@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		
+		
+		<link rel="stylesheet" type="text/css" href="stylesheets/style_place.css" />
+	    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+		<title>Tripinium</title>
+		<meta name="ROBOTS" content="noindex" />
+
+<script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?q="+place.value;
+}
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+</script>
+
+<script src="javascript/places.js">
+
+</script>
+
+	</head>
+<div class="nav-container">
+	
+		<span class="logo" >
+			<img src="/images/tripinium_logo_v2.png" />
+		</span>
+		<span class="search">
+		<input id="search" type="text" placeholder="{{ place }}" onkeydown="if (event.keyCode==13) { search();}"/>
+		<input type="submit" value="Search" onclick="search()"/>
+	</span>
+		<div class="nav1 ">
+			<ul>
+			<li><a href="/">Home</a></li>
+			<li><a href="/how.html">About</a></li>
+			<li><a href="/feedback.html">Feedback</a></li>
+			</ul>
+		</div>
+</div>
+	
+	<body style="width:100%" onload="document.getElementById('user_tips').value='';">
+		<div class="wrapper" >
+		
+<br>
+ {% if error: %}
+ No feedback available
+ {% endif %}
+ {% if output: %}
+ {% for tip in output %}
+ <div class="well" style="position:relative;top:90px;white-space:pre-wrap;word-wrap:break-word;">
+ 	{{tip.feedback}}
+ </div>
+ {% endfor %}
+ {% endif %}
+</div>
+<div class="push">
+	</div>
+	</body>
+	<div class="footer">
+		Copyright 2012 Tripinium. All rights reserved.
+	</div>
+</html>
+	

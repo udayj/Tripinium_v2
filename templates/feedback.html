@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html style="width:100%">
+	<head>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style_how.css" />
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script src="javascript/places.js"></script>
+		<title>Tripinium</title>
+<script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?location="+place.value;
+}
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32623235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<script>
+		$(document).ready(function() {
+    $("input#search").autocomplete({
+    source: places
+});
+  });
+
+function send_feedback()
+{
+	var data=document.getElementById("user_tips").value;
+	if(data=="" || data==null)
+	{
+		alert("No feedback entered !");
+		return;
+	}
+	 var email="";
+  if (document.getElementById("email").value!=null)
+  {
+  	email=document.getElementById("email").value;
+  }
+	$.ajax({
+  type: "POST",
+  url: "/user_tips",
+ 
+  data: { feedback: "Submitted for "+window.location.href+" \n"+data+"\n Email Id:"+email},
+  
+  success: function()
+  {
+  	document.getElementById("user_tips").value="";
+  	document.getElementById("email").value="";
+  alert("Thanks for helping us improve!");
+  },
+  fail: function()
+  {
+  	
+  	alert("Problem submitting feedback :(. Thanks anyways");
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+
+		</script>
+	</head>
+		<div class="nav-container">
+	
+		<span class="logo" >
+			<img src="/images/tripinium_logo_v2.png" />
+		</span>
+		<span class="search">
+		<input id="search" class="search-text" type="text" placeholder="eg. London" onkeydown="if (event.keyCode==13) { search();}"/>
+		<input type="submit" value="Search" onclick="search()"/>
+	</span>
+		<div class="nav1 ">
+			<ul>
+			<li><a href="/">Home</a></li>
+			<li ><a href="/how.html">About</a></li>
+			<li class="active"><a href="/feedback.html">Feedback</a></li>
+			</ul>
+		</div>
+		</div>
+	<body onload="document.getElementById('user_tips').value='';">
+		<div class="wrapper3">
+		<!--div class="main-content" >
+			<h2>
+		<p class="heading"> Do you like it ?</p>
+	</h2>
+		
+		<h2>
+
+	</div-->
+
+	<div class="feedback">
+	<div class="call_to_action" ><h2>We love to read feedback !<br> <span class="place-color">Let us know how we are doing</span></h2></div>
+	<br>
+	<label class="blue-color" > Feedback * </label><br>
+	<textarea id="user_tips" rows="4" cols="50" class="well" style="background-color:#e5e9fc;width:30%">
+	</textarea>
+	<br>
+		<label class="blue-color"> Email (optional) </label> <br>
+	<input id="email" type="text" class="well" style="background-color:#e5e9fc;width:30%" >
+	<br>
+
+	<input type="submit" name="user_feedback" value="Submit" onclick="send_feedback()"/>
+</div>
+
+
+
+</div>
+<div class="push">
+	</div>
+	<div class="footer" style="position:relative;top:30px;">
+		Copyright 2012 Tripinium. All rights reserved.
+	</div>
+	</body>
+	
+</html>

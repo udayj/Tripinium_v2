@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>
+Tripinium
+</title>
+</head>
+<body>
+{% if message %}
+<div class="message">
+{{message}}
+</div>
+{% endif %}
+<form method="post">
+<div> <label>Item Name </label> <input type="text" name="name" /> </div>
+<div> <label>Item Description</label><input type="text" name="description" /> </div>
+<input type="submit" value="Submit" />
+</form>
+

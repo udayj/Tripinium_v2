@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>
+Tripinium
+</title>
+</head>
+<body>
+{% if message %}
+<div class="message">
+{{message}}
+</div>
+{% endif %}
+<form method="post">
+<div> <label>Local Contact Name </label> <input type="text" name="name" /> </div>
+<div> <label>Local Contact Email</label><input type="text" name="email" /> </div>
+<div> <label>Local Contact Address</label><input type="text" name="address" /> </div>
+<input type="submit" value="Submit" />
+</form>
+

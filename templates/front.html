@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html lang="en">
+<head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>Generated HTML</title>
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script src="javascript/places.js"></script>
+        <title>Tripinium</title>
+<script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?location="+place.value;
+}
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32623235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<script>
+        $(document).ready(function() {
+    $("input#search").autocomplete({
+    source: places
+});
+  });
+
+
+        </script>
+</head>
+
+<body>
+    <div class="class7" style="padding-top:-0px;">
+        <div class="class8" style="padding-top:0;width:100%"><!--<img src="/images/layer_6.png" style="padding:0px;margin-top:0;width:100%"> --></div>
+
+        <div class="row class10">
+            <div class="pull-left class12">
+               <a href="/" style="text-decoration:none;"> <span class="sclass12">Home </span></a>
+            </div>
+
+
+
+            <div class="pull-left class15">
+              <a href="/how.html" style="text-decoration:none;">  <span class="sclass15">About </span></a>
+            </div>
+
+
+
+            <div class="pull-left class18">
+              <a href="/feedback.html" style="text-decoration:none;"> <span class="sclass18">Feedback </span></a>
+            </div>
+			<div class="pull-right" style="padding-top:1%;width:10%">
+            <div class="pull-left class20">
+                <div class="class21"><img src="/images/fb_img.png"></div>
+            </div>
+
+            <div class="pull-left class23">
+                <div class="class24"><img src="/images/twt_img.png"></div>
+            </div>
+
+            <div class="pull-left class25"><img class="pull-left" src="/images/layer_7.png" ></div>
+        </div>
+			</div>
+        <div class="class26"><img src="/images/layer_3.png"></div>
+
+        <div class="class28">
+            Get a Headstart
+        </div>
+
+        <div class="row class29">
+            <input id="search" type="text" placeholder="Where are you headed ? eg. Paris" style="float:left;position:relative;display:inline;" 
+             onkeydown="if (event.keyCode==13) { search();}"/>
+
+
+            <input type="submit" value="Search" style="float:right;position:relative;" onclick="search()"/>
+        </div>
+
+        <div class="class39">
+            Smart tips your for next trip !
+        </div>
+
+        <div class="class41">
+            <div class="class43">
+                Copyright 2012 Tripinium. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

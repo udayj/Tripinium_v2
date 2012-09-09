@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html style="width:100%">
+	<head>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style_how.css" />
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script src="javascript/places.js"></script>
+		<title>Tripinium</title>
+<script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?location="+place.value;
+}
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32623235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<script>
+		$(document).ready(function() {
+    $("input#search").autocomplete({
+    source: places
+});
+  });
+
+
+		</script>
+	</head>
+		<div class="nav-container">
+	
+		<span class="logo" >
+			<img src="/images/tripinium_logo_v2.png" />
+		</span>
+		<span class="search">
+		<input id="search" class="search-text" type="text" placeholder="eg. London" onkeydown="if (event.keyCode==13) { search();}"/>
+		<input type="submit" value="Search" onclick="search()" />
+	</span>
+		<div class="nav1 ">
+			<ul>
+			<li><a href="/">Home</a></li>
+			<li class="active"><a href="/how.html">About</a></li>
+			<li><a href="/feedback.html">Feedback</a></li>
+			</ul>
+		</div>
+		</div>
+	<body>
+		<div class="wrapper" >
+		<div class="main-content" >
+			<h2>
+		<p class="heading"> How does Tripinium work ? </p>
+	</h2>
+		<div class="content well">
+			Tripinium offers advice to travel planners on the last minute details for their next trip. To this end, it utilises deep local knowledge to prepare a carefully curated list of things that can help you enjoy your trip to the fullest. We provide you with useful tips that can help you organize the little details of your trip like where to eat, time to avoid the peak hour rush to your favorite tourist destination, how to commence a conversation with a foreigner, etc. We work hard so that you can <span id="smart">travel smart </span>.
+		</div>
+		
+		<h2>
+		<p class="heading"> What is your team ? </p>
+	</h2>
+		<div class="content well">
+			We are a bunch of guys trying to make travel planning simple. We have expertise to draw from graduate work at IIM-K, and work experience at companies like Microsoft, Amazon, etc.
+		</div>
+	</div>
+	
+</div>
+<div class="push">
+	</div>
+<div class="push">
+	</div>
+	</body>
+	<div class="footer">
+		Copyright 2012 Tripinium. All rights reserved.
+	</div>
+	
+	
+</html>

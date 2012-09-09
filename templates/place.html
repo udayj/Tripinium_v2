@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html lang="en">
+<head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/style_place.css" rel="stylesheet" type="text/css">
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+        <title>Smart tips for {{place.title()}} - Tripinium</title>
+        <meta property="og:image" content="images/tripinium_share_image.png" />
+        <meta property="og:title" content="Smart travel tips from Tripinium.com" />
+        <meta property="og:site_name" content="Tripinium" />
+        <meta name="description" content="Tour {{place.title()}} with confidence. Smart local tips for your next trip. We help you organise the little details of your trip to {{place.title()}}" />
+        <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
+
+        <script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?location="+place.value;
+}
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+</script>
+
+<script src="javascript/places.js">
+
+</script>
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32623235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+var func=function(obj){obj.placeholder='';};
+</script>
+<script>
+        $(document).ready(function() {
+    $("input#search").autocomplete({
+    source: places
+});
+  });
+
+function send_feedback()
+{
+    var data=document.getElementById("user_tips").value;
+    if(data=="" || data==null)
+    {
+        alert("No feedback entered !");
+        return;
+    }
+    $.ajax({
+  type: "POST",
+  url: "/user_tips",
+  data: { feedback: "Submitted for "+window.location.href+" \n"+data},
+  
+  success: function()
+  {
+    document.getElementById("user_tips").value="";
+  alert("Thanks for helping us improve!");
+  },
+  fail: function()
+  {
+    
+    alert("Problem submitting feedback :(. Thanks anyways");
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+        </script>
+
+    </head>
+</head>
+
+<body>
+    <div class="class3">
+        <div class="class4"></div>
+
+        <div class="row class6">
+            <div class="pull-left class8">
+                Home
+            </div>
+
+            <div class="pull-left class10">
+                About
+            </div>
+
+            <div class="pull-left class12">
+                Feedback
+            </div>
+
+			<div class="pull-right" style="padding-top:1%;">
+            <div class="pull-left class14">
+                <div class="class15"><img src="/images/results/fb_img.png"></div>
+            </div>
+
+            <div class="pull-left class17">
+                <div class="class18"><img src="/images/results/twt_img.png"></div>
+            </div>
+
+            <div class="pull-left class19"><img class="pull-left" src="/images/results/layer_7.png"></div>
+            </div>
+        </div>
+
+        <div class="row class20">
+            <div class="pull-left class21"><img class="pull-left" src="/images/results/layer_14.png" width="100%"></div>
+
+              <input type="text" placeholder="Where are you headed ? eg. Palo Alto" style="display:inline;"/>
+
+
+            <input type="submit" value="Search" style="" />
+        </div>
+
+        <div class="class30">
+            <div class="marginfix"></div>
+
+            <div class="class44">
+                <div class="class45"><img src="/images/results/layer_24_copy.png"></div>
+
+                
+                	<div class="pull-left" style="width:60%;display:inline;">
+                		<span class="class46">
+                        {% if place_info: %}
+                        
+                        {% if is_spell_corrected %}
+                            <div class="pull-left class51" >
+                        Showing result for {{place.title()}}, search instead for <a href="/search?location={{orig_query}}&spellcorrect=false" style="no-decorate">{{orig_query}}</a>
+                            </div>
+                        {% endif %}
+                        <span class="pull-left class51">
+                        <span class="class48">Get A Headstart on your trip to</span> <span class="class50">{{place.title()}}</span>
+                    </span>
+                        
+
+                        {% endif %}
+                    </span>
+                    <span class="pull-right" style="width:10%;float:right;margin-right:5%;display:block;">
+                    <div class="pull-left class53">
+                       <div class="class54"><img src="/images/results/email.png"></div>
+                    </div>
+
+                    <div class="pull-left class56">
+                        <div class="class57"><img src="/images/results/printer.png"></div>
+                    </div>
+                    </span>
+                    <br>
+                    {% if place_info: %}
+
+					<span style="background-color:#e5e9fc;margin-top:5%;">
+						<ol style="margin-top:2%;">
+							
+					{%    for p in place_info.items %}
+					       <li style="float:left;margin-top:1%;margin-bottom:2%;width:100%;">
+
+							
+							<span style="float:right;width:20%;margin-right:1%;display:inline;">
+								<span style="float:right;margin-right:15%;padding-top:1%;"><img src="/images/results/layer_29_copy.png" style="margin:1%;"/></span>
+					       	<span style="float:right;margin-right:5%;"><img src="/images/results/layer_29.png" /></span>
+					       </span>
+					       	<span style="float:right;width:76%;margin-right:1%;"> {{ p.item_name | safe }} </span>
+					       		
+					       {% if p.item_description %}
+					        <p>{{ p.item_description | safe }}<p>
+					       {% endif %}
+
+					        </li>
+					    
+					   {% endfor %}
+				   	
+					</ol>
+				</span>
+					{% endif %}
+				</div>
+                <span class="class43"><img src="/images/results/layer_24_copy_3.png"></span>	
+                    <span class="pull-right class62" style="position:relative;width:30%;margin-right:5%;">
+                        <div class="class59">Got a tip to share?</span> 
+                        	<span class="class60"><br></span><span class="class61">Let us know below</span></div>
+
+                        <textarea id="user_tips" rows="4" cols="100" class="well" style="background-color:white;width:70%">
+    					</textarea>
+    					<input type="submit" name="user_feedback" value="Submit" onclick="send_feedback()" style="width:20%"/>
+
+    					{% if recommendations %}
+   <div class="nclass118"  >
+	<span class="nclass120" style="width:100%">  	Also look at these places </span><br>
+	<div style="position:relative;float:left;margin:1%;display:inline;">
+	{% for recommendation in recommendations[:3] %}
+	<div class="nclass121" style="margin:3px;" >
+	<a href="/search?q={{recommendation.title()}}" style="text-decoration:none;"> <span >{{recommendation.title()}} </span></a>
+</div>
+
+	{% endfor %}
+</div>
+ <span style="position:relative;float:right;margin:1%;">
+	{% for recommendation in recommendations[3:] %}
+	<div class="nclass121" style="margin:3px;" >
+	<a href="/search?q={{recommendation.title()}}" style="text-decoration:none;"> <span class="" >{{recommendation.title()}} </span></a>
+</div>
+
+	{% endfor %}
+</span>
+</div>
+
+<div class="affiliate well" style="background-color:#e5e9fc;position:absolute;top:405px;right:50px;background-color:#e5e9fc; width:20%;" >
+	<b><a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;"><span class="blue-color tk-terfens">Find the best hotels in </span><span class="place-color tk-terfens">{{place.title()}}</span></a></b>
+</div>
+{% endif %}
+                    </span>
+
+
+                </div>
+				
+                
+
+                    <div class="pull-left class93">
+                        <span class="class80">Bring clothes that you can layer: a T-shirt, a sweater to wear over it, a jacket or coat on top of that. And yes, this applies even in
+                        July.<br></span><span class="class81"><br></span><span class="class82">An umbrella is handy.<br></span><span class="class83"><br></span><span class="class84">Basic knowledge
+                        of French will go a long way. Eg. "parlez vous anglais" -pronunciation: Parlay voo onglai = "Do you speak English?" before you commence a conversation would help break the
+                        ice.<br></span><span class="class85"><br></span><span class="class86">Comfortable shoes are a must as most of the exploring takes place on foot.<br></span><span class=
+                        "class87"><br></span><span class="class88">Paris boasts of one of the most widespread underground transit systems in the world. It is extremely well connected and spread
+                        across the city; though figuring out the map may be a little challenging.<br></span><span class="class89"><br></span><span class="class90">People in France are very courteous.
+                        Merci (thank you) and pardon (asking for forgiveness - sorry or excuse me) are two very oft heard words - especially in the metro.<br></span><span class=
+                        "class91"><br></span><span class="class92">Always greet someone before starting a conversation. Bonjour for good morning and bonsair for good evening should do the
+                        trick.</span>
+                    </div>
+
+                    <div class="pull-left class94">
+                        <div class="class101"><img src="/images/results/layer_29.png"></div>
+
+                        <div class="class95"><img src="/images/results/layer_29_copy_2.png"></div>
+
+                        <div class="class96"><img src="/images/results/layer_29_copy_4.png"></div>
+
+                        <div class="class97"><img src="/images/results/layer_29_copy_6.png"></div>
+
+                        <div class="class98"><img src="/images/results/layer_29_copy_8.png"></div>
+
+                        <div class="class99"><img src="/images/results/layer_29_copy_10.png"></div>
+
+                        <div class="class100"><img src="/images/results/layer_29_copy_12.png"></div>
+                    </div>
+
+                    <div class="pull-left class102">
+                        <div class="class103"><img src="/images/results/layer_29_copy.png"></div>
+
+                        <div class="class104"><img src="/images/results/layer_29_copy_3.png"></div>
+
+                        <div class="class105"><img src="/images/results/layer_29_copy_5.png"></div>
+
+                        <div class="class106"><img src="/images/results/layer_29_copy_7.png"></div>
+
+                        <div class="class107"><img src="/images/results/layer_29_copy_9.png"></div>
+
+                        <div class="class108"><img src="/images/results/layer_29_copy_11.png"></div>
+
+                        <div class="class109"><img src="/images/results/layer_29_copy_13.png"></div>
+                    </div>
+
+                    <div class="pull-left class110">
+                        <div class="class112"></div>
+
+                        <div class="class114">
+                            <div class="class116">
+                                Submit
+                            </div>
+                        </div>
+
+                        <div class="class118">
+                            <div class="class120">
+                                Also look at these places
+                            </div>
+
+                            <div class="row class122">
+                                <div class="pull-left class124">
+                                    Lille Brussels Luxembourg
+                                </div>
+
+                                <div class="pull-left class125"><img class="pull-left" src="/images/results/antwerp_london.png"></div>
+                            </div>
+                        </div>
+
+                        <div class="class127">
+                            <div class="class129">
+                                Find the best hotels in Paris
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row class130">
+                    <div class="pull-left class135">
+                        <span class="class132">Rate this</span> <span class="class134">City</span>
+                    </div>
+
+                    <div class="pull-left class137"></div>
+
+                    <div class="pull-left class139"></div>
+
+                    <div class="pull-left class141"></div>
+
+                    <div class="pull-left class143"></div>
+
+                    <div class="pull-left class145"></div>
+                </div>
+
+                <div class="row class147">
+                    <div class="pull-left class148">
+                        <div class="class149"><img src="/images/results/layer_8_copy_2.png"></div>
+
+                        <div class="row class150">
+                            <div class="pull-left class151"><img class="pull-left" src="/images/results/layer_8_copy_3.png"></div>
+
+                            <div class="pull-left class152"><img class="pull-left" src="/images/results/layer_19.png"></div>
+                        </div>
+
+                        <div class="class153"><img src="/images/results/layer_8_copy_4.png"></div>
+                    </div>
+
+                    <div class="pull-left class154"><img class="pull-left" src="/images/results/layer_8_copy.png"></div>
+                </div>
+            </div>
+
+            <div class="class36"></div>
+
+            <div class="class43"><img src="/images/results/layer_24_copy_3.png"></div>
+
+            <div class="class32">
+                <div class="class34">
+                    4
+                </div>
+            </div>
+
+            <div class="class38">
+                <div class="class40">
+                    4
+                </div>
+            </div>
+
+            <div class="class42"></div>
+        </div>
+
+        <div class="class156">
+            <div class="class158">
+                Copyright 2012 Tripinium. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<html !DOCTYPE HTML>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style_place.css" />
+		<link href='http://fonts.googleapis.com/css?family=Imprima' rel='stylesheet' type='text/css'>
+		<title>Tripinium</title>
+<script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?q="+place.value;
+}
+</script>
+	</head>
+	<body >
+	<div class="title">
+		Tripinium
+	</div>
+	<div class="caption">
+		Get A Headstart
+	</div>
+	<div class="search">
+		<input type="text" placeholder="eg. London" />
+		<input type="submit" value="Search" />
+	</div>
+	<div id="error">
+{% if not place:  %}
+    {{error}}
+{% endif %}
+</div>
+<br>
+<div id="items">
+{% if place: %}
+<ul>
+{%    for p in place.packing_list.split('|') %}
+       <li>{{ p | safe }}</li>
+    <br>
+   {% endfor %}
+</ul>
+{% endif %}
+</div>
+</div>
+	<div class="footer">
+		Copyright 2012 Tripinium. All rights reserved.
+	</div>
+	</body>
+	
+</html>
+	

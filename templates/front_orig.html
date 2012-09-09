@@ -1,0 +1,27 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+<link href='http://fonts.googleapis.com/css?family=Imprima' rel='stylesheet' type='text/css'>
+</head>
+<title>Tripinium - Get a headstart !!! </title>
+<script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?q="+place.value;
+}
+</script>
+<body>
+<h2> Tripinium </h2>
+<h3> Get a Headstart on your trip </h3>
+
+
+<div id="searcharea">
+<input type="text" name="search" id="search"></input>
+<input type="button" name="submit" value="Search" onclick="search()"/>
+</div>
+
+</body>
+</html>
