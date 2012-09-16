@@ -11,15 +11,23 @@
     <link href="/stylesheets/style_place.css" rel="stylesheet" type="text/css">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
         <title>Smart tips for {{place.title()}} - Tripinium</title>
         <meta property="og:image" content="images/tripinium_share_image.png" />
         <meta property="og:title" content="Smart travel tips from Tripinium.com" />
         <meta property="og:site_name" content="Tripinium" />
         <meta name="description" content="Tour {{place.title()}} with confidence. Smart local tips for your next trip. We help you organise the little details of your trip to {{place.title()}}" />
         <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
-
+<style>
+        .ui-autocomplete
+        {
+            position:absolute;
+            cursor:default;
+            z-index:4000 !important
+        }
+    </style>
         <script type="text/javascript">
 function search()
 {
@@ -72,7 +80,7 @@ var func=function(obj){obj.placeholder='';};
 
 function send_feedback()
 {
-    var data=document.getElementById("user_tips").value;
+    var data=document.getElementById('user_tips').value;
     if(data=="" || data==null)
     {
         alert("No feedback entered !");
@@ -98,8 +106,155 @@ function send_feedback()
   //alert("Thanks for helping us improve!");
 });
 }
-        </script>
 
+function calculateRating()
+{
+    var total_rating=$('#total_rating').attr('class');
+    var total_rating_count=$('#total_rating_count').attr('class');
+    
+    
+    if(total_rating!='None' && total_rating_count!='None')
+    {
+        return parseFloat(total_rating)/parseInt(total_rating_count);
+        
+
+    }
+    else
+    {
+        return 0;
+    }
+}
+        </script>
+<script>
+$(document).ready(function(){
+$("#dialog-form").dialog({
+            autoOpen: false,
+            height: 300,
+            width: 450,
+            modal: true,
+            buttons: {
+                "Send": function() {
+                    send_email();
+                     $(this).dialog("close");
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+               
+            }
+        });
+//calculateRating();
+$('#star').raty({
+  score:calculateRating(),
+  half:true,
+  click: function (score,evt){
+  var place=document.getElementById('email_place').innerHTML;
+    $.ajax({
+  type: "POST",
+  url: "/send_city_rating",
+  data: {score:score,place:place},
+  
+  success: function()
+  {
+    $('#star').raty({
+        readOnly:true,
+        score:score
+    })
+  },
+  fail: function()
+  {
+    
+    alert('Problem submitting rating. We are looking into this.');
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+});
+});
+
+function dialog(){
+
+        //alert($('#email').html());
+        $("#email").click(function() {
+                $("#dialog-form").dialog("open");
+            });
+    }
+    </script>
+<script>
+function send_email()
+{
+    var emails=document.getElementById('email_field').value;
+    var name=document.getElementById('name_field').value;
+    var place=document.getElementById('email_place').innerHTML;
+    if(emails=="" || emails==null)
+    {
+        alert("No email-id entered");
+        return;
+    }
+    $.ajax({
+  type: "POST",
+  url: "/send_email",
+  data: { emails:emails,name:name,place:place},
+  
+  success: function()
+  {
+    alert('Your request is being processed. The emails would be delivered shortly');
+  },
+  fail: function()
+  {
+    
+    alert('Problem processing email request. We are looking into this.');
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+function send_votes(id,key,type,displayId)
+{
+    
+    var display_vector={'p':'n','n':'p'};
+    var score_dict={'p':1,'n':-1};
+    if(id=="" || id==null || key=="" || key==null)
+    {
+        alert("Problem submitting vote. We are looking into this.");
+        return;
+
+        
+    }
+    //toggle display for rating buttons
+    $('#'+displayId).css('display','none');
+    $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).css('display','');
+    var score=parseInt($('#'+displayId).attr('title').split(' ')[1]);
+    score=score+score_dict[type];
+    $('#'+displayId).attr('title','Score '+score);
+    $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).attr('title','Score '+score);
+    $.ajax({
+  type: "POST",
+  url: "/send_votes",
+  data: { id:id,key:key,type:type},
+  
+  success: function()
+  {
+    
+  },
+  fail: function()
+  {
+    
+    alert('Problem submitting vote. We are looking into this.');
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+
+
+</script>
     </head>
 </head>
 
@@ -149,7 +304,7 @@ function send_feedback()
                 <img class="pull-left" src="/images/results/layer_14.png" width="100%">
             </div>
 
-            <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
+            <input id="search" style="z-index:10000;" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
             <input type="submit" value="Search" style="" onclick="search()"/>
         </div>
 
@@ -171,7 +326,8 @@ function send_feedback()
                         </div>
                         {% endif %}
                         <span class="pull-left class51" id="place_name">
-                            <span class="class48">Get A Headstart on your trip to</span> <span class="class50">{{place.title()}}</span>
+                            <span class="class48">Get A Headstart on your trip to</span> <span class="class50" id="email_place">{{place.title()}}</span>
+
                         </span>
                         
 
@@ -179,7 +335,7 @@ function send_feedback()
                     </span>
                     <span class="pull-right" style="width:10%;float:right;margin-right:2%;display:block;">
                         <div class="pull-left class53">
-                           <div class="class54"><img src="/images/results/email.png"></div>
+                           <div class="class54" id="email" ><img  src="/images/results/email.png" onclick="dialog()" style="cursor:pointer;"></div>
                         </div>
 
                         <div class="pull-left class56">
@@ -191,18 +347,21 @@ function send_feedback()
 
 					<span style="background-color:#e5e9fc;margin-top:5%;">
 						<ol style="margin-top:2%;" id="data">
-							
+							<span style="display:none;" id="total_rating" class="{{place_info.total_rating}}"> </span>
+                            <span style="display:none;" id="total_rating_count" class="{{place_info.total_rating_count}}"> </span>
 					{%   for p in place_info.items %}
 					       <li style="float:left;margin-top:1%;margin-bottom:2%;width:100%;">
+                            
 
 							
 							<span style="float:right;width:20%;margin-right:1%;display:inline;">
-							     <span style="float:right;margin-right:15%;padding-top:1%;"><img src="/images/results/layer_29_copy.png" style="margin:1%;"/>
+							     <span style="float:right;margin-right:15%;padding-top:1%;"><img src="/images/results/layer_29_copy.png" style="margin:1%;cursor:pointer;" id='n{{p.key().id()}}' onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %} " />
                                 </span>
-					       	     <span style="float:right;margin-right:10%;"><img src="/images/results/layer_29.png" /></span>
+					       	     <span style="float:right;margin-right:10%;"><img src="/images/results/layer_29.png" id='p{{p.key().id()}}'
+                                    onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}" /></span>
 					       </span>
-					       	<span style="float:right;width:76%;margin-right:1%;"> {{ p.item_name | safe }} </span>
-					       		
+					       	<span style="float:right;width:76%;margin-right:1%;" > {{ p.item_name | safe }} </span>
+
 					       {% if p.item_description %}
 					        <p>{{ p.item_description | safe }}</p>
 					       {% endif %}
@@ -213,11 +372,13 @@ function send_feedback()
 				   	
 					   </ol>
 
-                        <div class="fb-like" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="false"  data-font="lucida grande" onClick="_gaq.push(['_trackEvent', 'Social', 'Facebook', '{{place}}']);" style="allowtransparency:true">
+                        <div class="fb-like" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="false"  data-font="lucida grande" onClick="_gaq.push(['_trackEvent', 'Social', 'Facebook', '{{place}}']);" style="background-color:#AAE5E4;">
                         </div>
                        
                         <div style="margin-top:2%;">
                             Rate this city
+                            <span id="star" ></span>
+                            <!--
                             <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
                             </span>
                             <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
@@ -227,13 +388,13 @@ function send_feedback()
                             <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
                             </span>
                             <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
-                            </span>
+                            </span> -->
 
                         </div>
                         <!-- set vertical image to 80% if no picture for location -->
-                        <div style="margin-top:3%">
+                        <!--div style="margin-top:3%">
                             <img src="{{place_info.image}}" height="300" width="80%" class="inside-picture"/>
-                        </div>
+                        </div-->
     				</span>
                     {% endif %}
                 </div>	  	
@@ -383,6 +544,18 @@ function send_feedback()
             <div style="margin-bottom:0px;padding-top:270px;margin-left:20%;">
                 Copyright 2012 Tripinium. All rights reserved.
             </div>
+        </div>
+        <div id="dialog-form" title="Create new user" style="display:none;">
+            <p class="validateTips">Enter the email ids where you want the tips sent (separated by semi-colons ; )</p>
+
+            <form>
+            <fieldset>
+                <label for="name">Your Name (optional)</label>
+                <input type="text" name="name" id="name_field" value="" class="text ui-widget-content ui-corner-all" />
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email_field" value="" class="text ui-widget-content ui-corner-all" width="80%"/>
+            </fieldset>
+            </form>
         </div>
 
 </div>
