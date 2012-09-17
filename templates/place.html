@@ -312,7 +312,7 @@ function send_votes(id,key,type,displayId)
             <div class="marginfix"></div>
 
             <div class="class44" style="display:inline;">
-                <div class="class45">
+                <div class="class45" >
                     <img src="/images/results/layer_24_copy.png">
                 </div>
 
@@ -372,11 +372,12 @@ function send_votes(id,key,type,displayId)
 				   	
 					   </ol>
 
-                        <div class="fb-like" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="false"  data-font="lucida grande" onClick="_gaq.push(['_trackEvent', 'Social', 'Facebook', '{{place}}']);" style="background-color:#AAE5E4;">
-                        </div>
+                        <!--div class="fb-like" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="false"  data-font="lucida grande" onClick="_gaq.push(['_trackEvent', 'Social', 'Facebook', '{{place}}']);" style="" id="fb">
+                        </div-->
+                        
                        
-                        <div style="margin-top:2%;">
-                            Rate this city
+                        <div style="padding-top:2%;font-size:1.3em;">
+                            Rate this <span style="color:#1b918f;font-weight:bold;">Place</span>
                             <span id="star" ></span>
                             <!--
                             <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
@@ -398,7 +399,7 @@ function send_votes(id,key,type,displayId)
     				</span>
                     {% endif %}
                 </div>	  	
-                <span class="pull-right class62" style="position:relative;width:30%;margin-right:5%;">
+                <span class="pull-right class62" style="position:relative;width:28%;margin-right:8%;padding-right:1%;">
                     <div class="class59" style="padding-left:2%;">Got a tip to share?
                      	<br>
                         <span class="class61">Let us know below</span>
@@ -406,44 +407,47 @@ function send_votes(id,key,type,displayId)
 
                     <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%">
     				</textarea>
-    				<input type="submit" style="background-color:#89C9EE;width:23%;color:#1b918f;float:right;margin-right:20%;margin-bottom:6%;" name="user_feedback" value="Submit" onclick="send_feedback()" style="width:20%"/>
+            <span style="float:right;margin-right:5%;padding-right:23%;margin-bottom:6%;">
+    				<input type="submit" style="background-color:#89C9EE;width:95%;color:#1b918f;" name="user_feedback" value="Submit" onclick="send_feedback()" />
+          </span>
                     <br>
     				{% if recommendations %}
-                    <div class="nclass118" style="clear:both;" >
-	                   <span class="nclass120" style="width:100%"> Also look at these places </span><br>
-	                   <div style="position:relative;float:left;display:inline;padding:1%">
+                    <div class="nclass118" style="clear:both;min-width:250px;" >
+	                   <span class="nclass120" style="position:relative;float:right;min-width:250px;"> Also look at these places </span><br>
+                     <span style="width:1em;min-width:250px;">
+	                   <div style="position:relative;float:left;display:inline;margin:3%;">
 	                       {% for recommendation in recommendations[:3] %}
 	                       <div class="nclass121" style="margin:3px;" >
-	                            <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;"> 
+	                            <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;"> 
                                     <span >{{recommendation.title()}} </span>
                                 </a>
                            </div>
 
 	                       {% endfor %}
                         </div>
-                       <span style="position:relative;float:right;margin-right:15px;">
+                       <span style="position:relative;float:left;margin:3%;">
 	                       {% for recommendation in recommendations[3:] %}
 	                       <div class="nclass121" style="margin:3px;" >
-	                           <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;"> 
+	                           <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;"> 
                                     <span class="" >{{recommendation.title()}} </span>
                                </a>
                            </div>
 
 	                       {% endfor %}
                        </span>
+                      </span>
                     </div>
                     {% endif %}
-                    <div class="nclass123" style="background-color:#89C9EE;width:75%;color:#1b918f;padding-left:5%;" >
+                    <div class="nclass123" style="background-color:#89C9EE;width:65%;color:#1b918f;padding-left:5%;min-width:250px;" >
 	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;">Find the best hotels in {{place.title()}}
                        </a>
                     </div>
                 
                 </span>
-                 <span class="class43"><img src="/images/results/layer_24_copy_3.png"></span>
+                 <div class="class43" style="height:70%;display:inline;max-height:500px;"><img src="/images/results/layer_24_copy_3.png" style="max-height:500px;" width="2px"></div>
 
 
                 </span>
-				
               </div>  
 
                   
@@ -540,8 +544,8 @@ function send_votes(id,key,type,displayId)
         </div>
     </div> -->
 </div>
-        <div class="nclass41" style="margin-top:30px;margin-left:20%;margin-right:20%;width:60%;padding-bottom:0px;margin-bottom:0px;">
-            <div style="margin-bottom:0px;padding-top:270px;margin-left:20%;">
+        <div class="nclass41" style="margin-top:30px;margin-left:20%;margin-right:20%;width:45%;padding-bottom:0px;margin-bottom:0px;">
+            <div style="margin-bottom:0px;padding-top:270px;margin-left:20%;font-size:1.3em;">
                 Copyright 2012 Tripinium. All rights reserved.
             </div>
         </div>
@@ -558,7 +562,6 @@ function send_votes(id,key,type,displayId)
             </form>
         </div>
 
-</div>
  <div id="fb-root"></div>
                         <script>(function(d, s, id) {
                               var js, fjs = d.getElementsByTagName(s)[0];
@@ -568,6 +571,8 @@ function send_votes(id,key,type,displayId)
                               fjs.parentNode.insertBefore(js, fjs);
                             }(document, 'script', 'facebook-jssdk'));
                         </script>
+</div>
+
 </body>
 
 </html>
