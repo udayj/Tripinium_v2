@@ -460,6 +460,7 @@ class SendCityRating(webapp2.RequestHandler):
             place_info.total_rating=place_info.total_rating+score
         logging.info(str(place_info.total_rating)+' '+str(place_info.total_rating_count))
         place_info.put()
+        memcache.set(place,place_info)
         self.response.out.write('Success')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -478,7 +479,7 @@ class SendEmail(webapp2.RequestHandler):
         emails=self.request.get('emails').split(';')
         name=self.request.get('name')
         place=self.request.get('place')
-        timestamp=str(datetime.datetime.now())+'\n'
+        timestamp=str(datetime.datetime.now().strftime('%m/%d/%y'))+'\n'
         place=normalize(place)
         place_info=memcache.get(place)
         logging.info(name)
@@ -498,7 +499,7 @@ class SendEmail(webapp2.RequestHandler):
                 content=content+str(count)+'. '+item.item_name+'\n'
                 count=count+1
             content='Tips for '+place_info.name.title()+'\n'+content
-            if name is not None or name != '':
+            if name is not None and name != '':
                 content='Requested by:'+name+'\n'+'Date:'+timestamp+'\n'+content
             else:
                 content='Date:'+timestamp+'\n'+content

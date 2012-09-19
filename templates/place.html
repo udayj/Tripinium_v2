@@ -7,7 +7,7 @@
 
     
     <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css">
+    <!--link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css"-->
     <link href="/stylesheets/style_place.css" rel="stylesheet" type="text/css">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
@@ -28,31 +28,7 @@
             z-index:4000 !important
         }
     </style>
-        <script type="text/javascript">
-function search()
-{
-  var place=document.getElementById("search");
-  if(place==null || place.value.trim()=="")
-    return;
-  window.location="/search?location="+place.value;
-}
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-
-function print()
-{
-
-    var content=document.getElementById("data").innerHTML;
-    var place_name=document.getElementById("place_name").innerHTML;
-    myWin=window.open('','Tips from Tripinium','menubar,scrollbars,left=30px,top=40px,height=400px,width=600px'); 
-    myWin.document.write('<body onload="window.print();">'+place_name+'<br>'+content+'</body>');
-    myWin.print();
-    myWin.close();
-}
-
-</script>
+      <script src="/javascript/utility.js"></script>
 
 <script src="javascript/places.js">
 
@@ -77,54 +53,7 @@ var func=function(obj){obj.placeholder='';};
     source: places
 });
   });
-
-function send_feedback()
-{
-    var data=document.getElementById('user_tips').value;
-    if(data=="" || data==null)
-    {
-        alert("No feedback entered !");
-        return;
-    }
-    $.ajax({
-  type: "POST",
-  url: "/user_tips",
-  data: { feedback: "Submitted for "+window.location.href+" \n"+data},
-  
-  success: function()
-  {
-    document.getElementById("user_tips").value="";
-  alert("Thanks for helping us improve!");
-  },
-  fail: function()
-  {
-    
-    alert("Problem submitting feedback :(. Thanks anyways");
-  }
-}).done(function( msg ) {
- // document.getElementById("user_tips").value="";
-  //alert("Thanks for helping us improve!");
-});
-}
-
-function calculateRating()
-{
-    var total_rating=$('#total_rating').attr('class');
-    var total_rating_count=$('#total_rating_count').attr('class');
-    
-    
-    if(total_rating!='None' && total_rating_count!='None')
-    {
-        return parseFloat(total_rating)/parseInt(total_rating_count);
-        
-
-    }
-    else
-    {
-        return 0;
-    }
-}
-        </script>
+</script>
 <script>
 $(document).ready(function(){
 $("#dialog-form").dialog({
@@ -178,84 +107,12 @@ $('#star').raty({
 
 function dialog(){
 
-        //alert($('#email').html());
-        $("#email").click(function() {
+               $("#email").click(function() {
                 $("#dialog-form").dialog("open");
             });
     }
     </script>
-<script>
-function send_email()
-{
-    var emails=document.getElementById('email_field').value;
-    var name=document.getElementById('name_field').value;
-    var place=document.getElementById('email_place').innerHTML;
-    if(emails=="" || emails==null)
-    {
-        alert("No email-id entered");
-        return;
-    }
-    $.ajax({
-  type: "POST",
-  url: "/send_email",
-  data: { emails:emails,name:name,place:place},
-  
-  success: function()
-  {
-    alert('Your request is being processed. The emails would be delivered shortly');
-  },
-  fail: function()
-  {
-    
-    alert('Problem processing email request. We are looking into this.');
-  }
-}).done(function( msg ) {
- // document.getElementById("user_tips").value="";
-  //alert("Thanks for helping us improve!");
-});
-}
-function send_votes(id,key,type,displayId)
-{
-    
-    var display_vector={'p':'n','n':'p'};
-    var score_dict={'p':1,'n':-1};
-    if(id=="" || id==null || key=="" || key==null)
-    {
-        alert("Problem submitting vote. We are looking into this.");
-        return;
 
-        
-    }
-    //toggle display for rating buttons
-    $('#'+displayId).css('display','none');
-    $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).css('display','');
-    var score=parseInt($('#'+displayId).attr('title').split(' ')[1]);
-    score=score+score_dict[type];
-    $('#'+displayId).attr('title','Score '+score);
-    $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).attr('title','Score '+score);
-    $.ajax({
-  type: "POST",
-  url: "/send_votes",
-  data: { id:id,key:key,type:type},
-  
-  success: function()
-  {
-    
-  },
-  fail: function()
-  {
-    
-    alert('Problem submitting vote. We are looking into this.');
-  }
-}).done(function( msg ) {
- // document.getElementById("user_tips").value="";
-  //alert("Thanks for helping us improve!");
-});
-}
-
-
-</script>
-    </head>
 </head>
 
 <body>
@@ -304,7 +161,7 @@ function send_votes(id,key,type,displayId)
                 <img class="pull-left" src="/images/results/layer_14.png" width="100%">
             </div>
 
-            <input id="search" style="z-index:10000;" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
+            <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
             <input type="submit" value="Search" style="" onclick="search()"/>
         </div>
 
@@ -325,7 +182,7 @@ function send_votes(id,key,type,displayId)
                         Showing result for {{place.title()}}, search instead for <a href="/search?location={{orig_query}}&spellcorrect=false" style="no-decorate">{{orig_query}}</a>
                         </div>
                         {% endif %}
-                        <span class="pull-left class51" id="place_name">
+                        <span class="pull-left class51" id="place_name" style="margin-top:1%;">
                             <span class="class48">Get A Headstart on your trip to</span> <span class="class50" id="email_place">{{place.title()}}</span>
 
                         </span>
@@ -333,7 +190,7 @@ function send_votes(id,key,type,displayId)
 
                         {% endif %}
                     </span>
-                    <span class="pull-right" style="width:10%;float:right;margin-right:2%;display:block;">
+                    <span class="pull-right utility">
                         <div class="pull-left class53">
                            <div class="class54" id="email" ><img  src="/images/results/email.png" onclick="dialog()" style="cursor:pointer;"></div>
                         </div>
@@ -354,11 +211,13 @@ function send_votes(id,key,type,displayId)
                             
 
 							
-							<span style="float:right;width:20%;margin-right:1%;display:inline;">
-							     <span style="float:right;margin-right:15%;padding-top:1%;"><img src="/images/results/layer_29_copy.png" style="margin:1%;cursor:pointer;" id='n{{p.key().id()}}' onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %} " />
+							<span class="votes">
+							     <span class="votes_down">
+                    <img src="/images/results/layer_29_copy.png" style="margin:1%;cursor:pointer;" id='n{{p.key().id()}}' onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %} " />
                                 </span>
-					       	     <span style="float:right;margin-right:10%;"><img src="/images/results/layer_29.png" id='p{{p.key().id()}}'
-                                    onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}" /></span>
+					       	     <span class="votes_up">
+                        <img src="/images/results/layer_29.png" id='p{{p.key().id()}}'onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}" />
+                      </span>
 					       </span>
 					       	<span style="float:right;width:76%;margin-right:1%;" > {{ p.item_name | safe }} </span>
 
@@ -372,48 +231,33 @@ function send_votes(id,key,type,displayId)
 				   	
 					   </ol>
 
-                        <!--div class="fb-like" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="false"  data-font="lucida grande" onClick="_gaq.push(['_trackEvent', 'Social', 'Facebook', '{{place}}']);" style="" id="fb">
-                        </div-->
-                        
+                     
                        
-                        <div style="padding-top:2%;font-size:1.3em;">
-                            Rate this <span style="color:#1b918f;font-weight:bold;">Place</span>
+                        <div class="rating">
+                            Rate this <span class="place_rating">Place</span>
                             <span id="star" ></span>
-                            <!--
-                            <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
-                            </span>
-                            <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
-                            </span>
-                            <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
-                            </span>
-                            <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
-                            </span>
-                            <span style="padding-top:0%;margin-top:0%;"><img src="/images/results/shape_15_136.png" />
-                            </span> -->
+                          
 
                         </div>
-                        <!-- set vertical image to 80% if no picture for location -->
-                        <!--div style="margin-top:3%">
-                            <img src="{{place_info.image}}" height="300" width="80%" class="inside-picture"/>
-                        </div-->
+                       
     				</span>
                     {% endif %}
                 </div>	  	
-                <span class="pull-right class62" style="position:relative;width:28%;margin-right:8%;padding-right:1%;">
+                <span class="pull-right class62" >
                     <div class="class59" style="padding-left:2%;">Got a tip to share?
                      	<br>
                         <span class="class61">Let us know below</span>
                     </div>
 
-                    <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%">
+                    <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%" value="">
     				</textarea>
-            <span style="float:right;margin-right:5%;padding-right:23%;margin-bottom:6%;">
+            <span class="tip_submit_outer">
     				<input type="submit" style="background-color:#89C9EE;width:95%;color:#1b918f;" name="user_feedback" value="Submit" onclick="send_feedback()" />
           </span>
                     <br>
     				{% if recommendations %}
-                    <div class="nclass118" style="clear:both;min-width:250px;" >
-	                   <span class="nclass120" style="position:relative;float:right;min-width:250px;"> Also look at these places </span><br>
+                    <div class="nclass118">
+	                   <span class="nclass120"> Also look at these places </span><br>
                      <span style="width:1em;min-width:250px;">
 	                   <div style="position:relative;float:left;display:inline;margin:3%;">
 	                       {% for recommendation in recommendations[:3] %}
@@ -438,118 +282,27 @@ function send_votes(id,key,type,displayId)
                       </span>
                     </div>
                     {% endif %}
-                    <div class="nclass123" style="background-color:#89C9EE;width:65%;color:#1b918f;padding-left:5%;min-width:250px;" >
+                    <div class="nclass123">
 	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;">Find the best hotels in {{place.title()}}
                        </a>
                     </div>
                 
                 </span>
-                 <div class="class43" style="height:70%;display:inline;max-height:500px;"><img src="/images/results/layer_24_copy_3.png" style="max-height:500px;" width="2px"></div>
+                 <div class="class43" style="height:70%;display:inline;max-height:500px;">
+                  <img src="/images/results/layer_24_copy_3.png" style="max-height:500px;" width="2px">
+                </div>
 
 
                 </span>
               </div>  
 
-                  
-                  
-                    
-<!--
-                    <div class="pull-left class110">
-                        <div class="class112"></div>
-
-                        <div class="class114">
-                            <div class="class116">
-                                Submit
-                            </div>
-                        </div>
-
-                        <div class="class118">
-                            <div class="class120">
-                                Also look at these places
-                            </div>
-
-                            <div class="row class122">
-                                <div class="pull-left class124">
-                                    Lille Brussels Luxembourg
-                                </div>
-
-                                <div class="pull-left class125"><img class="pull-left" src="/images/results/antwerp_london.png"></div>
-                            </div>
-                        </div>
-
-                        <div class="class127">
-                            <div class="class129">
-                                Find the best hotels in Paris
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row class130">
-                    <div class="pull-left class135">
-                        <span class="class132">Rate this</span> <span class="class134">City</span>
-                    </div>
-
-                    <div class="pull-left class137"></div>
-
-                    <div class="pull-left class139"></div>
-
-                    <div class="pull-left class141"></div>
-
-                    <div class="pull-left class143"></div>
-
-                    <div class="pull-left class145"></div>
-                </div>
-
-                <div class="row class147">
-                    <div class="pull-left class148">
-                        <div class="class149"><img src="/images/results/layer_8_copy_2.png"></div>
-
-                        <div class="row class150">
-                            <div class="pull-left class151"><img class="pull-left" src="/images/results/layer_8_copy_3.png"></div>
-
-                            <div class="pull-left class152"><img class="pull-left" src="/images/results/layer_19.png"></div>
-                        </div>
-
-                        <div class="class153"><img src="/images/results/layer_8_copy_4.png"></div>
-                    </div>
-
-                    <div class="pull-left class154"><img class="pull-left" src="/images/results/layer_8_copy.png"></div>
-                </div>
-            </div>
-
-            <div class="class36"></div>
-
-            <div class="class43"><img src="/images/results/layer_24_copy_3.png"></div>
-
-            <div class="class32">
-                <div class="class34">
-                    4
-                </div>
-            </div>
-
-            <div class="class38">
-                <div class="class40">
-                    4
-                </div>
-            </div>
-
-            <div class="class42"></div>
-        </div>
-
-        <div class="class156">
-            <div class="class158">
-                Copyright 2012 Tripinium. All rights reserved.
-            </div>
-        </div>
-    </div> -->
 </div>
         <div class="nclass41" style="margin-top:30px;margin-left:20%;margin-right:20%;width:45%;padding-bottom:0px;margin-bottom:0px;">
-            <div style="margin-bottom:0px;padding-top:170px;margin-left:20%;font-size:1.3em;">
+            <div style="margin-bottom:0px;padding-top:170px;margin-left:20%;font-size:1.2em;">
                 Copyright 2012 Tripinium. All rights reserved.
             </div>
         </div>
-        <div id="dialog-form" title="Create new user" style="display:none;">
+        <div id="dialog-form" title="Share tips through email" style="display:none;">
             <p class="validateTips">Enter the email ids where you want the tips sent (separated by semi-colons ; )</p>
 
             <form>
