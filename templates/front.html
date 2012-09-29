@@ -60,9 +60,15 @@
             <div class="pull-left class18">
               <a href="/feedback.html" style="text-decoration:none;"> <span class="sclass18">Feedback </span></a>
             </div>
-      			<div class="pull-right" style="padding-top:1%;width:10%">
+      			<div class="pull-right" style="padding-top:1%;width:200px;margin-right:">
                   
-
+                <div class="pull-left class14" style="display:inline;margin-top:3px;">
+                      {% if user: %}
+                      Hi! {{user.nickname}}, <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
+                      {%else: %}
+                      <a href="{{login_url}}" class="sclass15" style="text-decoration:none;">Sign up or Login</a>
+                      {% endif %}
+                </div>
                   <div class="pull-left class23">
                       <div class="class24"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com/search?location={{place}}" data-text="Cool and useful" data-via="tripinium" data-count="none" onClick="_gaq.push(['_trackEvent', 'Social', 'Twitter', 'Main']);"><img src="/images/results/twt_img.png"></a></div>
                   </div>

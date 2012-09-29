@@ -141,9 +141,16 @@ function dialog(){
                 </a>
             </div>
 
-			<div class="pull-right" style="padding-top:1%;width:10%">
-                <div class="pull-left class14">
-                    <div class="class15" style="display:inline;"></div>
+			<div class="pull-right" style="padding-top:1%;width:200px;">
+                <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
+                   
+                      {% if user: %}
+                      Hi! {{user.nickname}}, <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
+                      {%else: %}
+                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;">Sign up or Login</a>
+                      {% endif %}
+
+                   
                 </div>
 
                 <div class="pull-left class17">
@@ -220,7 +227,7 @@ function dialog(){
                         <img src="/images/results/layer_29.png" id='p{{p.key().id()}}'onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}" />
                       </span>
 					       </span>
-					       	<span style="float:right;width:76%;margin-right:1%;" > {{ p.item_name | safe }} </span>
+					       	<span style="float:right;width:76%;margin-right:1%;font-size:13px;" > {{ p.item_name | safe }} </span>
 
 					       {% if p.item_description %}
 					        <p>{{ p.item_description | safe }}</p>

@@ -13,7 +13,7 @@ import datetime
 
 import webapp2
 import jinja2
-
+from google.appengine.api import users
 from google.appengine.api import mail
 
 
@@ -43,6 +43,29 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
 def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
+class SystemUser(db.Model):
+    username=db.StringProperty(required=True)
+    created=db.DateTimeProperty(auto_now_add=True)
+    email=db.StringProperty()
+    usertype=db.StringProperty()
+    password=db.StringProperty()
+    nickname=db.StringProperty()
+
+def get_user():
+    user=users.get_current_user()
+    if user is not None:
+        system_user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',user.email())
+        system_user=system_user.get()
+        if system_user:
+            logging.info('Returning user')
+            return system_user
+        else:
+            logging.info('New User')
+            system_user=SystemUser(username=user.email(),email=user.email(),nickname=user.email().split('@')[0],usertype='Google')
+            system_user.put()
+            return system_user
+    else:
+        return None
 
 class Place(db.Model):
     name = db.StringProperty(required = True)
@@ -195,7 +218,8 @@ class LocalContact(db.Model):
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.render('front.html')
+        user=get_user()
+        self.render('front.html',user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -317,6 +341,10 @@ def getPlaceFromQuery(query,is_spell_correct=True):
         return query
     return query
 
+
+
+
+
 class ResultPage(webapp2.RequestHandler):
 	
     def get(self):
@@ -331,11 +359,12 @@ class ResultPage(webapp2.RequestHandler):
         if  spell_correct:
             is_spell_correct=False
         #if 'q' query parameter is none, render error.html
+        user=get_user()
         if query is None or query=='':
-            self.render('error.html',place='',suggestion=choice(error_suggestions))
+            self.render('error.html',place='',suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             return
         #query=query.lower()
-    
+        
         place=getPlaceFromQuery(query,is_spell_correct)
         #if place is same as normalized query then assume no spell correction has taken place
         if place == normalize(query):
@@ -345,7 +374,8 @@ class ResultPage(webapp2.RequestHandler):
         else:
             is_spell_corrected=True
         if place is None:
-            self.render('error.html',place=place,suggestion=choice(error_suggestions))
+            logging.info(users.create_login_url())
+            self.render('error.html',place=place,suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             return
         place_info=memcache.get(place)
         recommended_places=None
@@ -353,7 +383,7 @@ class ResultPage(webapp2.RequestHandler):
         if place_info is not None:
             if place_info.recommendations is not None:
                 recommended_places=place_info.recommendations.split('|')
-            self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places)
+            self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,login_url=users.create_login_url('/search?location='+place),logout_url=users.create_logout_url('/search?q='+place))
 
         else:
             place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
@@ -361,14 +391,14 @@ class ResultPage(webapp2.RequestHandler):
             if not place_info:
                 logging.error(query)
                 logging.error(place)
-                self.render('error.html',place=place,suggestion=choice(error_suggestions))
+                self.render('error.html',place=place,suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             else:
                 #store result in memcache
                 memcache.set(place,place_info)
                 #logging.error(place_info.recommendations)
                 if place_info.recommendations is not None:
                     recommended_places=place_info.recommendations.split('|')
-                self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places)
+                self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,login_url=users.create_login_url('/search?location='+place),logout_url=users.create_logout_url('/search?q='+place))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -376,14 +406,16 @@ class ResultPage(webapp2.RequestHandler):
 
 class HowPage(webapp2.RequestHandler):
     def get(self):
-        self.render('how.html')
+        user=get_user()
+        self.render('how.html',user=user,login_url=users.create_login_url('/how.html'),logout_url=users.create_logout_url('/how.html'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 class FeedbackPage(webapp2.RequestHandler):
     def get(self):
-        self.render('feedback.html')
+        user=get_user()
+        self.render('feedback.html',user=user,login_url=users.create_login_url('/feedback.html'),logout_url=users.create_logout_url('/feedback.html'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
