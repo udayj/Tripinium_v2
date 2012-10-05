@@ -1,7 +1,7 @@
-@font-face {
+/*@font-face {
   font-family: "Myriad Pro";
   src: url('/fonts/MyriadPro-Regular.otf') format('opentype');
-}
+}*/
 
 
 /*@font-face {
@@ -111,7 +111,7 @@ min-height:3px;
   position: relative;
   z-index: 6;
   width: 90%;
-  font-family: "Myriad Pro";
+  font-family: arial, sans-serif;
 }
 .class3 .class30 .class44 .class46 {
   position: relative;
@@ -132,17 +132,17 @@ min-height:3px;
   margin-bottom:2px;
 }
 .class3 .class30 .class44 .class46 .class48 {
-  font-family: Myriad Pro;
+  font-family: arial, sans-serif;
   font-size: 20px;
   color: #2d2d2d;
 }
 .class3 .class30 .class44 .class46 .class49 {
-  font-family: Myriad Pro;
+  font-family: arial, sans-serif;
   font-size: 28px;
   color: #585858;
 }
 .class3 .class30 .class44 .class46 .class50 {
-  font-family: Myriad Pro;
+  font-family: arial, sans-serif;
   font-weight: bold;
   font-size: 28px;
   color: #1b918f;
@@ -204,7 +204,7 @@ min-height:3px;
   color: #2c2c2c;
 }
 .class3 .class30 .class44 .class46 .class60 {
-  font-family: Myriad Pro;
+  font-family: arial, sans-serif;
   font-size: 20px;
   color: #9f9f9f;
 }
@@ -213,12 +213,12 @@ min-height:3px;
   font-size: 18px;
 }
 .class3 .class30 .class44 .class46 .class61 {
-  font-family: Myriad Pro;
+  font-family: arial, sans-serif;
   font-size: 20px;
   color: #1b918f;
 }
 .class61{
- font-family: "Myriad Pro";
+ font-family: arial, sans-serif;
   font-size: 20px;
   color: #1b918f; 
 }
@@ -473,7 +473,7 @@ width: 300px;
   width:235px;
   background-color:#1b918f;
   color:white;
-  font-size:18px;
+  font-size:16px;
   position:relative;float:right;
 }
 
@@ -545,14 +545,14 @@ ol span{
 }
 
 .votes {
-  float:right;width:20%;margin-right:1%;display:inline;
+  float:right;width:100px;margin-right:20px;display:inline;
 }
 .votes_down{
-  float:right;margin-right:15%;padding-top:1%;
+  float:right;margin-right:10px;padding-top:1%;
 }
 
 .votes_up{
-  float:right;margin-right:10%;
+  float:right;margin-right:10px;
 }
 
 .place_rating{

@@ -528,20 +528,21 @@ class SendEmail(webapp2.RequestHandler):
         if place_info is not None:
             count=1
             for item in place_info.items:
-                content=content+str(count)+'. '+item.item_name+'\n'
+                content=content+str(count)+'. '+item.item_name+'<br>'
                 count=count+1
-            content='Tips for '+place_info.name.title()+'\n'+content
+            content='<b>Tips for '+place_info.name.title()+'</b><br><br>'+content
             if name is not None and name != '':
-                content='Requested by:'+name+'\n'+'Date:'+timestamp+'\n'+content
+                content='<br>Requested by:'+name+'<br>'+'Date:'+timestamp+'<br>'+content
             else:
-                content='Date:'+timestamp+'\n'+content
-            content=content+'\n\nVisit www.tripinium.com for more tips\n'
+                content='Date:'+timestamp+'<br>'+content
+            content=content+'<br><br>Visit <a href="http://www.tripinium.com">www.tripinium.com</a> for more tips<br>'
             for email in emails:
                 sender_address='Tripinium Admin <dev@tripinium.com>'
                 subject='Tips for '+place.title()+' from Tripinium.com'
                 body=content
-                mail.send_mail(sender_address, email, subject, body)
+                mail.send_mail(sender_address, email, subject, '',html=body)
                 logging.info('Sending email to:'+email)
+
         self.response.out.write('Success')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))

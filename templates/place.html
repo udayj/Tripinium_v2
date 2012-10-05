@@ -104,6 +104,21 @@ $('#star').raty({
 });
 }
 });
+
+$( "#login-confirm" ).dialog({
+      resizable: false,
+      height:140,
+      modal: true,
+      autoOpen:false,
+      buttons: {
+        "Sign Up or Login": function() {
+          window.location=$('#loginurl').attr('href')
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
 });
 
 function dialog(){
@@ -141,13 +156,13 @@ function dialog(){
                 </a>
             </div>
 
-			<div class="pull-right" style="padding-top:1%;width:200px;">
+			<div class="pull-right" style="padding-top:1%;width:260px;">
                 <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
                    
                       {% if user: %}
                       Hi! {{user.nickname}}, <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
                       {%else: %}
-                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;">Sign up or Login</a>
+                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Sign up or Login</a>
                       {% endif %}
 
                    
@@ -200,18 +215,18 @@ function dialog(){
                     </span>
                     <span class="pull-right utility">
                         <div class="pull-left class53">
-                           <div class="class54" id="email" ><img  src="/images/results/email.png" onclick="dialog()" style="cursor:pointer;"></div>
+                           <div class="class54" id="email" title="Share tips with friends through email"><img  src="/images/results/email.png" onclick="dialog()" style="cursor:pointer;"></div>
                         </div>
 
                         <div class="pull-left class56">
-                            <div class="class57"><img src="/images/results/printer.png" onclick="print()" style="cursor:pointer;" ></div>
+                            <div class="class57" title="Print these tips"><img src="/images/results/printer.png" onclick="print()" style="cursor:pointer;" ></div>
                         </div>
                     </span>
                     <br>
                     {% if place_info: %}
-
+                    <br>
 					<span style="background-color:#e5e9fc;margin-top:5%;">
-						<ol style="margin-top:2%;" id="data">
+						<ol style="margin-top:2%;" id="data" >
 							<span style="display:none;" id="total_rating" class="{{place_info.total_rating}}"> </span>
                             <span style="display:none;" id="total_rating_count" class="{{place_info.total_rating_count}}"> </span>
 					{%   for p in place_info.items %}
@@ -220,14 +235,30 @@ function dialog(){
 
 							
 							<span class="votes">
+
 							     <span class="votes_down">
-                    <img src="/images/results/layer_29_copy.png" style="margin:1%;cursor:pointer;" id='n{{p.key().id()}}' onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %} " />
+
+
+                    <img src="/images/results/layer_29_copy.png" style="margin-top:3px;cursor:pointer;" id='n{{p.key().id()}}' 
+                    {% if user: %}
+                    onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"
+                    {% else: %} 
+                    onclick="$('#login-confirm').dialog('open')"
+                    {% endif %}
+                    title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" />
                                 </span>
-					       	     <span class="votes_up">
-                        <img src="/images/results/layer_29.png" id='p{{p.key().id()}}'onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}" />
+                  <span class="votes_up">
+                        <img src="/images/results/layer_29.png" id='p{{p.key().id()}}'
+                        {% if user: %}
+                        onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" 
+                        {% else: %} 
+                        onclick="$('#login-confirm').dialog('open')"
+                        {% endif %}
+                        style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %} Click to vote up" />
                       </span>
+					       	     
 					       </span>
-					       	<span style="float:right;width:76%;margin-right:1%;font-size:13px;" > {{ p.item_name | safe }} </span>
+					       	<span style="float:right;width:76%;margin-right:20px;font-size:13px;" > {{ p.item_name | safe }} </span>
 
 					       {% if p.item_description %}
 					        <p>{{ p.item_description | safe }}</p>
@@ -257,7 +288,7 @@ function dialog(){
                         <span class="class61">Let us know below</span>
                     </div>
 
-                    <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%" value="">
+                    <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%" value="" title="Tell us something about this place that we dont yet know">
     				</textarea>
             <span class="tip_submit_outer">
     				<input type="submit" style="background-color:#89C9EE;width:95%;color:#1b918f;" name="user_feedback" value="Submit" onclick="send_feedback()" />
@@ -317,11 +348,12 @@ function dialog(){
             <fieldset>
                 <label for="name">Your Name (optional)</label>
                 <input type="text" name="name" id="name_field" value="" class="text ui-widget-content ui-corner-all" />
-                <label for="email">Email</label>
+                <label for="email">Email Id(s)</label>
                 <input type="text" name="email" id="email_field" value="" class="text ui-widget-content ui-corner-all" width="80%"/>
             </fieldset>
             </form>
         </div>
+        <div id="login-confirm" style="display:none" title="Sign up or Login to Vote">You need to be logged in to vote. Sign up for free !</div>
 
  <div id="fb-root"></div>
                         <script>(function(d, s, id) {
