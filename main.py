@@ -50,7 +50,13 @@ class SystemUser(db.Model):
     usertype=db.StringProperty()
     password=db.StringProperty()
     nickname=db.StringProperty()
-
+    points=db.TextProperty()
+    badges=db.StringListProperty()
+class TentativeTip(db.Model):
+    user=db.StringProperty()
+    tip=db.TextProperty()
+    place=db.StringProperty()
+    date=db.DateTimeProperty(auto_now_add=True)
 def get_user():
     user=users.get_current_user()
     if user is not None:
@@ -77,6 +83,9 @@ class Place(db.Model):
     image=db.StringProperty()
     total_rating=db.FloatProperty()
     total_rating_count=db.IntegerProperty()
+    gov_points=db.IntegerProperty()
+    gov=db.StringProperty()
+    prev_gov=db.StringProperty()
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)
@@ -429,13 +438,111 @@ class AnalyticsPage(webapp2.RequestHandler):
         self.response.out.write(*a, **kw)
 class UserTipsPage(webapp2.RequestHandler):
     def post(self):
-        feedback=self.request.get('feedback')
-        logging.info('feedback:'+feedback)
-        feedback=feedback[:300]
-        feedback='Submitted on '+str(datetime.datetime.now())+'\n'+feedback
-        db_feedback=Feedback(feedback=feedback)
-        db_feedback.put()
-        self.response.out.write('Success')
+        #feedback=self.request.get('feedback')
+        #logging.info('feedback:'+feedback)
+        #feedback=feedback[:300]
+        #feedback='Submitted on '+str(datetime.datetime.now())+'\n'+feedback
+        #db_feedback=Feedback(feedback=feedback)
+        #db_feedback.put()
+        #self.response.out.write('Success')
+        tip=self.request.get('tip')
+        place=self.request.get('place')
+        place=normalize(place)
+        user=get_user()
+        if not user:
+            self.store_tentative(None,tip,place,datetime.datetime.now())
+            #prepare_json_data_object()
+        else:
+            points_dict=None
+
+            if not user.points:
+                points_dict={place:1}
+            else:
+                points_dict=eval(user.points)
+                if place in points_dict:
+                    points_dict[place]+=1
+                else:
+                    points_dict[place]=1
+            user.points=repr(points_dict)
+            self.store_tentative(user.username,tip,place,datetime.datetime.now())
+            badges=[]
+            new_badges=self.calc_place_badges(points_dict[place],place,user.username)
+            if new_badges !=None:
+                badges.append(new_badges)
+            logging.info(badges)
+            user.badges=user.badges+badges
+            user.put()
+            #badges.append(calc_cross_place_badges(points_dict))
+            #calc_next_milestone_place(points_dict,user_place_badges)
+            #calc_next_milestone_social(user,user_social_badges)
+            #user.put()
+            #prepare_json_data_object()
+            #governor badge rollback wont work in concurrent tip submission case
+
+    def calc_cross_place_badges(self,points_dict,user):
+
+    def calc_place_badges(self,points,place,username):
+        badge_rules={1:'Infantry',2:'Cavalry'}
+        if points>=3:
+            (new_gov,place_info)=self.is_new_gov(points,place)
+            if new_gov==True:
+                current_gov=self.get_user(place_info.gov)
+                if current_gov==None:
+                    self.set_place_gov(place,place_info,username,points,None)
+                    return place+':Governor'
+                else:
+                    self.set_place_gov(place,place_info,username,points,current_gov.username)
+                    self.remove_place_badge_from_user(place+':Governor',current_gov)
+                    return place+':Governor'
+            else:
+                return None
+
+        if badge_rules[points]:
+            return place+':'+badge_rules[points]
+
+    def get_user(self,username):
+        if username==None:
+            return None
+        user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',username)
+        user=user.get()
+        if not user:
+            return -1
+        else:
+            return user
+
+    def remove_place_badge_from_user(self,badge,user):
+        logging.info(user)
+        logging.info(badge)
+        user.badges.remove(badge)
+        user.put()
+
+    def set_place_gov(self,place,place_info,username,points,previous_gov):
+        place_info.gov=username
+        place_info.previous_gov=previous_gov
+        place_info.gov_points=points
+        place_info.put()
+        memcache.set(place,place_info)
+
+
+    def is_new_gov(self,points,place):
+        place_info=memcache.get(place)
+        if not place_info:
+            place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
+            place_info=place_info.get()
+            if not place_info:
+                logging.info('Problem')
+                return -1
+        if place_info.gov_points==None or place_info.gov_points==0:
+            logging.info('New Governor')
+            return (True,place_info)
+        elif place_info.gov_points>=points:
+            return (False,None)
+        else:
+            return (True,place_info)
+    def store_tentative(self,user,tip,place,date):
+        tentative_tip=TentativeTip(user=user,tip=tip,place=place)
+        tentative_tip.put()
+
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):

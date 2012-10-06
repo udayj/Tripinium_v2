@@ -291,7 +291,7 @@ function dialog(){
                     <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%" value="" title="Tell us something about this place that we dont yet know">
     				</textarea>
             <span class="tip_submit_outer">
-    				<input type="submit" style="background-color:#89C9EE;width:95%;color:#1b918f;" name="user_feedback" value="Submit" onclick="send_feedback()" />
+    				<input type="submit" style="background-color:#89C9EE;width:95%;color:#1b918f;" name="user_feedback" value="Submit" onclick="send_feedback('{{place}}')" />
           </span>
                     <br>
     				{% if recommendations %}
