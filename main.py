@@ -10,6 +10,7 @@ import codecs
 from random import choice
 import urllib
 import datetime
+import json
 
 import webapp2
 import jinja2
@@ -52,6 +53,8 @@ class SystemUser(db.Model):
     nickname=db.StringProperty()
     points=db.TextProperty()
     badges=db.StringListProperty()
+    social_points=db.TextProperty()
+    social_badges=db.StringListProperty()
 class TentativeTip(db.Model):
     user=db.StringProperty()
     tip=db.TextProperty()
@@ -436,6 +439,125 @@ class AnalyticsPage(webapp2.RequestHandler):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
+
+def calc_next_place_milestone(points_dict,place):
+    milestone_rules={0:'Submit your first tip for this place to be a part of the Infantry',
+                    1:'Submit another tip for this place to join the Cavalry'}
+    if place not in points_dict:
+        return milestone_rules[0]
+    count=points_dict[place]
+    if count in milestone_rules:
+        return milestone_rules[count]
+    if count>=2:
+        gov_milestone=get_gov_milestone(place,count)
+        more_tips=gov_milestone-count
+        if more_tips>0:
+            plural={1:'',2:'s'}
+            return 'Submit '+str(more_tips)+' more tip'+plural[more_tips]+' to become the Governor of this place'
+        else:
+            return None
+    return None
+
+def calc_next_cross_place_milestone(points_dict):
+    def filter_func(x):
+        if x>0:
+            return True
+        else:
+            return False
+    count=len([value for value in points_dict.values() if filter_func(value)])
+    milestone_rules={0:'Submit your first tip for this place to join the Infantry',
+                    1:'Great going so far! Submit a tip for a different place to become an Ambassador',
+                    2:'Submit a tip for some place else to become an esteemed Envoy',
+                    3:'You need tips for two more places to become a Diplomat',
+                    4:'You are almost there! Submit a tip for some other place to become a true Diplomat'}
+    if count in milestone_rules:
+        return milestone_rules[count]
+    else:
+        return None
+
+def get_gov_milestone(place,count):
+    place_info=get_place_info(place)
+    if not place_info.gov_points:
+        return 3
+    current_gov_points=place_info.gov_points
+    return current_gov_points
+
+def get_place_info(place):
+    place_info=memcache.get(place)
+    if not place_info:
+        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
+        place_info=place_info.get()
+        if not place_info:
+            return None
+        else:
+            return place_info
+    else:
+        return place_info
+
+class SocialActionPage(webapp2.RequestHandler):
+    def post(self):
+        action=self.request.get('action')
+        place=self.request.get('place')
+        place=normalize(place)
+        user=get_user()
+        if user==None:
+            logging.info('No user logged in')
+            self.response.headers['Content-Type'] = 'application/json'
+            output_json=json.dumps({'badges_earned':[],'place_milestone':'',
+                                    'social_milestone':'','user':'n','thanks':'Thanks for letting the word out!'})
+            self.response.out.write(output_json)
+        else:
+            points_dict=None
+            if user.social_points==None:
+                points_dict={action:1}
+            else:
+                points_dict=eval(user.social_points)
+                if action in points_dict:
+                    points_dict[action]+=1
+                else:
+                    points_dict[action]=1
+            badges=''
+            if action=='tweet':
+                new_badge=self.calc_social_badges(points_dict[action])
+                if user.social_badges==None:
+                    user.social_badges=[]
+                if new_badge:
+                    badges=new_badge
+                    user.social_badges=user.social_badges+[badges]
+                logging.info(badges)
+            social_milestone=get_next_social_milestone(points_dict[action])
+            place_points_dict={}
+            if user.points!=None:
+                place_points_dict=eval(user.points)
+            place_milestone=calc_next_place_milestone(place_points_dict,place)
+            user.social_points=repr(points_dict)
+            logging.info(social_milestone)
+            logging.info(place_milestone)
+            user.put()
+            self.response.headers['Content-Type'] = 'application/json'
+            output_json=json.dumps({'badges_earned':[badges],'place_milestone':place_milestone,
+                                    'social_milestone':social_milestone,'user':'y','thanks':''})
+            self.response.out.write(output_json)
+
+            
+
+    def calc_social_badges(self,points):
+        badge_rules={1:'Humming-Bird',2:'Koel',3:'Nightingale'}
+        if points in badge_rules:
+            return badge_rules[points]
+        else:
+            return None
+
+def get_next_social_milestone(points):
+    milestone_rules={0:'Becoming a Humming-Bird by tweeting about this page',
+                    1:'You sing like a humming-bird! Become a Koel by tweeting regularly.',
+                    2:'Tweet your way to becoming a Nightingale!'}
+    if points in milestone_rules:
+        return milestone_rules[points]
+    else:
+        return None
+
+
 class UserTipsPage(webapp2.RequestHandler):
     def post(self):
         #feedback=self.request.get('feedback')
@@ -451,7 +573,8 @@ class UserTipsPage(webapp2.RequestHandler):
         user=get_user()
         if not user:
             self.store_tentative(None,tip,place,datetime.datetime.now())
-            #prepare_json_data_object()
+            output_json=json.dumps({'badges_earned':[],'place_milestone':'',
+                                    'social_milestone':'','user':'n','thanks':'Thanks for submitting a tip!'})
         else:
             points_dict=None
 
@@ -470,16 +593,48 @@ class UserTipsPage(webapp2.RequestHandler):
             if new_badges !=None:
                 badges.append(new_badges)
             logging.info(badges)
+            new_badges=self.calc_cross_place_badges(points_dict)
+            if new_badges!=None:
+                badges.append(new_badges)
             user.badges=user.badges+badges
+            logging.info(badges)
+
+
+            place_milestone=calc_next_place_milestone(points_dict,place)
+            cross_place_milestone=calc_next_cross_place_milestone(points_dict)
+            logging.info(place_milestone)
+            logging.info(cross_place_milestone)
+            if user.social_points==None or user.social_points==0 :
+                social_milestone=get_next_social_milestone(0)
+            else:
+                social_points_dict=eval(user.social_points)
+                if 'tweet' in social_points_dict:
+                    social_milestone=get_next_social_milestone(social_points_dict['tweet'])
+                else:
+                    social_milestone=get_next_social_milestone(0)
+            logging.info(social_milestone)
             user.put()
-            #badges.append(calc_cross_place_badges(points_dict))
-            #calc_next_milestone_place(points_dict,user_place_badges)
-            #calc_next_milestone_social(user,user_social_badges)
-            #user.put()
-            #prepare_json_data_object()
+            self.response.headers['Content-Type'] = 'application/json'
+            output_json=json.dumps({'badges_earned':badges,'place_milestone':choice([place_milestone,cross_place_milestone]),
+                                    'social_milestone':social_milestone,'user':'y','thanks':''})
+            self.response.out.write(output_json)
             #governor badge rollback wont work in concurrent tip submission case
 
-    def calc_cross_place_badges(self,points_dict,user):
+
+
+
+    def calc_cross_place_badges(self,points_dict):
+        def filter_func(x):
+            if x>0:
+                return True
+            else:
+                return False
+        count=len([value for value in points_dict.values() if filter_func(value)])
+        badge_rules={2:'Ambassador',3:'Envoy',5:'Diplomat'}
+        if count in badge_rules:
+            return badge_rules[count]
+        else:
+            return None
 
     def calc_place_badges(self,points,place,username):
         badge_rules={1:'Infantry',2:'Cavalry'}
@@ -488,10 +643,10 @@ class UserTipsPage(webapp2.RequestHandler):
             if new_gov==True:
                 current_gov=self.get_user(place_info.gov)
                 if current_gov==None:
-                    self.set_place_gov(place,place_info,username,points,None)
+                    self.set_place_gov(place,place_info,username,points)
                     return place+':Governor'
                 else:
-                    self.set_place_gov(place,place_info,username,points,current_gov.username)
+                    self.set_place_gov(place,place_info,username,points)
                     self.remove_place_badge_from_user(place+':Governor',current_gov)
                     return place+':Governor'
             else:
@@ -516,9 +671,8 @@ class UserTipsPage(webapp2.RequestHandler):
         user.badges.remove(badge)
         user.put()
 
-    def set_place_gov(self,place,place_info,username,points,previous_gov):
+    def set_place_gov(self,place,place_info,username,points):
         place_info.gov=username
-        place_info.previous_gov=previous_gov
         place_info.gov_points=points
         place_info.put()
         memcache.set(place,place_info)
@@ -686,6 +840,7 @@ app = webapp2.WSGIApplication(
                                       ('/send_votes',SendVotes),
                                       ('/send_city_rating',SendCityRating),
                                       ('/show_user_tips',ShowUserTipsPage),
+                                      ('/send_social_action',SocialActionPage),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)
 #Need more comments
