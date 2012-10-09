@@ -63,7 +63,7 @@ min-height:3px;
 .class3 .class20 {
   margin-top: 1%;
   margin-left: 100px;
-  width: 900px;
+  width: 1000px;
   font-size: 22px;
 }
 .class3 .class20 .class21 {
@@ -128,7 +128,6 @@ min-height:3px;
 .class3 .class30 .class44 .class46 .class51 {
   position: relative;
   z-index: 14;
-  width: 60%;
   margin-bottom:2px;
 }
 .class3 .class30 .class44 .class46 .class48 {
@@ -566,4 +565,44 @@ ol span{
 
 .tip_submit_outer{
   float:right;margin-right:5%;padding-right:23%;margin-bottom:6%;
+}
+
+.badge {
+  font-size: 10.998px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #999999;
+}
+
+.badge-infantry {
+background-color: #468847;
+}
+.badge-cavalry {
+background-color: #468847;
+
+}
+.badge-governor{
+background-color: #468847;
+}
+.badge-ambassador{
+background-color: #468847;
+}
+.badge-envoy{
+background-color: #468847;
+}
+.badge-diplomat{
+background-color: #468847;
+}
+.badge-humming-bird{
+background-color: #468847;
+}
+.badge-koel{
+background-color: #468847;
+}
+.badge-nightingale{
+background-color: #468847;
 }

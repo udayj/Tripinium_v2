@@ -37,8 +37,31 @@ function send_feedback(place)
   
   success: function(data)
   {
-    document.getElementById("user_tips").value="";
-    alert(data['badges_earned']+'\n'+data['place_milestone']+'\n'+data['social_milestone']);
+
+    var display_class=[];
+    display_class['Infantry']='badge-infantry';
+    display_class['Cavalry']='badge-cavalry';
+    display_class['Governor']='badge-governor';
+    display_class['Ambassador']='badge-ambassador';
+    display_class['Envoy']='badge-envoy';
+    display_class['Diplomat']='badge-diplomat';
+    display_class['Humming-Bird']='badge-humming-bird';
+    display_class['Koel']='badge-koel';
+    display_class['Nightingale']='badge-nightingale';
+    $('#user_tips').val('');
+  if(data['user']=='y')
+    {
+      $('#reward').html('You earned new badges <span class="badge '+
+        display_class[data['badges_earned'][0].substr(data['badges_earned'][0].indexOf(':')+1)]+'">'+data['badges_earned'][0]+'</span>');
+      $('#reward').css('display','inline');
+    }
+    else
+    {
+
+      $('#reward').html(data['thanks']);
+      $('#reward').css('display','inline');
+    }
+    $('#milestone').html(data['place_milestone'])
   },
   fail: function()
   {
@@ -108,7 +131,28 @@ function send_social_action(action,place)
   
   success: function(data)
   {
-    //alert(data['badges_earned']+'/n'+data['place_milestone']+'/n'+data['social_milestone']);
+    var display_class=[];
+    display_class['Infantry']='badge-infantry';
+    display_class['Cavalry']='badge-cavalry';
+    display_class['Governor']='badge-governor';
+    display_class['Ambassador']='badge-ambassador';
+    display_class['Envoy']='badge-envoy';
+    display_class['Diplomat']='badge-diplomat';
+    display_class['Humming-Bird']='badge-humming-bird';
+    display_class['Koel']='badge-koel';
+    display_class['Nightingale']='badge-nightingale';
+
+    if(data['user']=='y')
+    {
+      $('#reward').html('You earned new badges <span class="badge '+display_class[data['badges_earned'][0]]+'">'+data['badges_earned'][0]+'</span>');
+      $('#reward').css('display','inline');
+    }
+    else
+    {
+      $('#reward').html(data['thanks']);
+      $('#reward').css('display','inline');
+    }
+    $('#milestone').html(data['place_milestone'])
 
   },
   fail: function()

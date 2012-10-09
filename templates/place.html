@@ -222,6 +222,9 @@ function dialog(){
 
             <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
             <input type="submit" value="Search" style="" onclick="search()"/>
+            <div id="reward" class="pull-right new-badge thank-you" style="display:inline;display:none;width:300px;font-size:13px;">
+
+            </div>
         </div>
 
         <div class="class30">
@@ -316,6 +319,8 @@ function dialog(){
                         </div>
                         <br>
                         <div class="fb-like" style="float:left;margin-top:10px;" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="true" data-font="arial"></div>
+                        <br>
+                        <div id="milestone" class="alert alert-info" style="float:left;margin-top:10px;min-width:400px;">{{milestone}}</div>
                                                
     				</span>
                     {% endif %}
@@ -359,8 +364,11 @@ function dialog(){
                       </span>
                     </div>
                     {% endif %}
+                    <div class=" {{leader_class}}" style="xheight:60px;max-width:210px;">
+                      {{leader_message}}
+                    </div>
                     <div class="nclass123">
-	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;">Find the best hotels in {{place.title()}}
+	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;">Hotels in {{place.title()}}
                        </a>
                     </div>
                 
