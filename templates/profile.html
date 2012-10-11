@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html lang="en">
+<head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/style_place.css" rel="stylesheet" type="text/css">
+     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script src="javascript/places.js"></script>
+    <title>Tripinium - Travel tips for your next trip</title>
+    <script type="text/javascript">
+function search()
+{
+  var place=document.getElementById("search");
+  if(place==null || place.value.trim()=="")
+    return;
+  window.location="/search?location="+place.value;
+}
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32623235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<style>
+        .ui-autocomplete
+        {
+            position:absolute;
+            cursor:default;
+            z-index:4000 !important
+        }
+    </style>
+<script>
+        $(document).ready(function() {
+    $("input#search").autocomplete({
+    source: places
+});
+  });
+
+
+
+function send_feedback()
+{
+	var data=document.getElementById("user_tips").value;
+	if(data=="" || data==null)
+	{
+		alert("No feedback entered !");
+		return;
+	}
+	 var email="";
+  if (document.getElementById("email").value!=null)
+  {
+  	email=document.getElementById("email").value;
+  }
+	$.ajax({
+  type: "POST",
+  url: "/user_tips",
+ 
+  data: { feedback: "Submitted for "+window.location.href+" \n"+data+"\n Email Id:"+email},
+  
+  success: function()
+  {
+  	document.getElementById("user_tips").value="";
+  	document.getElementById("email").value="";
+  alert("Thanks for helping us improve!");
+  },
+  fail: function()
+  {
+  	
+  	alert("Problem submitting feedback :(. Thanks anyways");
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+        </script>
+</head>
+
+<body>
+   <center>
+    <div class="class3" style="min-height:700px;background: url('/images/results/error_layer_16.png') no-repeat;background-color:#B1E8E7;overflow-x:hidden;">
+        <div class="class4">
+        </div>
+
+        <div class="row class6">
+            <div class="pull-left class8">
+                <a href="/" style="text-decoration:none;"> 
+                    <span class="sclass12">Home </span>
+                </a>
+            </div>
+
+            <div class="pull-left class10">
+                <a href="/how.html" style="text-decoration:none;">  
+                    <span class="sclass12">About </span>
+                </a>
+            </div>
+
+            <div class="pull-left class12">
+                <a href="/feedback.html" style="text-decoration:none;"> 
+                    <span class="sclass12">Feedback </span>
+                </a>
+            </div>
+
+			<div class="pull-right" style="padding-top:1%;width:260px;">
+               
+                    <div class="pull-left class14" style="display:inline;margin-top:3px;">
+                      {% if user: %}
+                      Hi! {{user.nickname}}, <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
+                      {%else: %}
+                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;">Sign up or Login</a>
+                      {% endif %}
+                </div>
+
+                <div class="pull-left class17">
+                    <div class="class18"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com/search?location={{place}}" data-text="Cool and useful" data-via="tripinium" data-count="none" onClick="_gaq.push(['_trackEvent', 'Social', 'Twitter', '{{place}}']);"><img src="/images/results/twt_img.png"></a>
+                    </div>
+
+                </div>
+
+                <div class="pull-left class19"><a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.tripinium.com/search%3Flocation%3D{{place}}&media=http%3A%2F%2Fwww.tripinium.com%2Fimages%2Ftripinium_logo_v2.png&description=Cool%20and%20useful%20tips%20for%20your%20next%20trip" class="pin-it-button" count-layout="none"><img border="0" src="/images/results/layer_7.png" title="Pin It" onClick="_gaq.push(['_trackEvent', 'Social', 'Pinterest', '{{place}}']);"/></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row class20">
+            <div class="pull-left class21">
+                <img class="pull-left" src="/images/results/layer_14.png" width="100%">
+            </div>
+
+            <input id="search" style="z-index:10000;" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
+            <input type="submit" value="Search" style="" onclick="search()"/>
+        </div>
+        <div class="class30" style="">
+            <div class="marginfix"></div>
+
+            <div class="class44" style="display:inline;">
+                <div class="class45" >
+                    <img src="/images/results/layer_24_copy.png">
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:2%;color:#1b918f;font-size:1.4em;margin-left:10%;margin-right:20%;width:50%;"> 
+          {{error_message}}
+        </div>
+        <div style="margin-top:2%;color:#1b918f;font-size:1.4em;margin-left:10%;margin-right:20%;width:50%;"> 
+        	<br>
+        	{{user}}
+        
+       
+	<br>
+	{% for badge in place_badges: %}
+  <div class="badge badge-governor" style="max-width:100px;">{{badge}}</div>
+  {% endfor %}
+  {% for badge in social_badges: %}
+  <div class="badge badge-governor" style="max-width:100px;">{{badge}}</div>
+  {% endfor %}
+
+       </div>
+      <div class="nclass41" style="margin-top:30px;margin-left:350px;width:400px;padding-bottom:0px;margin-bottom:0px;padding-left:100px;position:fixed;bottom:0;">
+            <div style="margin-bottom:0px;padding-top:170px;font-size:12px;">
+                Copyright 2012 Tripinium. All rights reserved.
+            </div>
+        </div>
+   </div>
+</center>
+</body>
+</html>

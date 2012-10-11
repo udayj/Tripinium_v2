@@ -1,0 +1,42 @@
+<html>
+<head></head>
+<body>
+	<table style="border:none;width:960px;">
+		<tr>
+			<td style="width:182px;">
+				Place
+			</td>
+			<td style="width:384px;">
+				Tip
+			</td>
+			<td style="width:288px;">
+				User
+			</td>
+			<td style="width:48px;">
+				Accept
+			</td>
+			<td style="width:48px;">
+				Reject
+			</td>
+		</tr>
+		{% for object in tips: %}
+		<tr>
+			<td style="width:182px;">
+				{{object.place}}
+			</td>
+			<td style="width:384px;">
+			<textarea>{{object.tip}}</textarea>
+			</td>
+			<td style="width:288px;">
+				{{object.user}}
+			</td>
+			<td style="width:48px;">
+				Accept
+			</td>
+			<td style="width:48px;">
+				Reject
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</html>

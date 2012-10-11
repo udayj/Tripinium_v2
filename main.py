@@ -60,6 +60,7 @@ class TentativeTip(db.Model):
     tip=db.TextProperty()
     place=db.StringProperty()
     date=db.DateTimeProperty(auto_now_add=True)
+    status=db.StringProperty()
 def get_user():
     user=users.get_current_user()
     if user is not None:
@@ -391,6 +392,7 @@ class ResultPage(webapp2.RequestHandler):
             is_spell_correct=False
         #if 'q' query parameter is none, render error.html
         user=get_user()
+
         if query is None or query=='':
             self.render('error.html',place='',suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             return
@@ -884,6 +886,42 @@ class ShowUserTipsPage(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)            
 
+class UserProfile(webapp2.RequestHandler):
+    def get(self):
+        error_message=''
+        user_id=self.request.get('user')
+        logging.info(user_id)
+        user=None
+        if not user_id or user_id=='':
+            error_message='No such user exists...incorrect url'
+        else:
+            user=SystemUser.get_by_id(int(user_id))
+        logging.info(user)
+        nickname=''
+        place_badges=None
+        social_badges=None
+        if not user:
+            error_message='No such user exists'
+        else:
+            nickname=user.nickname
+            place_badges=map(toTitle,user.badges)
+            social_badges=map(toTitle,user.social_badges)
+
+        self.render("profile.html",error_message=error_message,user=nickname,place_badges=place_badges,social_badges=social_badges)
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+class TipAdmin(webapp2.RequestHandler):
+    def get(self):
+        tips=db.GqlQuery('select * from TentativeTip')
+        self.render('tipadmin.html',tips=tips)
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
+
 def func():
     print "google app engine"
 app = webapp2.WSGIApplication(
@@ -903,6 +941,8 @@ app = webapp2.WSGIApplication(
                                       ('/send_city_rating',SendCityRating),
                                       ('/show_user_tips',ShowUserTipsPage),
                                       ('/send_social_action',SocialActionPage),
+                                      ('/profile',UserProfile),
+                                      ('/tipadmin',TipAdmin),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)
 #Need more comments
