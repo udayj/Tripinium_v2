@@ -1,5 +1,35 @@
 <html>
-<head></head>
+<head>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
+</head>
+<script type="text/javascript">
+function send_review(id,status)
+{
+ $.ajax({
+  type: "POST",
+  url: "/send_review",
+  data: { id:id,status:status},
+  
+  success: function(data)
+  {
+    
+
+  },
+  fail: function()
+  {
+    
+    alert('Problem processing request. We are looking into this.');
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+}); 
+}
+</script>
 <body>
 	<table style="border:none;width:960px;">
 		<tr>
@@ -30,10 +60,10 @@
 			<td style="width:288px;">
 				{{object.user}}
 			</td>
-			<td style="width:48px;">
-				Accept
+			<td style="width:48px;pointer:cursor;" onclick="send_review({{object.key().id()}},'accept')">
+				Accept {{object.key().id()}}
 			</td>
-			<td style="width:48px;">
+			<td style="width:48px;pointer:cursor;" onclick="send_review({{object.key().id()}},'reject')">
 				Reject
 			</td>
 		</tr>

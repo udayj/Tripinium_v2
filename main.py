@@ -99,6 +99,7 @@ class Item(db.Model):
     place=db.ReferenceProperty(Place,collection_name='items')
     item_name=db.TextProperty()
     item_description=db.TextProperty()
+    submitted_by=db.StringProperty()
     votes=db.IntegerProperty()
 
 class Feedback(db.Model):
@@ -921,6 +922,60 @@ class TipAdmin(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
+class TipReview(webapp2.RequestHandler):
+    def post(self):
+        tip_id=self.request.get('id')
+        status=self.request.get('status')
+        logging.info(tip_id)
+        logging.info(status)
+        if status=='accept':
+            self.perform_accept(tip_id)
+        else:
+            self.perform_reject(tip_id)
+    def perform_accept(self,tip_id):
+        #save in main db
+        #calc_place_badges
+        #for every badge if not in user badge list, remove
+        #if removing gov badge, restore gov from prev gov list
+        tip_id=int(tip_id)
+        tip=TentativeTip.get_by_id(tip_id)
+        if not tip:
+            return -1
+        place=tip.place
+        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
+        place_info=place_info.get()
+        if not place_info:
+            return -1
+        item=Item(place=place_info,item_name=tip.tip,submitted_by=tip.user)
+        logging.info(place_info.name)
+        if place_info.gov==tip.user:
+            if place_info.prev_gov:
+                place_info.prev_gov=place_info.prev_gov.insert(0,tip.user)
+            else:
+                place_info.gov=[tip_user]
+        item.put()
+        place_info.put()
+        memcache.set(place,place_info)
+        return 0
+    def perform_reject(tip_id):
+        tip_id=int(tip_id)
+        tip=TentativeTip.get_by_id(tip_id)
+        if not tip:
+            return -1
+        place=tip.place
+        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
+        place_info=place_info.get()
+        if not place_info:
+            return -1
+
+
+
+
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
 
 def func():
     print "google app engine"
@@ -943,6 +998,7 @@ app = webapp2.WSGIApplication(
                                       ('/send_social_action',SocialActionPage),
                                       ('/profile',UserProfile),
                                       ('/tipadmin',TipAdmin),
+                                      ('/send_review',TipReview),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)
 #Need more comments
