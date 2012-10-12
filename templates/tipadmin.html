@@ -12,7 +12,7 @@ function send_review(id,status)
  $.ajax({
   type: "POST",
   url: "/send_review",
-  data: { id:id,status:status},
+  data: { id:id,status:status,content:$('#'+id).val()},
   
   success: function(data)
   {
@@ -55,7 +55,7 @@ function send_review(id,status)
 				{{object.place}}
 			</td>
 			<td style="width:384px;">
-			<textarea>{{object.tip}}</textarea>
+			<textarea id="{{object.key().id()}}">{{object.tip}}</textarea>
 			</td>
 			<td style="width:288px;">
 				{{object.user}}

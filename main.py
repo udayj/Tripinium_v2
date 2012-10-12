@@ -44,6 +44,13 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
 def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
+class RejectedTip(db.Model):
+    user=db.StringProperty()
+    tip=db.TextProperty()
+    place=db.StringProperty()
+    date=db.DateTimeProperty(auto_now_add=True)
+   
+
 class SystemUser(db.Model):
     username=db.StringProperty(required=True)
     created=db.DateTimeProperty(auto_now_add=True)
@@ -679,7 +686,11 @@ class UserTipsPage(webapp2.RequestHandler):
             user.put()
             self.response.headers['Content-Type'] = 'application/json'
             badges=map(toTitle,badges)
-            output_json=json.dumps({'badges_earned':[choice(badges)],'place_milestone':choice([place_milestone,cross_place_milestone,social_milestone]),
+            badges_earned=[]
+            if badges !=[]:
+                badges_earned=choice(badges)
+
+            output_json=json.dumps({'badges_earned':[badges_earned],'place_milestone':choice([place_milestone,cross_place_milestone,social_milestone]),
                                     'social_milestone':social_milestone,'user':'y','thanks':''})
             self.response.out.write(output_json)
             #governor badge rollback wont work in concurrent tip submission case
@@ -926,13 +937,24 @@ class TipReview(webapp2.RequestHandler):
     def post(self):
         tip_id=self.request.get('id')
         status=self.request.get('status')
+        content=self.request.get('content')
+        logging.info(content)
         logging.info(tip_id)
         logging.info(status)
+        result=-1
         if status=='accept':
-            self.perform_accept(tip_id)
+            result=self.perform_accept(tip_id,content)
         else:
-            self.perform_reject(tip_id)
-    def perform_accept(self,tip_id):
+            result=self.perform_reject(tip_id)
+        self.response.headers['Content-Type'] = 'application/json'
+        if result==0:   
+            output_json=json.dumps({'status':'success'})
+        else:
+            output_json=json.dumps({'status':'failure'})
+        self.response.out.write(output_json)
+
+
+    def perform_accept(self,tip_id,content):
         #save in main db
         #calc_place_badges
         #for every badge if not in user badge list, remove
@@ -941,6 +963,7 @@ class TipReview(webapp2.RequestHandler):
         tip=TentativeTip.get_by_id(tip_id)
         if not tip:
             return -1
+        tip.tip=content
         place=tip.place
         place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
         place_info=place_info.get()
@@ -956,8 +979,9 @@ class TipReview(webapp2.RequestHandler):
         item.put()
         place_info.put()
         memcache.set(place,place_info)
+        tip.delete()
         return 0
-    def perform_reject(tip_id):
+    def perform_reject(self,tip_id):
         tip_id=int(tip_id)
         tip=TentativeTip.get_by_id(tip_id)
         if not tip:
@@ -967,7 +991,77 @@ class TipReview(webapp2.RequestHandler):
         place_info=place_info.get()
         if not place_info:
             return -1
+        rejected_tip=RejectedTip(user=tip.user,place=tip.place,tip=tip.tip,date=tip.date)
+        user=self.get_user(tip.user)
+        if place_info.gov==tip.user:
+            place_info.gov_points=place_info.gov_points-1
+        points_dict=eval(user.points)
+        points_dict[place]=points_dict[place]-1
+        cross_place_badges=self.get_cross_place_badges(points_dict,user)
+        badges_to_remove=set(['Ambassador','Envoy','Diplomat'])
+        badges_to_remove=badges_to_remove-set(cross_place_badges)
+        place_badges=[place+':'+value for value in self.get_place_badges(points_dict,tip.place,place_info)]
+        place_badges_to_remove=set([place+':'+value for value in set(['Infantry','Cavalry','Governor'])])
+        place_badges_to_remove=place_badges_to_remove-set(place_badges)
+        bad_badges=badges_to_remove.union(place_badges_to_remove)
+        logging.info(bad_badges)
+        logging.info(user.badges)
+        user.badges=[badge for badge in user.badges if badge not in bad_badges]
+        logging.info(user.badges)
+        governor_badge=place+':Governor'
+        if governor_badge in bad_badges and place_info.gov==tip.user:
+            if place_info.prev_gov:
+                place_info.gov=place_info.prev_gov[0]
+            else:
+                place_info.gov=None
+        user.points=repr(points_dict)
+        rejected_tip.put()
+        place_info.put()
+        memcache.set(place,place_info)
+        user.put()
+        tip.delete()
+        return 0
 
+    def get_place_badges(self,points_dict,place,place_info):
+        rules={1:['Infantry'],2:['Infantry','Cavalry']}
+        count=points_dict[place]
+        if count in rules:
+            return rules[count]
+        total=['Infantry','Cavalry','Governor']
+        if count>gov_points:
+            return total
+        elif count>2:
+            return rules[2]
+        else:
+            return []
+
+
+
+    def get_cross_place_badges(self,points_dict,user):
+        def filter_func(x):
+            if x>0:
+                return True
+            else:
+                return False
+        count=len([value for value in points_dict.values() if filter_func(value)])
+        rules={2:['Ambassador'],3:['Ambassador','Envoy'],4:['Ambassador','Envoy'],5:['Ambassador','Envoy','Diplomat']}
+        if count in rules:
+            return rules[count]
+        elif count>5:
+            return rules[5]
+        else:
+            return []
+
+
+    def get_user(self,username):
+        if username==None:
+            return None
+        user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',username)
+        user=user.get()
+        if not user:
+            return -1
+        else:
+            return user
 
 
 
