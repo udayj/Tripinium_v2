@@ -1,0 +1,56 @@
+1. Search for place present in place list 
+-verify autocomplete working properly
+-results displayed properly
+2. Search for mis-spelled place present in place list
+-verify autocomplete working
+-results displayed properly
+-spell correct message
+3. Search with mis-spelled place and spellcorrect query parameter
+- error.html rendered
+4. search for place not in place list
+- error.html rendered
+5. Search using autocomplete suggestion
+Perform above sequence of test from front, places, how, feedback, error pages
+6. Verify country-> capital is working
+7. Verify recommendation links are working
+8. Verify place suggestion in error message is working
+
+Verify social interaction - tweet, pinterest, facebook - check output
+
+Scenario based verification
+
+logged out
+-hints displaying properly
+-leaderboard displaying properly
+-thank you message displaying properly on the backend
+-tip displaying in tentative db
+-accept/reject working
+
+
+logged in
+-person submits 1 tip - check reward, check hint, check leaderboard
+-user object in db gets the tip
+
+-person tweets
+-gets tip
+-check reward, check hint, check leaderboard
+-user object in db gets the tip
+
+-normal query
+-check hint, check leaderboard
+
+-user submits tip and becomes governor
+-checkleaderboard
+-check user object in db
+try scenario with accept/reject paths
+
+-two users simultaneously submit tip to become governor
+try scenario with accept/reject path
+
+-user gets all place specific badges
+-check hint/leaderboard
+-check user object on backend
+
+
+facebook like working properly
+tweet working properly (with hashtag)

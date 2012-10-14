@@ -196,7 +196,7 @@ function dialog(){
                 <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
                    
                       {% if user: %}
-                      Hi {{user.nickname}} ! <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
+                      <a href="/profile?user={{user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{user.nickname}}!</a>    <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
                       {%else: %}
                       <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Sign up or Login</a>
                       {% endif %}
@@ -222,7 +222,7 @@ function dialog(){
 
             <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
             <input type="submit" value="Search" style="" onclick="search()"/>
-            <div id="reward" class="pull-right new-badge thank-you" style="display:inline;display:none;width:300px;font-size:13px;">
+            <div id="reward" class="pull-right" style="display:inline;display:none;width:300px;font-size:13px;margin-top:10px;">
 
             </div>
         </div>
@@ -240,12 +240,12 @@ function dialog(){
                        {% if place_info: %}
                        
                        {% if is_spell_corrected %}
-                        <div class="pull-left class51" >
+                        <div class="pull-left class51"  style="display:block;min-width:400px;">
                         Showing result for {{place.title()}}, search instead for <a href="/search?location={{orig_query}}&spellcorrect=false" style="no-decorate">{{orig_query}}</a>
                         </div>
                         {% endif %}
                         <span class="pull-left class51" id="place_name" style="margin-top:1%;">
-                            <span class="class48">Get A Headstart on your trip to</span> <span class="class50" id="email_place">{{place.title()}}</span>
+                            <span class="class48">Get a Headstart on your trip to</span> <span class="class50" id="email_place">{{place.title()}}</span>
 
                         </span>
                         
@@ -320,7 +320,9 @@ function dialog(){
                         <br>
                         <div class="fb-like" style="float:left;margin-top:10px;" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="true" data-font="arial"></div>
                         <br>
+                        {% if milestone %}
                         <div id="milestone" class="alert alert-info" style="float:left;margin-top:10px;min-width:400px;">{{milestone}}</div>
+                        {% endif %}
                                                
     				</span>
                     {% endif %}
@@ -339,7 +341,7 @@ function dialog(){
                     <br>
     				{% if recommendations %}
                     <div class="nclass118">
-	                   <span class="nclass120"> Also look at these places </span><br>
+	                   <span class="nclass120"> Explore these places </span><br>
                      <span style="width:1em;min-width:250px;">
 	                   <div style="position:relative;float:left;display:inline;margin:3%;">
 	                       {% for recommendation in recommendations[:3] %}
@@ -364,7 +366,11 @@ function dialog(){
                       </span>
                     </div>
                     {% endif %}
-                    <div class=" {{leader_class}}" style="xheight:60px;max-width:210px;">
+                    <div class=" {{leader_class}}" style="xheight:60px;max-width:230px;min-width:230px;padding-right:2px;cursor:pointer;"
+                    {% if gov: %}
+                    onclick="window.location='/profile?user={{gov.key().id()}}'" style="cursor:pointer;"
+                    {% endif %}
+                    >
                       {{leader_message}}
                     </div>
                     <div class="nclass123">

@@ -240,7 +240,7 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
         user=get_user()
-        self.render('front.html',user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+        self.render('front.html',current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -402,7 +402,7 @@ class ResultPage(webapp2.RequestHandler):
         user=get_user()
 
         if query is None or query=='':
-            self.render('error.html',place='',suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+            self.render('error.html',place='',suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             return
         #query=query.lower()
         
@@ -415,17 +415,19 @@ class ResultPage(webapp2.RequestHandler):
         else:
             is_spell_corrected=True
         if place is None:
-            logging.info(users.create_login_url())
-            self.render('error.html',place=place,suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+            
+            self.render('error.html',place=place,suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             return
         place_info=memcache.get(place)
         recommended_places=None
         #logging.error(place_info.recommendations)
+        gov=None
         if place_info is not None:
             if place_info.recommendations is not None:
                 recommended_places=place_info.recommendations.split('|')
             if place_info.gov!=None:
-                leader_message='Governor of '+place.title()+': '+place_info.gov
+                gov=get_user_by_name(place_info.gov)
+                leader_message='Governor of '+place.title()+': '+gov.nickname
                 leader_class='badge badge-governor'
             else:
                 leader_message='This place does not yet have a governor! Submit 3 tips to become the governor'
@@ -438,7 +440,7 @@ class ResultPage(webapp2.RequestHandler):
                 logging.info(milestone)
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                         login_url=users.create_login_url('/search?location='+place),milestone=milestone,
-                        logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class)
+                        logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov)
 
         else:
             place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
@@ -446,7 +448,7 @@ class ResultPage(webapp2.RequestHandler):
             if not place_info:
                 logging.error(query)
                 logging.error(place)
-                self.render('error.html',place=place,suggestion=choice(error_suggestions),user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+                self.render('error.html',place=place,suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             else:
                 #store result in memcache
                 memcache.set(place,place_info)
@@ -454,7 +456,8 @@ class ResultPage(webapp2.RequestHandler):
                 if place_info.recommendations is not None:
                     recommended_places=place_info.recommendations.split('|')
                 if place_info.gov!=None:
-                    leader_message='Governor of '+place.title()+': '+place_info.gov
+                    gov=get_user_by_name(place_info.gov)
+                    leader_message='Governor of '+place.title()+': '+gov.nickname
                     leader_class='badge badge-governor'
                 else:
                     leader_message='This place does not yet have a governor! Submit 3 tips to become the governor'
@@ -466,7 +469,7 @@ class ResultPage(webapp2.RequestHandler):
                     milestone=get_milestone(user,place)
                     logging.info(milestone)
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
-                            login_url=users.create_login_url('/search?location='+place),milestone=milestone,
+                            login_url=users.create_login_url('/search?location='+place),milestone=milestone,gov=gov,
                             logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -476,7 +479,7 @@ class ResultPage(webapp2.RequestHandler):
 class HowPage(webapp2.RequestHandler):
     def get(self):
         user=get_user()
-        self.render('how.html',user=user,login_url=users.create_login_url('/how.html'),logout_url=users.create_logout_url('/how.html'))
+        self.render('how.html',current_user=user,login_url=users.create_login_url('/how.html'),logout_url=users.create_logout_url('/how.html'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -484,7 +487,7 @@ class HowPage(webapp2.RequestHandler):
 class FeedbackPage(webapp2.RequestHandler):
     def get(self):
         user=get_user()
-        self.render('feedback.html',user=user,login_url=users.create_login_url('/feedback.html'),logout_url=users.create_logout_url('/feedback.html'))
+        self.render('feedback.html',current_user=user,login_url=users.create_login_url('/feedback.html'),logout_url=users.create_logout_url('/feedback.html'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -900,7 +903,9 @@ class ShowUserTipsPage(webapp2.RequestHandler):
 
 class UserProfile(webapp2.RequestHandler):
     def get(self):
+        current_user=get_user()
         error_message=''
+
         user_id=self.request.get('user')
         logging.info(user_id)
         user=None
@@ -910,16 +915,24 @@ class UserProfile(webapp2.RequestHandler):
             user=SystemUser.get_by_id(int(user_id))
         logging.info(user)
         nickname=''
-        place_badges=None
-        social_badges=None
+        use_place_badges=[]
+        use_social_badges=[]
         if not user:
             error_message='No such user exists'
         else:
             nickname=user.nickname
             place_badges=map(toTitle,user.badges)
             social_badges=map(toTitle,user.social_badges)
+            for badge in place_badges:
+                if badge in ['Ambassador','Envoy','Governor']:
+                    use_place_badges.append((badge,'badge-'+badge.lower()))
+                else:
+                    use_place_badges.append((badge,'badge-'+badge[badge.index(':')+1:].lower()))
+            for badge in social_badges:
+                use_social_badges.append((badge,'badge-'+badge.lower()))
 
-        self.render("profile.html",error_message=error_message,user=nickname,place_badges=place_badges,social_badges=social_badges)
+        self.render("profile.html",error_message=error_message,user=nickname,place_badges=use_place_badges,social_badges=use_social_badges,
+                    current_user=current_user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -927,6 +940,7 @@ class UserProfile(webapp2.RequestHandler):
 class TipAdmin(webapp2.RequestHandler):
     def get(self):
         tips=db.GqlQuery('select * from TentativeTip')
+
         self.render('tipadmin.html',tips=tips)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -971,11 +985,12 @@ class TipReview(webapp2.RequestHandler):
             return -1
         item=Item(place=place_info,item_name=tip.tip,submitted_by=tip.user)
         logging.info(place_info.name)
-        if place_info.gov==tip.user:
+        if tip.user!=None and place_info.gov==tip.user:
             if place_info.prev_gov:
                 place_info.prev_gov=place_info.prev_gov.insert(0,tip.user)
             else:
-                place_info.gov=[tip_user]
+                place_info.gov=tip.user
+
         item.put()
         place_info.put()
         memcache.set(place,place_info)
@@ -993,6 +1008,10 @@ class TipReview(webapp2.RequestHandler):
             return -1
         rejected_tip=RejectedTip(user=tip.user,place=tip.place,tip=tip.tip,date=tip.date)
         user=self.get_user(tip.user)
+        if not tip.user:
+            rejected_tip.put()
+            tip.delete()
+            return 0
         if place_info.gov==tip.user:
             place_info.gov_points=place_info.gov_points-1
         points_dict=eval(user.points)
@@ -1001,6 +1020,7 @@ class TipReview(webapp2.RequestHandler):
         badges_to_remove=set(['Ambassador','Envoy','Diplomat'])
         badges_to_remove=badges_to_remove-set(cross_place_badges)
         place_badges=[place+':'+value for value in self.get_place_badges(points_dict,tip.place,place_info)]
+        logging.info(place_badges)
         place_badges_to_remove=set([place+':'+value for value in set(['Infantry','Cavalry','Governor'])])
         place_badges_to_remove=place_badges_to_remove-set(place_badges)
         bad_badges=badges_to_remove.union(place_badges_to_remove)
@@ -1028,7 +1048,7 @@ class TipReview(webapp2.RequestHandler):
         if count in rules:
             return rules[count]
         total=['Infantry','Cavalry','Governor']
-        if count>gov_points:
+        if place_info.gov_points and count>place_info.gov_points:
             return total
         elif count>2:
             return rules[2]
@@ -1069,6 +1089,15 @@ class TipReview(webapp2.RequestHandler):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
+def get_user_by_name(username):
+        if username==None:
+            return None
+        user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',username)
+        user=user.get()
+        if not user:
+            return -1
+        else:
+            return user
 
 
 def func():

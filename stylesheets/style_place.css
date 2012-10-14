@@ -129,6 +129,7 @@ min-height:3px;
   position: relative;
   z-index: 14;
   margin-bottom:2px;
+  margin-right:20px;
 }
 .class3 .class30 .class44 .class46 .class48 {
   font-family: arial, sans-serif;
@@ -570,7 +571,7 @@ ol span{
 .badge {
   font-size: 10.998px;
   font-weight: bold;
-  line-height: 14px;
+  line-height: 30px;
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   white-space: nowrap;
@@ -579,30 +580,31 @@ ol span{
 }
 
 .badge-infantry {
-background-color: #468847;
+background-color: #953b39;
 }
 .badge-cavalry {
-background-color: #468847;
+background-color: #3a87ad;
 
 }
 .badge-governor{
 background-color: #468847;
 }
 .badge-ambassador{
-background-color: #468847;
+background-color: #333333;
 }
 .badge-envoy{
-background-color: #468847;
+background-color: #595E4E;
 }
 .badge-diplomat{
-background-color: #468847;
+background-color: #A86D62;
 }
 .badge-humming-bird{
-background-color: #468847;
+background-color: #f89406;
 }
 .badge-koel{
-background-color: #468847;
+background-color: #6E3745;
+cbackground-vcolor: green;
 }
 .badge-nightingale{
-background-color: #468847;
+background-color: #E984DC;
 }

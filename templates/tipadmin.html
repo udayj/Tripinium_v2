@@ -5,6 +5,12 @@
 
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
         <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
+
+        <style type="text/css">
+        .oddrow {
+        	background-color:#E5E5E5;
+        }
+        </style>
 </head>
 <script type="text/javascript">
 function send_review(id,status)
@@ -17,6 +23,29 @@ function send_review(id,status)
   success: function(data)
   {
     
+  		if(data['status']=='success')
+  		{
+  			if(status=='accept')
+  			{
+  				$('#status'+id).html('Successfully Accepted');
+  				$('#status'+id).css('color','green');
+  			}
+  			else
+  			{
+  				$('#status'+id).html('Successfully Rejected');
+  				$('#status'+id).css('color','red');	
+  			}
+
+  		}
+  		else
+  		{
+  			$('#status'+id).html('Some problem occurred. Could not complete request.');
+  			$('#status'+id).css('color','green');
+  			alert('Could not successfully review tip');
+  		}
+  		$('#accept'+id).attr("onclick","");
+  		$('#reject'+id).attr("onclick","");
+  		$('#row'+id).css('background-color','grey');
 
   },
   fail: function()
@@ -29,9 +58,17 @@ function send_review(id,status)
   //alert("Thanks for helping us improve!");
 }); 
 }
+
+$(document).ready(function(){
+	$("table.tips tr:even").addClass("oddrow");
+});
+
 </script>
+
 <body>
-	<table style="border:none;width:960px;">
+	
+	<br>
+	<table style="border:none;width:960px;" class="tips">
 		<tr>
 			<td style="width:182px;">
 				Place
@@ -50,21 +87,23 @@ function send_review(id,status)
 			</td>
 		</tr>
 		{% for object in tips: %}
-		<tr>
+		<tr id="row{{object.key().id()}}">
 			<td style="width:182px;">
 				{{object.place}}
 			</td>
 			<td style="width:384px;">
-			<textarea id="{{object.key().id()}}">{{object.tip}}</textarea>
+			<textarea id="{{object.key().id()}}" cols="45" rows="5">{{object.tip}}</textarea>
 			</td>
 			<td style="width:288px;">
 				{{object.user}}
 			</td>
-			<td style="width:48px;pointer:cursor;" onclick="send_review({{object.key().id()}},'accept')">
-				Accept {{object.key().id()}}
+			<td style="width:48px;cursor:pointer;color:green;" id="accept{{object.key().id()}}" onclick="send_review({{object.key().id()}},'accept')">
+				Accept 
 			</td>
-			<td style="width:48px;pointer:cursor;" onclick="send_review({{object.key().id()}},'reject')">
+			<td style="width:48px;cursor:pointer;color:red;" id="reject{{object.key().id()}}" onclick="send_review({{object.key().id()}},'reject')">
 				Reject
+			</td>
+			<td style="max-width:80px;" id="status{{object.key().id()}}" style="background-color:white;">
 			</td>
 		</tr>
 		{% endfor %}

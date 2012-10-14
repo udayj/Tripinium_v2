@@ -54,12 +54,16 @@ function send_feedback(place)
       $('#reward').html('You earned new badges <span class="badge '+
         display_class[data['badges_earned'][0].substr(data['badges_earned'][0].indexOf(':')+1)]+'">'+data['badges_earned'][0]+'</span>');
       $('#reward').css('display','inline');
+      $('#reward').css('margin-top','10px');
     }
     else
     {
 
       $('#reward').html(data['thanks']);
       $('#reward').css('display','inline');
+      $('#reward').addClass('alert').addClass('alert-success');
+      $('#reward').css('max-width','180px');
+      $('#reward').css('margin-top','');
     }
     $('#milestone').html(data['place_milestone'])
   },
@@ -146,11 +150,15 @@ function send_social_action(action,place)
     {
       $('#reward').html('You earned new badges <span class="badge '+display_class[data['badges_earned'][0]]+'">'+data['badges_earned'][0]+'</span>');
       $('#reward').css('display','inline');
+      $('#reward').css('margin-top','10px');
     }
     else
     {
       $('#reward').html(data['thanks']);
       $('#reward').css('display','inline');
+      $('#reward').addClass('alert').addClass('alert-success');
+      $('#reward').css('max-width','180px');
+      $('#reward').css('margin-top','');
     }
     $('#milestone').html(data['place_milestone'])
 
