@@ -15,7 +15,7 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
         <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
         <title>Smart tips for {{place.title()}} - Tripinium</title>
-        <meta property="og:image" content="images/tripinium_share_image.png" />
+        <meta property="og:image" content="/images/tripinium_share_image.png" />
         <meta property="og:title" content="Smart travel tips from Tripinium.com" />
         <meta property="og:site_name" content="Tripinium" />
         <meta name="description" content="Tour {{place.title()}} with confidence. Smart local tips for your next trip. We help you organise the little details of your trip to {{place.title()}}" />
@@ -70,6 +70,8 @@ $("#dialog-form").dialog({
                      $(this).dialog("close");
                 },
                 Cancel: function() {
+                  var place=$('#email_place').html()
+                  _gaq.push(['_trackEvent', 'Sign_Up_Via_Tip_Rating', 'Cancel', place]);
                     $(this).dialog("close");
                 }
             },
@@ -90,6 +92,8 @@ $('#star').raty({
   
   success: function()
   {
+    var place=$('#email_place').html()
+    _gaq.push(['_trackEvent', 'Place', 'Rating', place]);
     $('#star').raty({
         readOnly:true,
         score:score
@@ -124,8 +128,9 @@ $( "#login-confirm" ).dialog({
 
  twttr.ready(function (twttr) {
     // bind events here
-    twttr.events.bind('click', function(event) {
-      var place=$('#email_place').html()
+    twttr.events.bind('tweet', function(event) {
+    var place=$('#email_place').html()
+    _gaq.push(['_trackEvent', 'Social', 'Tweet', place]);
     send_social_action('tweet',place);
   });
   });
@@ -141,6 +146,8 @@ function tweet()
 function dialog(){
 
                $("#email").click(function() {
+                var place=$('#email_place').html()
+                _gaq.push(['_trackEvent', 'Email', 'Click', place]);
                 $("#dialog-form").dialog("open");
             });
     }
@@ -163,6 +170,7 @@ function dialog(){
     FB.Event.subscribe('edge.create',
     function(response) {
       place=$('#email_place').innerHTML();
+      _gaq.push(['_trackEvent', 'Social', 'Like', place]);
         send_social_action('like',place);
     });
   };
@@ -198,14 +206,18 @@ function dialog(){
                       {% if user: %}
                       <a href="/profile?user={{user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{user.nickname}}!</a>    <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
                       {%else: %}
-                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Sign up or Login</a>
+                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
+                      onclick="_gaq.push(['_trackEvent', 'Sign_Up_Login_Link', 'Click', {{place}}]);"
+                      >Sign up or Login</a>
                       {% endif %}
 
                    
                 </div>
 
                 <div class="pull-left class17" style="margin-top:2px;">
-                    <div class="class18"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com/search?location={{place}}" data-text="Cool and useful" data-via="tripinium" data-count="none" onClick="tweet()"><img src="/images/results/twt_img.png"></a>
+                    <div class="class18"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com/search?location={{place}}" data-text="Practical travel tips" data-via="tripinium" data-count="none" onClick="tweet()" 
+                      data-hashtags="{{place}}"
+                      ><img src="/images/results/twt_img.png"></a>
                     </div>
 
                 </div>
@@ -347,7 +359,7 @@ function dialog(){
 	                       {% for recommendation in recommendations[:3] %}
 	                       <div class="nclass121" style="margin:3px;" >
 	                            <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;"> 
-                                    <span >{{recommendation.title()}} </span>
+                                    <span onclick="_gaq.push(['_trackEvent', 'Recommendation', 'Click', '{{place}}']);">{{recommendation.title()}} </span>
                                 </a>
                            </div>
 
@@ -357,7 +369,7 @@ function dialog(){
 	                       {% for recommendation in recommendations[3:] %}
 	                       <div class="nclass121" style="margin:3px;" >
 	                           <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;"> 
-                                    <span class="" >{{recommendation.title()}} </span>
+                                    <span class="" onclick="_gaq.push(['_trackEvent', 'Recommendation', 'Click', '{{place}}']);">{{recommendation.title()}} </span>
                                </a>
                            </div>
 
@@ -374,7 +386,7 @@ function dialog(){
                       {{leader_message}}
                     </div>
                     <div class="nclass123">
-	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;">Hotels in {{place.title()}}
+	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;" onclick="_gaq.push(['_trackEvent', 'Affiliate_Link', 'Click', '{{place}}']);">Hotels in {{place.title()}}
                        </a>
                     </div>
                 

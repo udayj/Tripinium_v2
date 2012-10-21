@@ -16,6 +16,8 @@ function print()
 
     var content=document.getElementById("data").innerHTML;
     var place_name=document.getElementById("place_name").innerHTML;
+    var place=$('#email_place').html()
+    _gaq.push(['_trackEvent', 'Print', 'Open', place]);
     myWin=window.open('','Tips from Tripinium','menubar,scrollbars,left=30px,top=40px,height=400px,width=600px'); 
     myWin.document.write('<body onload="window.print();">'+place_name+'<br>'+content+'</body>');
     myWin.print();
@@ -113,6 +115,7 @@ function send_email()
   
   success: function()
   {
+    _gaq.push(['_trackEvent', 'Email', 'Send', place]);
     alert('Your request is being processed. Email would be delivered shortly');
   },
   fail: function()
@@ -201,7 +204,8 @@ function send_votes(id,key,type,displayId)
   
   success: function()
   {
-    
+    var place=$('#email_place').html()
+    _gaq.push(['_trackEvent', 'Tip', 'Rating', place]);
   },
   fail: function()
   {
