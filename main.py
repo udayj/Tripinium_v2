@@ -256,6 +256,7 @@ class InsertPage(webapp2.RequestHandler):
         if not place or place is None or item_name is None or place is '' or item_name is '':
             #if place is none, then we cant insert data
             self.render('insert.html',message='Place or item name is null')
+        place=normalize(place)
         place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
         place_info=place_info.get()
         if place_info is None:
@@ -263,7 +264,7 @@ class InsertPage(webapp2.RequestHandler):
             place_info.put()
         item=Item(place=place_info,item_name=item_name,item_description=item_description)
         item.put()
-        self.render('insert.html',message='Successfully inserted record')
+        self.render('tipmodify.html',tips=place_info.items,place=place)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -947,6 +948,70 @@ class TipAdmin(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
+class TipModify(webapp2.RequestHandler):
+    def get(self):
+        place=self.request.get('place')
+        if not place:
+            self.render('tipmodify.html',tips=[],error_message='No place found')
+            return
+        place=normalize(place)
+        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
+        place_info=place_info.get()
+        if not place_info:
+            self.render('tipmodify.html',tips=[],error_message='No place found')
+        else:
+            self.render('tipmodify.html',place=place.title(),tips=place_info.items,error_message=None)            
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
+class TipModifyAction(webapp2.RequestHandler):
+    def post(self):
+        tip_id=self.request.get('id')
+        status=self.request.get('status')
+        content=self.request.get('content')
+        tip_id=int(tip_id)
+        tip=Item.get_by_id(tip_id)
+        self.response.headers['Content-Type'] = 'application/json'
+        if not tip:
+            output_json=json.dumps({'status':'failure'})
+            self.response.out.write(output_json)
+            return
+        if status=='delete':
+            result=self.delete_tip(tip)
+            if result==0:
+                output_json=json.dumps({'status':'success'})
+                self.response.out.write(output_json)
+                return
+            else:
+                output_json=json.dumps({'status':'failure'})
+                self.response.out.write(output_json)
+                return
+        else:
+            result=self.save_tip(tip,content)
+            if result==0:
+                output_json=json.dumps({'status':'success'})
+                self.response.out.write(output_json)
+                return
+            else:
+                output_json=json.dumps({'status':'failure'})
+                self.response.out.write(output_json)
+                return
+
+
+    def delete_tip(self,tip):
+        tip.delete()
+        return 0
+    def save_tip(self,tip,content):
+        tip.item_name=content
+        tip.put()
+        return 0
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
 class TipReview(webapp2.RequestHandler):
     def post(self):
         tip_id=self.request.get('id')
@@ -1121,6 +1186,8 @@ app = webapp2.WSGIApplication(
                                       ('/send_social_action',SocialActionPage),
                                       ('/profile',UserProfile),
                                       ('/tipadmin',TipAdmin),
+                                      ('/tipmodify',TipModify),
+                                      ('/tipmodifyaction',TipModifyAction),
                                       ('/send_review',TipReview),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)

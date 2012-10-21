@@ -1,0 +1,114 @@
+<html>
+<head>
+	<title>
+		Tip Modification
+	</title>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
+
+        <style type="text/css">
+        .oddrow {
+        	background-color:#E5E5E5;
+        }
+        </style>
+</head>
+<script type="text/javascript">
+function review_tip(id,status)
+{
+ $.ajax({
+  type: "POST",
+  url: "/tipmodifyaction",
+  data: { id:id,status:status,content:$('#'+id).val()},
+  
+  success: function(data)
+  {
+    
+  		if(data['status']=='success')
+  		{
+  			if(status=='save')
+  			{
+  				$('#status'+id).html('Successfully Updated');
+  				$('#status'+id).css('color','green');
+  			}
+  			else
+  			{
+  				$('#status'+id).html('Successfully Deleted');
+  				$('#status'+id).css('color','red');	
+  			}
+
+  		}
+  		else
+  		{
+  			$('#status'+id).html('Some problem occurred. Could not complete request.');
+  			$('#status'+id).css('color','green');
+  			alert('Could not successfully update/delete tip');
+  		}
+  		$('#delete'+id).attr("onclick","");
+
+  },
+  fail: function()
+  {
+    
+    alert('Problem processing request. We are looking into this.');
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+}); 
+}
+
+$(document).ready(function(){
+	$("table.tips tr:even").addClass("oddrow");
+});
+
+</script>
+
+<body style="font-family:arial,sans-serif">
+	{% if error_message: %}
+	<div >
+		{{error_message}}
+	</div>
+	{% endif %}
+	<br>
+	{% if place: %}
+	<div>
+	Tips for {{place}}
+	<br>
+	<a href="/insert12345?p={{place}}">Add new tip</a> or modify/delete tips below
+</div>
+	{% endif %}
+	<br>
+	<table style="border:none;width:960px;" class="tips">
+		<tr>
+			<td style="width:384px;">
+				Tip
+			</td>
+			<td style="width:288px;">
+				Save
+			</td>
+			<td style="width:48px;">
+				Delete
+			</td>
+			
+		</tr>
+		{% for object in tips: %}
+		<tr id="row{{object.key().id()}}">
+			
+			<td style="width:584px;">
+			<textarea style="font-family:arial,sans-serif" id="{{object.key().id()}}" cols="80" rows="5">{{object.item_name}}</textarea>
+			</td>
+			<td style="width:48px;cursor:pointer;color:green;" id="save{{object.key().id()}}" onclick="review_tip({{object.key().id()}},'save')">
+				Save
+			</td>
+			<td style="width:48px;cursor:pointer;color:red;" id="delete{{object.key().id()}}" onclick="review_tip({{object.key().id()}},'delete')">
+				Delete
+			</td>
+			<td style="max-width:80px;" id="status{{object.key().id()}}" style="background-color:white;">
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</html>
