@@ -16,6 +16,9 @@ import webapp2
 import jinja2
 from google.appengine.api import users
 from google.appengine.api import mail
+from db_classes import *
+from db_initialization import *
+from utility import *
 
 
 #Feature list for MVP
@@ -44,197 +47,10 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
 def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
-class RejectedTip(db.Model):
-    user=db.StringProperty()
-    tip=db.TextProperty()
-    place=db.StringProperty()
-    date=db.DateTimeProperty(auto_now_add=True)
-   
-
-class SystemUser(db.Model):
-    username=db.StringProperty(required=True)
-    created=db.DateTimeProperty(auto_now_add=True)
-    email=db.StringProperty()
-    usertype=db.StringProperty()
-    password=db.StringProperty()
-    nickname=db.StringProperty()
-    points=db.TextProperty()
-    badges=db.StringListProperty()
-    social_points=db.TextProperty()
-    social_badges=db.StringListProperty()
-class TentativeTip(db.Model):
-    user=db.StringProperty()
-    tip=db.TextProperty()
-    place=db.StringProperty()
-    date=db.DateTimeProperty(auto_now_add=True)
-    status=db.StringProperty()
-def get_user():
-    user=users.get_current_user()
-    if user is not None:
-        system_user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',user.email())
-        system_user=system_user.get()
-        if system_user:
-            logging.info('Returning user')
-            return system_user
-        else:
-            logging.info('New User')
-            system_user=SystemUser(username=user.email(),email=user.email(),nickname=user.email().split('@')[0],usertype='Google')
-            system_user.put()
-            return system_user
-    else:
-        return None
-
-class Place(db.Model):
-    name = db.StringProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)
-    last_modified = db.DateTimeProperty(auto_now = True)
-    coordinates=db.GeoPtProperty()
-    synonyms=db.StringProperty()
-    recommendations=db.TextProperty()
-    image=db.StringProperty()
-    total_rating=db.FloatProperty()
-    total_rating_count=db.IntegerProperty()
-    gov_points=db.IntegerProperty()
-    gov=db.StringProperty()
-    prev_gov=db.StringProperty()
-    def render(self):
-        self._render_text = self.content.replace('\n', '<br>')
-        return render_str("post.html", p = self)
-
-class Item(db.Model):
-    #items need to have a foreign reference to a place entity
-    place=db.ReferenceProperty(Place,collection_name='items')
-    item_name=db.TextProperty()
-    item_description=db.TextProperty()
-    submitted_by=db.StringProperty()
-    votes=db.IntegerProperty()
-
-class Feedback(db.Model):
-    #items need to have a foreign reference to a place entity
-    feedback=db.TextProperty()
-    created=db.DateTimeProperty(auto_now_add=True)
-
-
-def is_valid_data(data):
-    if data[0] == '' or data is None or len(data[0].strip())<=1:
-        return False
-    return True
-
-class InsertImagesPage(webapp2.RequestHandler):
-    def get(self):
-        password=self.request.get('password')
-        if password !='difficultpassword':
-            self.response.out.write('You are not authorized to access this page')
-            return
-        f=codecs.open('resources/place_images','r','utf-8')
-        while True:
-            data=f.readline()
-            if not data:
-                break
-            else:
-                parts=data
-                place=normalize(parts)
-                place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-                place_info=place_info.get()
-                if place_info is None:
-                    logging.error('error while calculating recommendations for'+place)
-                    continue
-                place_info.image='/images/'+place.replace(' ','')+'_display.jpg'
-                place_info.put()
-        f.close()
-        self.response.out.write('Successfully written data')
-
-class InsertBulkPage(webapp2.RequestHandler):
-    def get(self):
-        password=self.request.get('password')
-        if password !='difficultpassword':
-            self.response.out.write('You are not authorized to access this page')
-            return
-        f=codecs.open('resources/places_tips_v2','r','utf-8')
-        while True:
-            data=f.readline()
-            if not data:
-                break
-            else:
-                parts=data.split('\t')
-                if len(parts)<=1:
-                    continue
-                #logging.error(parts[0])
-                if not is_valid_data(parts[1:]):
-                    continue
-                place_info=Place(name=normalize(parts[0]))
-                place_info.put()
-
-                for item_data in parts[1:]:
-                    if item_data == '' or item_data is None or len(item_data)<1 or len(item_data.strip())<1:
-                        continue
-                    item=Item(place=place_info,item_name=item_data)
-                    item.put()
-        f.close()
-        self.response.out.write('Successfully written data')
-class InsertBulkPagev2(webapp2.RequestHandler):
-    def get(self):
-        password=self.request.get('password')
-        if password !='difficultpassword':
-            self.response.out.write('You are not authorized to access this page')
-            return
-        f=codecs.open('resources/places_tips_v2_part2','r','utf-8')
-        while True:
-            data=f.readline()
-            if not data:
-                break
-            else:
-                parts=data.split('\t')
-                if len(parts)<=1:
-                    continue
-                #logging.error(parts[0])
-                if not is_valid_data(parts[1:]):
-                    continue
-                place_info=Place(name=normalize(parts[0]))
-                place_info.put()
-
-                for item_data in parts[1:]:
-                    if item_data == '' or item_data is None or len(item_data)<1 or len(item_data.strip())<1:
-                        continue
-                    item=Item(place=place_info,item_name=item_data)
-                    item.put()
-        f.close()
-        self.response.out.write('Successfully written data')
-class InsertRecommendationsPage(webapp2.RequestHandler):
-    def get(self):
-        password=self.request.get('password')
-        if password !='difficultpassword':
-            self.response.out.write('You are not authorized to access this page')
-            return
-        f=codecs.open('resources/place_recommendations','r','utf-8')
-        while True:
-            data=f.readline()
-            if not data:
-                break
-            else:
-                parts=data.split('\t')
-                if len(parts)<=1:
-                    continue
-                #logging.error(parts[0])
-                place=normalize(parts[0])
-                place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-                place_info=place_info.get()
-                if place_info is None:
-                    logging.error('error while calculating recommendations for'+place)
-                    continue
-                place_info.recommendations='|'.join(parts[1:])
-                place_info.put()
-        f.close()
-        self.response.out.write('Successfully written data')
 
 error_suggestions=['Rome','Paris','Lyon','Barcelona','Munich']
 
-class LocalContact(db.Model):
-    #local contacts need to have a foreign reference to a place entity
-    place=db.ReferenceProperty(Place,collection_name='local_contacts')
-    name=db.TextProperty(required=True)
-    email=db.EmailProperty()
-    address=db.TextProperty()
+
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -257,8 +73,7 @@ class InsertPage(webapp2.RequestHandler):
             #if place is none, then we cant insert data
             self.render('insert.html',message='Place or item name is null')
         place=normalize(place)
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
+        place_info=get_place_from_db(place)
         if place_info is None:
             place_info=Place(name=place)
             place_info.put()
@@ -280,8 +95,7 @@ class InsertLocalPage(webapp2.RequestHandler):
         local_address=self.request.get('address')
         if not place or place is None or local_name is None or place is '' or local_name is '':
             self.render('insertlocal.html',message='Place or local contact name is null')
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
+        place_info=get_place_from_db(place)
         if place_info is None:
             place_info=Place(name=place)
             place_info.put()
@@ -344,8 +158,7 @@ def in_place_list(word):
 
 def is_country(query):
     return query in country_capital
-def normalize(query):
-    return query.lower().strip()
+
 
 def getPlaceFromQuery(query,is_spell_correct=True):
     query=normalize(query)
@@ -385,7 +198,7 @@ def get_milestone(user,place):
     return choice([place_milestone,social_milestone])
 
 
-
+#This class should be thread-safe as only read operation are being performed to prepare data
 class ResultPage(webapp2.RequestHandler):
 	
     def get(self):
@@ -424,45 +237,31 @@ class ResultPage(webapp2.RequestHandler):
         #logging.error(place_info.recommendations)
         gov=None
         if place_info is not None:
+            logging.info('Retreived from memcache:'+place)
             if place_info.recommendations is not None:
                 recommended_places=place_info.recommendations.split('|')
-            if place_info.gov!=None:
-                gov=get_user_by_name(place_info.gov)
-                leader_message='Governor of '+place.title()+': '+gov.nickname
-                leader_class='badge badge-governor'
-            else:
-                leader_message='This place does not yet have a governor! Submit 3 tips to become the governor'
-                leader_class='alert alert-error'
+            leader_message,leader_class=self.get_gov(place_info,place)
             milestone=''
             if not user:
                 milestone='Submit your first tip to join the Infantry!'
             else:
                 milestone=get_milestone(user,place)
-                logging.info(milestone)
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                         login_url=users.create_login_url('/search?location='+place),milestone=milestone,
                         logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov)
 
         else:
-            place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-            place_info=place_info.get()
+            place_info=get_place_from_db(place)
             if not place_info:
-                logging.error(query)
-                logging.error(place)
+                logging.info('No place for this query:'+query)
+                logging.info('Canonical place from query:'+place)
                 self.render('error.html',place=place,suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
             else:
                 #store result in memcache
                 memcache.set(place,place_info)
-                #logging.error(place_info.recommendations)
                 if place_info.recommendations is not None:
                     recommended_places=place_info.recommendations.split('|')
-                if place_info.gov!=None:
-                    gov=get_user_by_name(place_info.gov)
-                    leader_message='Governor of '+place.title()+': '+gov.nickname
-                    leader_class='badge badge-governor'
-                else:
-                    leader_message='This place does not yet have a governor! Submit 3 tips to become the governor'
-                    leader_class='alert alert-error'
+                leader_message,leader_class=self.get_gov(place_info,place)
                 milestone=''
                 if not user:
                     milestone='Submit your first tip to join the Infantry!'
@@ -476,6 +275,16 @@ class ResultPage(webapp2.RequestHandler):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
+    def get_gov(self,place_info,place):
+        if place_info.gov!=None:
+            gov=get_user_by_name(place_info.gov)
+            leader_message='Governor of '+place.title()+': '+gov.nickname
+            leader_class='badge badge-governor'
+            return (leader_message,leader_class)
+        else:
+            leader_message='This place does not yet have a governor! Submit 3 tips to become the governor'
+            leader_class='alert alert-error'
+            return (leader_message,leader_class)
 
 class HowPage(webapp2.RequestHandler):
     def get(self):
@@ -553,8 +362,7 @@ def get_gov_milestone(place,count):
 def get_place_info(place):
     place_info=memcache.get(place)
     if not place_info:
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
+        place_info=get_place_from_db(place)
         if not place_info:
             return None
         else:
@@ -630,20 +438,13 @@ def toTitle(string):
 
 class UserTipsPage(webapp2.RequestHandler):
     def post(self):
-        #feedback=self.request.get('feedback')
-        #logging.info('feedback:'+feedback)
-        #feedback=feedback[:300]
-        #feedback='Submitted on '+str(datetime.datetime.now())+'\n'+feedback
-        #db_feedback=Feedback(feedback=feedback)
-        #db_feedback.put()
-        #self.response.out.write('Success')
         tip=self.request.get('tip')
         place=self.request.get('place')
         place=normalize(place)
         user=get_user()
         if not user:
             self.store_tentative(None,tip,place,datetime.datetime.now())
-            logging.info('User not logged in')
+            logging.info('User not logged in, submitted tip')
             self.response.headers['Content-Type'] = 'application/json'
             output_json=json.dumps({'badges_earned':[],'place_milestone':'Submit your first tip to join the Infantry!',
                                     'social_milestone':'','user':'n','thanks':'Thanks for submitting a tip!'})
@@ -719,27 +520,32 @@ class UserTipsPage(webapp2.RequestHandler):
     def calc_place_badges(self,points,place,username):
         badge_rules={1:'Infantry',2:'Cavalry'}
         if points>=3:
-            (new_gov,place_info)=self.is_new_gov(points,place)
-            if new_gov==True:
-                current_gov=self.get_user(place_info.gov)
-                if current_gov==None:
-                    self.set_place_gov(place,place_info,username,points)
-                    return place+':Governor'
-                else:
-                    self.set_place_gov(place,place_info,username,points)
-                    self.remove_place_badge_from_user(place+':Governor',current_gov)
-                    return place+':Governor'
-            else:
-                return None
+            return self.gov_reward(points,place,username)
+            
 
         if badge_rules[points]:
             return place+':'+badge_rules[points]
 
+    
+    def gov_reward(self,points,place,username):
+        (new_gov,place_info)=self.is_new_gov(points,place)
+        if new_gov==True:
+            #current_gov=self.get_user(place_info.gov)
+            if place_info.gov==None or place_info.gov=='':
+                self.set_place_gov(place,place_info,username,points)
+                return place+':Governor'
+            else:
+                self.set_place_gov(place,place_info,username,points)
+                current_gov=self.get_user(place_info.gov)
+                self.remove_place_badge_from_user(place+':Governor',current_gov)
+                return place+':Governor'
+        else:
+            return None
+
     def get_user(self,username):
         if username==None:
             return None
-        user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',username)
-        user=user.get()
+        user=get_user_from_db(username)
         if not user:
             return -1
         else:
@@ -761,13 +567,11 @@ class UserTipsPage(webapp2.RequestHandler):
     def is_new_gov(self,points,place):
         place_info=memcache.get(place)
         if not place_info:
-            place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-            place_info=place_info.get()
+            place_info=get_place_from_db(place)
             if not place_info:
-                logging.info('Problem')
+                logging.info('Problem with tip submission, cannot find place:'+place)
                 return -1
         if place_info.gov_points==None or place_info.gov_points==0:
-            logging.info('New Governor')
             return (True,place_info)
         elif place_info.gov_points>=points:
             return (False,None)
@@ -787,25 +591,21 @@ class SendVotes(webapp2.RequestHandler):
         key=self.request.get('key')
         vote_type=self.request.get('type')
         item_id=self.request.get('id')
-        logging.info(vote_type)
+        logging.info('Received tip vote type:'+vote_type+' for tip:'+key)
         if vote_type is None or vote_type =='':
             return
         if key is None or key is '':
             return
-        item=db.GqlQuery('select * from Item where key=:1',key)
-        item=Item.get(key)
+        item=get_item_from_db_with_key(key)
         if item is None:
             logging.error('Problem submitting votes for:'+key)
             return
         if hasattr(item,'votes') and item.votes is not None:
-            logging.info(item.votes)
-            logging.info('hasattr'+str(value[vote_type]))
             item.votes=item.votes+value[vote_type]
         else:
-            logging.info(value[vote_type])
             item.votes=value[vote_type]
         item.put()
-        logging.info(str(item.votes)+' vote put')
+        
         self.response.out.write('Success')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -819,11 +619,9 @@ class SendCityRating(webapp2.RequestHandler):
         place=normalize(place)
         logging.info(score)
         score=float(score)
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
-        logging.info(score)
+        place_info=get_place_from_db(place)
         if place_info is None:
-            logging.info('Problem while rating '+place)
+            logging.info('Problem while rating place:'+place)
             return
         if place_info.total_rating_count is None:
             place_info.total_rating_count=1
@@ -831,7 +629,7 @@ class SendCityRating(webapp2.RequestHandler):
         else:
             place_info.total_rating_count=place_info.total_rating_count+1
             place_info.total_rating=place_info.total_rating+score
-        logging.info(str(place_info.total_rating)+' '+str(place_info.total_rating_count))
+        logging.info('Received rating for:'+place)
         place_info.put()
         memcache.set(place,place_info)
         self.response.out.write('Success')
@@ -840,13 +638,7 @@ class SendCityRating(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 class SendEmail(webapp2.RequestHandler):
-    #get email-ids
-    #get name
-    #get place
-    #get tips for place from memcache
-    #get tips for place from db if not available in memcache
-    #setup content for email
-    #send email to email-ids retrieved from json message    
+  
     def post(self):
         logging.info('Sending email')
         emails=self.request.get('emails').split(';')
@@ -855,12 +647,13 @@ class SendEmail(webapp2.RequestHandler):
         timestamp=str(datetime.datetime.now().strftime('%m/%d/%y'))+'\n'
         place=normalize(place)
         place_info=memcache.get(place)
-        logging.info(name)
+        logging.info('Sending email to:'+emails)
+        logging.info('Sending email from:'+name)
+        logging.info('Sending emil for place:'+place)
         if place_info is None:
-            place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-            place_info=place_info.get()
+            place_info=get_place_from_db(place)
             if not place_info:
-                logging.error(place)
+                logging.error('Cannot find place for sending email:'+place)
                 return
             else:
                 #store result in memcache
@@ -955,8 +748,7 @@ class TipModify(webapp2.RequestHandler):
             self.render('tipmodify.html',tips=[],error_message='No place found')
             return
         place=normalize(place)
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
+        place_info=get_place_from_db(place)
         if not place_info:
             self.render('tipmodify.html',tips=[],error_message='No place found')
         else:
@@ -1044,8 +836,7 @@ class TipReview(webapp2.RequestHandler):
             return -1
         tip.tip=content
         place=tip.place
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
+        place_info=get_place_from_db(place)
         if not place_info:
             return -1
         item=Item(place=place_info,item_name=tip.tip,submitted_by=tip.user)
@@ -1067,8 +858,7 @@ class TipReview(webapp2.RequestHandler):
         if not tip:
             return -1
         place=tip.place
-        place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)
-        place_info=place_info.get()
+        place_info=get_place_from_db(place)
         if not place_info:
             return -1
         rejected_tip=RejectedTip(user=tip.user,place=tip.place,tip=tip.tip,date=tip.date)
@@ -1141,8 +931,7 @@ class TipReview(webapp2.RequestHandler):
     def get_user(self,username):
         if username==None:
             return None
-        user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',username)
-        user=user.get()
+        user=get_user_from_db(username)
         if not user:
             return -1
         else:
@@ -1157,8 +946,7 @@ class TipReview(webapp2.RequestHandler):
 def get_user_by_name(username):
         if username==None:
             return None
-        user=db.GqlQuery('select * from SystemUser where username=:1 limit 1',username)
-        user=user.get()
+        user=get_user_from_db(username)
         if not user:
             return -1
         else:
