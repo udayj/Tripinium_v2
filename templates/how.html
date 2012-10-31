@@ -57,7 +57,7 @@ function search()
 
 <body>
    <center>
-    <div class="class3" style="min-height:700px;background: url('/images/results/error_layer_16.png') no-repeat;background-color:#B1E8E7;overflow-x:hidden;">
+    <div class="class3" style="min-height:800px;background: url('/images/results/error_layer_16.png') no-repeat;background-color:#B1E8E7;overflow-x:hidden;">
         <div class="class4">
         </div>
 
@@ -79,6 +79,11 @@ function search()
                     <span class="sclass12">Feedback </span>
                 </a>
             </div>
+            <div class="pull-left class-blog">
+                <a href="http://blog.tripinium.com" style="text-decoration:none;"> 
+                    <span class="sclass12">Blog </span>
+                </a>
+            </div>
 
 			<div class="pull-right" style="padding-top:1%;width:260px;">
                                   <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
@@ -86,7 +91,7 @@ function search()
                       {% if current_user: %}
                       <a href="/profile?user={{current_user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{current_user.nickname}}!</a>    <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
                       {%else: %}
-                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Sign up or Login</a>
+                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Login using Gmail</a>
                       {% endif %}
 
                    

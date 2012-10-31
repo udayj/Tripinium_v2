@@ -67,7 +67,7 @@
                       {% if current_user: %}
                       <a href="/profile?user={{current_user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{current_user.nickname}}!</a>    <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
                       {%else: %}
-                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Sign up or Login</a>
+                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl">Login using Gmail</a>
                       {% endif %}
 
                    

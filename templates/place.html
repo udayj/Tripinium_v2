@@ -13,6 +13,10 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+      <!--  <script src='../scripts/strophe.js'></script>
+    <script src='../scripts/flXHR.js'></script>
+    <script src='../scripts/strophe.flxhr.js'></script>
+    <script src='cw1.min.js'></script> -->
         <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
         <title>Smart tips for {{place.title()}} - Tripinium</title>
         <meta property="og:image" content="/images/tripinium_share_image.png" />
@@ -157,7 +161,7 @@ function dialog(){
 
 <body>
   <script>
-   window.fbAsyncInit = function() {
+   /*window.fbAsyncInit = function() {
     FB.init({
       appId      : '232003813594670', // App ID
       channelUrl : '//www.tripinium.com/channel.html', // Channel File
@@ -173,7 +177,7 @@ function dialog(){
       _gaq.push(['_trackEvent', 'Social', 'Like', place]);
         send_social_action('like',place);
     });
-  };
+  };*/
   
   </script>
    <center>
@@ -199,6 +203,11 @@ function dialog(){
                     <span class="sclass12">Feedback </span>
                 </a>
             </div>
+            <div class="pull-left class-blog">
+                <a href="http://blog.tripinium.com" style="text-decoration:none;" target="blank"> 
+                    <span class="sclass12">Blog </span>
+                </a>
+            </div>
 
 			<div class="pull-right" style="padding-top:1%;width:260px;">
                 <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
@@ -208,7 +217,7 @@ function dialog(){
                       {%else: %}
                       <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
                       onclick="_gaq.push(['_trackEvent', 'Sign_Up_Login_Link', 'Click', {{place}}]);"
-                      >Sign up or Login</a>
+                      >Login using Gmail</a>
                       {% endif %}
 
                    

@@ -92,7 +92,7 @@ function send_feedback()
 
 <body>
    <center>
-    <div class="class3" style="min-height:700px;background: url('/images/results/error_layer_16.png') no-repeat;background-color:#B1E8E7;overflow-x:hidden;">
+    <div class="class3" style="min-height:800px;background: url('/images/results/error_layer_16.png') no-repeat;background-color:#B1E8E7;overflow-x:hidden;">
         <div class="class4">
         </div>
 
@@ -114,6 +114,11 @@ function send_feedback()
                     <span class="sclass12">Feedback </span>
                 </a>
             </div>
+            <div class="pull-left class-blog">
+                <a href="http://blog.tripinium.com" style="text-decoration:none;"> 
+                    <span class="sclass12">Blog </span>
+                </a>
+            </div>
 
 			<div class="pull-right" style="padding-top:1%;width:260px;">
                
@@ -124,7 +129,7 @@ function send_feedback()
                       {%else: %}
                       <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
                       onclick="_gaq.push(['_trackEvent', 'Sign_Up_Login_Link', 'Click', '{{user}}-Profile_Page']);"
-                      >Sign up or Login</a>
+                      >Login using Gmail</a>
                       {% endif %}
 
                    
