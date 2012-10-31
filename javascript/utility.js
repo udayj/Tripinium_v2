@@ -24,6 +24,29 @@ function print()
     myWin.close();
 }
 
+function visited(place)
+{
+  $.ajax({
+  type: "POST",
+  url: "/visited",
+  data: { place:place},
+  
+  success: function(data)
+  {
+
+    
+  },
+  fail: function()
+  {
+    
+    alert("Problem submitting request :(. But good to know you have been here.");
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+
 function send_feedback(place)
 {
     var data=document.getElementById('user_tips').value;

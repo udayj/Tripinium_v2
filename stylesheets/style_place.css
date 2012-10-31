@@ -615,3 +615,10 @@ cbackground-vcolor: green;
 .badge-nightingale{
 background-color: #E984DC;
 }
+.badge-visited {
+background-color: #3a87ad;
+
+}
+.badge-not-visited{
+background-color: #A86D62;
+}

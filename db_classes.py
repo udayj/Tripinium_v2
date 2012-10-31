@@ -21,6 +21,7 @@ class SystemUser(db.Model):
     badges=db.StringListProperty()
     social_points=db.TextProperty()
     social_badges=db.StringListProperty()
+    visited=db.StringListProperty()
 
 class TentativeTip(db.Model):
     """This class encapsulates a tip that has ben submitted but not yet approved"""
@@ -44,6 +45,7 @@ class Place(db.Model):
     gov_points=db.IntegerProperty()
     gov=db.StringProperty()
     prev_gov=db.StringProperty()
+    visited_count=db.IntegerProperty()
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
         return render_str("post.html", p = self)

@@ -246,9 +246,15 @@ class ResultPage(webapp2.RequestHandler):
                 milestone='Submit your first tip to join the Infantry!'
             else:
                 milestone=get_milestone(user,place)
+            visited=False
+            count=place_info.visited_count or 1
+            if user and place in user.visited:
+                visited=True
+                count-=1
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                         login_url=users.create_login_url('/search?location='+place),milestone=milestone,
-                        logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov)
+                        logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov,
+                        visited=visited,visited_count=count)
 
         else:
             place_info=get_place_from_db(place)
@@ -268,9 +274,16 @@ class ResultPage(webapp2.RequestHandler):
                 else:
                     milestone=get_milestone(user,place)
                     logging.info(milestone)
+                visited=False
+                count=place_info.visited_count or 1
+                if user and place in user.visited:
+                    visited=True
+                    count-=1
+
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                             login_url=users.create_login_url('/search?location='+place),milestone=milestone,gov=gov,
-                            logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class)
+                            logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,
+                            visited=visited,visited_count=count)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -804,6 +817,34 @@ class TipModifyAction(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
+class Visited(webapp2.RequestHandler):
+    def post(self):
+        place=self.request.get('place')
+        user=get_user()
+        if place is None or user is None:
+            return
+        place=normalize(place)
+        logging.info(place)
+        logging.info(user)
+        place_info=get_place_from_db(place)
+        if place_info is None:
+            return
+        place_info.visited_count+=1
+        user.visited.append(place)
+        user.put()
+        place_info.put()
+        memcache.set(place,place_info)
+        self.response.headers['Content-Type'] = 'application/json'
+        output_json=json.dumps({'status':'success','count':str(place_info.visited_count-1)})
+        self.response.out.write(output_json)
+
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+    
+
+
 class TipReview(webapp2.RequestHandler):
     def post(self):
         tip_id=self.request.get('id')
@@ -977,6 +1018,7 @@ app = webapp2.WSGIApplication(
                                       ('/tipmodify',TipModify),
                                       ('/tipmodifyaction',TipModifyAction),
                                       ('/send_review',TipReview),
+                                      ('/visited',Visited),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)
 #Need more comments
