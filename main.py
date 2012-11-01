@@ -829,7 +829,10 @@ class Visited(webapp2.RequestHandler):
         place_info=get_place_from_db(place)
         if place_info is None:
             return
-        place_info.visited_count+=1
+        if place_info.visited_count:
+            place_info.visited_count+=1
+        else:
+            place_info.visited_count=2
         user.visited.append(place)
         user.put()
         place_info.put()

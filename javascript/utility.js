@@ -33,7 +33,15 @@ function visited(place)
   
   success: function(data)
   {
-
+    if(data['status']=='success')
+    {
+      $('#visited').removeClass('badge-not-visited');
+      $('#visited').addClass('badge-visited');
+      $('#visited').html('You and '+data['count']+' other people have been here');
+      $('#visited-other').css('display','none');
+      $('#visited').attr('onclick','');
+      $('#visited').css('cursor','');
+    }
     
   },
   fail: function()

@@ -117,11 +117,11 @@ $('#star').raty({
 
 $( "#login-confirm" ).dialog({
       resizable: false,
-      height:140,
+      height:160,
       modal: true,
       autoOpen:false,
       buttons: {
-        "Sign Up or Login": function() {
+        "Login Usign Gmail": function() {
           window.location=$('#loginurl').attr('href')
         },
         Cancel: function() {
@@ -286,7 +286,11 @@ function dialog(){
                     {% if place_info: %}
                     <br>
 					<span style="background-color:#e5e9fc;margin-top:5%;">
-           
+           {% if milestone: %}
+                        <div id="milestone" class="alert alert-info" style="float:left;margin-top:10px;min-width:350px;border-size:3px;font-weight:bold;">{{milestone}}</div>
+                        <a href="http://www.facebook.com/pages/Tripinium/485369678152306"><span style="float:right;margin-top:10px;font-weight:bold;margin-right:20px;" class="alert alert-info">Say Hi on our Facebook Page</span>
+                        </a>
+                        {% endif %}
 						<ol style="margin-top:2%;" id="data" >
 							<span style="display:none;" id="total_rating" class="{{place_info.total_rating}}"> </span>
                             <span style="display:none;" id="total_rating_count" class="{{place_info.total_rating_count}}"> </span>
@@ -342,9 +346,7 @@ function dialog(){
                         <br>
                         <div class="fb-like" style="float:left;margin-top:10px;" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="true" data-font="arial"></div>
                         <br>
-                        {% if milestone: %}
-                        <div id="milestone" class="alert alert-info" style="float:left;margin-top:10px;min-width:400px;">{{milestone}}</div>
-                        {% endif %}
+                        
                                                
     				</span>
                     {% endif %}
@@ -355,9 +357,18 @@ function dialog(){
                 You and {{visited_count}} other people have been here
               </span>
             {% else: %}
-              <span class="badge badge-not-visited" style="margin-top:1%;font-size:13px;padding:4px;padding-left:6px;padding-right:6px;cursor:pointer;"
-              onclick="visited('{{place}}')">
+              <span id="visited" class="badge badge-not-visited" style="margin-top:1%;font-size:13px;padding:4px;padding-left:6px;padding-right:6px;cursor:pointer;"
+              {% if user: %}
+              onclick="visited('{{place}}')"
+              {% else: %}
+              onclick="$('#login-confirm').dialog('open')"
+              {% endif %}
+              >
                 I have been here
+              </span>
+              <br>
+              <span id="visited-other" class="badge badge-visited" style="margin-top:1%;font-size:13px;padding:4px;padding-left:6px;padding-right:6px;">
+                {{visited_count}} people have been here
               </span>
             {% endif %}
                     <div class="class59" style="padding-left:2%;margin-top:20px;">Got a tip to share?
@@ -437,7 +448,7 @@ function dialog(){
             </fieldset>
             </form>
         </div>
-        <div id="login-confirm" style="display:none" title="Sign up or Login to Vote">You need to be logged in to vote. Sign up for free !</div>
+        <div id="login-confirm" style="display:none" title="Login for this action">You need to be logged in to complete this action. Just login using your Gmail account !</div>
 
  <div id="fb-root"></div>
                         <script>(function(d, s, id) {
