@@ -247,7 +247,7 @@ class ResultPage(webapp2.RequestHandler):
             else:
                 milestone=get_milestone(user,place)
             visited=False
-            count=place_info.visited_count or 1
+            count=place_info.visited_count or 2
             if user and place in user.visited:
                 visited=True
                 count-=1
@@ -275,7 +275,7 @@ class ResultPage(webapp2.RequestHandler):
                     milestone=get_milestone(user,place)
                     logging.info(milestone)
                 visited=False
-                count=place_info.visited_count or 1
+                count=place_info.visited_count or 2
                 if user and place in user.visited:
                     visited=True
                     count-=1
@@ -832,7 +832,7 @@ class Visited(webapp2.RequestHandler):
         if place_info.visited_count:
             place_info.visited_count+=1
         else:
-            place_info.visited_count=2
+            place_info.visited_count=3
         user.visited.append(place)
         user.put()
         place_info.put()
