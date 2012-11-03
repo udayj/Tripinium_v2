@@ -451,14 +451,7 @@ function dialog(){
         <div id="login-confirm" style="display:none" title="Login for this action">You need to be logged in to complete this action. Just login using your Gmail account !</div>
 
  <div id="fb-root"></div>
-                        <script>(function(d, s, id) {
-                              var js, fjs = d.getElementsByTagName(s)[0];
-                              if (d.getElementById(id)) return;
-                              js = d.createElement(s); js.id = id;
-                              js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-                              fjs.parentNode.insertBefore(js, fjs);
-                            }(document, 'script', 'facebook-jssdk'));
-                        </script>
+                       
                         <script type="text/javascript" charset="utf-8">
   window.twttr = (function (d,s,id) {
     var t, js, fjs = d.getElementsByTagName(s)[0];
@@ -469,6 +462,14 @@ function dialog(){
 
   
 </script>
+ <script>(function(d, s, id) {
+                              var js, fjs = d.getElementsByTagName(s)[0];
+                              if (d.getElementById(id)) return;
+                              js = d.createElement(s); js.id = id;
+                              js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                              fjs.parentNode.insertBefore(js, fjs);
+                            }(document, 'script', 'facebook-jssdk'));
+                        </script>
 </div>
 </center>
 </body>
