@@ -55,7 +55,7 @@ error_suggestions=['Rome','Paris','Lyon','Barcelona','Munich']
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        user=get_user()
+        user=get_user(self.request.cookies)
         self.render('front.html',current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -213,7 +213,7 @@ class ResultPage(webapp2.RequestHandler):
         if  spell_correct:
             is_spell_correct=False
         #if 'q' query parameter is none, render error.html
-        user=get_user()
+        user=get_user(self.request.cookies)
 
         if query is None or query=='':
             self.render('error.html',place='',suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
@@ -251,6 +251,8 @@ class ResultPage(webapp2.RequestHandler):
             if user and place in user.visited:
                 visited=True
                 count-=1
+            gov=get_user_from_db(place_info.gov)
+            logging.info(gov)
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                         login_url=users.create_login_url('/search?location='+place),milestone=milestone,
                         logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov,
@@ -279,7 +281,7 @@ class ResultPage(webapp2.RequestHandler):
                 if user and place in user.visited:
                     visited=True
                     count-=1
-
+                gov=get_user_from_db(place_info.gov)
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                             login_url=users.create_login_url('/search?location='+place),milestone=milestone,gov=gov,
                             logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,
@@ -301,7 +303,7 @@ class ResultPage(webapp2.RequestHandler):
 
 class HowPage(webapp2.RequestHandler):
     def get(self):
-        user=get_user()
+        user=get_user(self.request.cookies)
         self.render('how.html',current_user=user,login_url=users.create_login_url('/how.html'),logout_url=users.create_logout_url('/how.html'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -309,7 +311,7 @@ class HowPage(webapp2.RequestHandler):
         self.response.out.write(*a, **kw)
 class FeedbackPage(webapp2.RequestHandler):
     def get(self):
-        user=get_user()
+        user=get_user(self.request.cookies)
         self.render('feedback.html',current_user=user,login_url=users.create_login_url('/feedback.html'),logout_url=users.create_logout_url('/feedback.html'))
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
@@ -388,7 +390,7 @@ class SocialActionPage(webapp2.RequestHandler):
         action=self.request.get('action')
         place=self.request.get('place')
         place=normalize(place)
-        user=get_user()
+        user=get_user(self.request.cookies)
         if user==None:
             logging.info('No user logged in')
             self.response.headers['Content-Type'] = 'application/json'
@@ -454,7 +456,7 @@ class UserTipsPage(webapp2.RequestHandler):
         tip=self.request.get('tip')
         place=self.request.get('place')
         place=normalize(place)
-        user=get_user()
+        user=get_user(self.request.cookies)
         if not user:
             self.store_tentative(None,tip,place,datetime.datetime.now())
             logging.info('User not logged in, submitted tip')
@@ -710,7 +712,7 @@ class ShowUserTipsPage(webapp2.RequestHandler):
 
 class UserProfile(webapp2.RequestHandler):
     def get(self):
-        current_user=get_user()
+        current_user=get_user(self.request.cookies)
         error_message=''
 
         user_id=self.request.get('user')
@@ -820,7 +822,7 @@ class TipModifyAction(webapp2.RequestHandler):
 class Visited(webapp2.RequestHandler):
     def post(self):
         place=self.request.get('place')
-        user=get_user()
+        user=get_user(self.request.cookies)
         if place is None or user is None:
             return
         place=normalize(place)
@@ -1022,6 +1024,8 @@ app = webapp2.WSGIApplication(
                                       ('/tipmodifyaction',TipModifyAction),
                                       ('/send_review',TipReview),
                                       ('/visited',Visited),
+                                      ('/login',LoginHandler),
+                                      ('/logout',LogoutHandler),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)
 #Need more comments

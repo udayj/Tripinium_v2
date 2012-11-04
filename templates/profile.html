@@ -124,12 +124,20 @@ function send_feedback()
                
                    <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
                    
-                      {% if current_user: %}
-                      <a href="/profile?user={{current_user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{current_user.nickname}}!</a>    <a href="{{logout_url}}" class="sclass12" style="text-decoration:none;">Logout</a>
+                     {% if current_user: %}
+                      <a href="/profile?user={{current_user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{current_user.nickname}}!</a>    <a 
+                      {% if current_user.usertype=='Facebook': %}
+                      href="/logout"
+                      {% else: %}
+                      href="{{logout_url}}" 
+                      {% endif %}
+                      class="sclass12" style="text-decoration:none;">Logout</a>
                       {%else: %}
-                      <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Sign_Up_Login_Link', 'Click', '{{user}}-Profile_Page']);"
-                      >Login using Gmail</a>
+                      <span class="sclass12">Login using</span> <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
+                      onclick="_gaq.push(['_trackEvent', 'Login_Gmail', 'Click', {{place}}]);"
+                      >Gmail</a> | <a href="/login" class="sclass12" style="text-decoration:none;" id="loginurl"
+                      onclick="_gaq.push(['_trackEvent', 'Login_Facebook', 'Click', {{place}}]);"
+                      >Facebook</a>
                       {% endif %}
 
                    

@@ -22,6 +22,9 @@ class SystemUser(db.Model):
     social_points=db.TextProperty()
     social_badges=db.StringListProperty()
     visited=db.StringListProperty()
+    access_token=db.StringProperty()
+    profile_url=db.StringProperty()
+    key_name_=db.StringProperty()
 
 class TentativeTip(db.Model):
     """This class encapsulates a tip that has ben submitted but not yet approved"""
