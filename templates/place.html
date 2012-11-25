@@ -60,6 +60,7 @@ var func=function(obj){obj.placeholder='';};
   });
 
 
+
 </script>
 <script>
 $(document).ready(function(){
@@ -155,6 +156,10 @@ function dialog(){
                 $("#dialog-form").dialog("open");
             });
     }
+function clear_placeholder()
+{
+  $('#search').attr('placeholder','');
+}
     </script>
 
 </head>
@@ -249,7 +254,7 @@ function dialog(){
                 <img class="pull-left" src="/images/results/layer_14.png" width="100%">
             </div>
 
-            <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
+            <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onclick="clear_placeholder()" onkeydown="if (event.keyCode==13) { search();}"/>
             <input type="submit" value="Search" style="" onclick="search()"/>
             <div id="reward" class="pull-right" style="display:inline;display:none;width:300px;font-size:13px;margin-top:10px;">
 
@@ -394,20 +399,20 @@ function dialog(){
                     <div class="nclass118">
 	                   <span class="nclass120"> Explore these places </span><br>
                      <span style="width:1em;min-width:250px;">
-	                   <div style="position:relative;float:left;display:inline;margin:3%;">
+	                   <div style="position:relative;float:left;display:inline;margin:3%;min-width:100px;">
 	                       {% for recommendation in recommendations[:3] %}
 	                       <div class="nclass121" style="margin:3px;" >
-	                            <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;"> 
+	                            <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;font-size:15px;"> 
                                     <span onclick="_gaq.push(['_trackEvent', 'Recommendation', 'Click', '{{place}}']);">{{recommendation.title()}} </span>
                                 </a>
                            </div>
 
 	                       {% endfor %}
                         </div>
-                       <span style="position:relative;float:left;margin:3%;">
+                       <span style="position:relative;float:left;margin:3%;min-width:100px;">
 	                       {% for recommendation in recommendations[3:] %}
 	                       <div class="nclass121" style="margin:3px;" >
-	                           <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;"> 
+	                           <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;font-size:15px;"> 
                                     <span class="" onclick="_gaq.push(['_trackEvent', 'Recommendation', 'Click', '{{place}}']);">{{recommendation.title()}} </span>
                                </a>
                            </div>

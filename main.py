@@ -3,6 +3,7 @@ import cgi
 import os
 from google.appengine.ext import db
 from google.appengine.api import memcache
+from google.appengine.api import taskqueue
 import sys
 import spell_check
 import logging
@@ -48,7 +49,7 @@ def render_str(template, **params):
     t = jinja_env.get_template(template)
     return t.render(params)
 
-error_suggestions=['Rome','Paris','Lyon','Barcelona','Munich']
+error_suggestions=['Rome','Paris','London','Barcelona','Singapore']
 
 
 
@@ -122,7 +123,7 @@ def in_place_list(word):
         else:
             return False
     #create in-memory places list to check future queries
-    f=codecs.open('resources/places','r','utf-8')
+    f=codecs.open('resources/place_list_refresh_v2_part1','r','utf-8')
     fc=codecs.open('resources/country_capitals','r','utf-8')
     fnc=codecs.open('resources/no_data_cities','r','utf-8')
     while True:
@@ -773,6 +774,22 @@ class TipModify(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
+class DataRefresh(webapp2.RequestHandler):
+    def get(self):
+        task=self.request.get('task')
+        if task=='tips':
+            taskqueue.add(url='/insertbulk',method='GET')
+            logging.info('insert tips - enqueued')
+        elif task=='recommendations':
+            taskqueue.add(url='/insertrecommendations',method='GET')
+            logging.info('insert recommendations - enqueued')
+        else:
+            return
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
 class TipModifyAction(webapp2.RequestHandler):
     def post(self):
         tip_id=self.request.get('id')
@@ -1026,6 +1043,7 @@ app = webapp2.WSGIApplication(
                                       ('/visited',Visited),
                                       ('/login',LoginHandler),
                                       ('/logout',LogoutHandler),
+                                      ('/datarefresh',DataRefresh),
                                       ('/feedback.html',FeedbackPage)],
                                      debug=False)
 #Need more comments

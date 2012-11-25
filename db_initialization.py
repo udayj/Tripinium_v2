@@ -38,11 +38,11 @@ class InsertImagesPage(webapp2.RequestHandler):
 
 class InsertBulkPage(webapp2.RequestHandler):
     def get(self):
-        password=self.request.get('password')
-        if password !='difficultpassword':
-            self.response.out.write('You are not authorized to access this page')
-            return
-        f=codecs.open('resources/places_tips_v2','r','utf-8')
+        #password=self.request.get('password')
+        #if password !='difficultpassword':
+        #    self.response.out.write('You are not authorized to access this page')
+        #    return
+        f=codecs.open('resources/place_tips_refresh_v2_part1','r','utf-8')
         while True:
             data=f.readline()
             if not data:
@@ -94,11 +94,11 @@ class InsertBulkPagev2(webapp2.RequestHandler):
         self.response.out.write('Successfully written data')
 class InsertRecommendationsPage(webapp2.RequestHandler):
     def get(self):
-        password=self.request.get('password')
-        if password !='difficultpassword':
-            self.response.out.write('You are not authorized to access this page')
-            return
-        f=codecs.open('resources/place_recommendations','r','utf-8')
+        #password=self.request.get('password')
+        #if password !='difficultpassword':
+        #    self.response.out.write('You are not authorized to access this page')
+        #    return
+        f=codecs.open('resources/place_recommendations_refresh_v2_part1','r','utf-8')
         while True:
             data=f.readline()
             if not data:

@@ -1,0 +1,90 @@
+Beijing	Seoul	Acheng	Hong Kong	Macau	Thimpu
+Cape Town 	La Plata	Madinah	Buenos Aires	Giza 	Cairo
+Jakarta	Singapore	Siem Reap	Bangkok	Macau	Hong Kong
+Seoul	Acheng	Beijing	Hong Kong	Macau	Siem Reap
+Pune	Bijapur	Surat	Panaji	Diu	Aurangabad
+Rome	Zurich	Vienna	Barcelona	Luxembourg	San Fransisco
+New York City	Boston	Regina	Edmonton	Crete	Le Habana
+Cologne	Luxembourg	Antwerp	Brussels	Amsterdam	Brugge
+Paris	Brussels	Brugge	Luxembourg	Antwerp	London
+London	Brugge	Antwerp	Brussels	Paris	Amsterdam
+Buenos Aires	La Plata	Santiago	La Serena	Iquique	Cape Town 
+Le Habana	Cancun	Edmonton	Regina	Concepcion	Austin
+Athens	Istanbul	Rome	Cairo	Giza 	Aleppo
+Sydney	Jakarta	Singapore	Siem Reap	Hong Kong	Macau
+Cairo	Giza 	Aleppo	Madinah	Athens	Istanbul
+Amsterdam	Antwerp	Brugge	Brussels	Cologne	Luxembourg
+Dubai	Abu Dhabi	Baghdad 	Madinah	Diu	Kabul
+Barcelona	San Fransisco	Paris	Zurich	Rome	Luxembourg
+San Fransisco	Barcelona	Rome	Zurich	Paris	Luxembourg
+Singapore	Jakarta	Siem Reap	Bangkok	Macau	Hong Kong
+Zurich	Luxembourg	Cologne	Paris	Brussels	Antwerp
+Maui	Seattle	Las Vegas	Saskatoon	Guadalajara	Monterrey
+Crete	Edmonton	Regina	New York City	Boston	Austin
+Bangkok	Siem Reap	Singapore	Agartala	Dhaka	Macau
+Las Vegas	Seattle	Austin	Monterrey	Concepcion	Saskatoon
+Siem Reap	Bangkok	Singapore	Macau	Hong Kong	Agartala
+Macau	Hong Kong	Siem Reap	Bangkok	Beijing	Seoul
+Sri Nagar	Jammu	Kabul	Faridabad	Allahabad	Jaipur
+Acapulco	Morelia	Guadalajara	Monterrey	Concepcion	Cancun
+Cancun	Le Habana	Concepcion	Acapulco	Monterrey	Austin
+Qaanaaq	Bergen	Saskatoon	Belfast 	Cork	Tallinn
+Thiruvananthapuram	Kanyakumari	Kochi	Colombo	Mysore	Mangalore
+Kochi	Thiruvananthapuram	Kanyakumari	Mysore	Mangalore	Colombo
+Aleppo	Baghdad 	Cairo	Giza 	Istanbul	Athens
+Monterrey	Concepcion	Austin	Guadalajara	Morelia	Acapulco
+Guadalajara	Morelia	Acapulco	Monterrey	Concepcion	Austin
+Morelia	Guadalajara	Acapulco	Monterrey	Concepcion	Austin
+Edmonton	Regina	Crete	New York City	Austin	Boston
+Regina	Edmonton	Crete	New York City	Boston	Le Habana
+Aurangabad	Bijapur	Pune	Panaji	Indore	Bhopal
+Baghdad 	Aleppo	Madinah	Cairo	Giza 	Dubai
+Abu Dhabi	Dubai	Baghdad 	Madinah	Diu	Kabul
+Acheng	Seoul	Beijing	Hong Kong	Macau	Thimpu
+Chennai	Mysore	Kochi	Mangalore	Aurangabad	Thiruvananthapuram
+Faridabad	Allahabad	Jaipur	Jammu	Bhopal	Indore
+Giza 	Cairo	Aleppo	Madinah	Athens	Istanbul
+Gorakhpur	Darjeeling 	Gangtok	Thimpu	Dhaka	Kathmandu
+Saskatoon	Seattle	Crete	Las Vegas	Edmonton	Regina
+Indore	Bhopal	Surat	Jaipur	Pune	Diu
+Mysore	Mangalore	Kochi	Chennai	Thiruvananthapuram	Panaji
+Austin	Concepcion	Monterrey	Guadalajara	Morelia	Edmonton
+Allahabad	Faridabad	Jaipur	Bhopal	Jammu	Indore
+Madinah	Giza 	Cairo	Baghdad 	Aleppo	Abu Dhabi
+Darjeeling 	Gangtok	Thimpu	Gorakhpur	Kathmandu	Dhaka
+Jaipur	Allahabad	Faridabad	Bhopal	Indore	Jammu
+Diu	Surat	Pune	Indore	Panaji	Bijapur
+Agartala	Dhaka	Gorakhpur	Thimpu	Darjeeling 	Gangtok
+Kanyakumari	Thiruvananthapuram	Kochi	Colombo	Mysore	Mangalore
+Surat	Diu	Pune	Indore	Bhopal	Bijapur
+Bhopal	Indore	Jaipur	Allahabad	Surat	Faridabad
+Mangalore	Mysore	Panaji	Kochi	Bijapur	Thiruvananthapuram
+Jammu	Sri Nagar	Faridabad	Kabul	Allahabad	Jaipur
+Gangtok	Darjeeling 	Thimpu	Gorakhpur	Kathmandu	Dhaka
+Bijapur	Panaji	Pune	Aurangabad	Mangalore	Mysore
+Istanbul	Athens	Aleppo	Cairo	Giza 	Vienna
+Hong Kong	Macau	Siem Reap	Bangkok	Beijing	Seoul
+Dhaka	Agartala	Gorakhpur	Thimpu	Darjeeling 	Gangtok
+Colombo	Kanyakumari	Thiruvananthapuram	Kochi	Chennai	Mysore
+Thimpu	Gangtok	Darjeeling 	Gorakhpur	Dhaka	Kathmandu
+Kabul	Sri Nagar	Jammu	Faridabad	Allahabad	Jaipur
+Kathmandu	Darjeeling 	Gangtok	Gorakhpur	Thimpu	Dhaka
+Boston	New York City	Regina	Crete	Edmonton	Le Habana
+Seattle	Saskatoon	Las Vegas	Crete	Austin	Concepcion
+Santiago	La Serena	Buenos Aires	La Plata	Iquique	Cancun
+Concepcion	Monterrey	Austin	Guadalajara	Morelia	Acapulco
+Iquique	La Serena	Santiago	Buenos Aires	La Plata	Cancun
+La Serena	Santiago	Iquique	Buenos Aires	La Plata	Cancun
+La Plata	Buenos Aires	Santiago	La Serena	Iquique	Cape Town 
+Vienna	Zurich	Cologne	Rome	Luxembourg	Copenhagen
+Panaji	Bijapur	Mangalore	Pune	Mysore	Aurangabad
+Bergen	Copenhagen	Amsterdam	Belfast 	Antwerp	Brugge
+Belfast 	Cork	London	Brugge	Amsterdam	Antwerp
+Antwerp	Brussels	Brugge	Amsterdam	Cologne	Luxembourg
+Cork	Belfast 	London	Brugge	Paris	Antwerp
+Brussels	Antwerp	Brugge	Amsterdam	Cologne	Luxembourg
+Brugge	Antwerp	Brussels	Amsterdam	London	Cologne
+Copenhagen	Amsterdam	Cologne	Bergen	Riga	Antwerp
+Luxembourg	Cologne	Brussels	Antwerp	Brugge	Paris
+Riga	Tallinn	Copenhagen	Vienna	Bergen	Cologne
+Tallinn	Riga	Copenhagen	Bergen	Vienna	Amsterdam
