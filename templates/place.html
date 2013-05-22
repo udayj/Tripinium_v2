@@ -2,13 +2,10 @@
 
 <html lang="en">
 <head>
-    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     
-    <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
-    <!--link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css"-->
-    <link href="/stylesheets/style_place.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">    
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
@@ -163,6 +160,106 @@ function clear_placeholder()
     </script>
 
 </head>
+<body>
+  <div class="container">
+  <header>
+    
+    <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container" style="width: auto;">
+        <a class="brand" href="#">Tripinium</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active"><a href="/">Home</a></li>
+           <li>
+        <a href="/blog">Blog</a>
+      </li>
+      <li>
+        <a href="/about">About</a>
+      </li>
+      <li>
+        <a href="/cities">All Places</a>
+      </li>
+      <li>
+        <a href="/feedback">Feedback</a>
+      </li>
+    </ul>
+    <ul class="nav pull-right">
+      <li class="pull-right">
+        <a href="/login">Login Facebook</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Gmail</a>
+      </li>
+            
+          </ul>
+          
+
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->
+<!--    <div class="subnav">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/blog">Blog</a>
+      </li>
+      <li>
+        <a href="/about">About</a>
+      </li>
+      <li>
+        <a href="/cities">All Places</a>
+      </li>
+      <li>
+        <a href="/feedback">Feedback</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Facebook</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Gmail</a>
+      </li>
+    </ul>
+  </div>
+  </header>
+</div> -->
+</header>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="span9">
+      <!--<h3 style="display:inline;margin-right:10px;margin-left:25px;">Search</h3>-->
+      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}"/>
+   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span9">
+      <h2>Tips for {{place.title()}}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span9">
+   <table class="table table-bordered table-striped table-hover">
+    <tbody>
+      {% for p in place_info.items %}
+      <tr>
+        <td>
+          {{p.item_name}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+
+</body>
+
+<!--
 
 <body>
   <script>
@@ -245,7 +342,7 @@ function clear_placeholder()
                 </div>
 
                 <!--div class="pull-left class19"><a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.tripinium.com/search%3Flocation%3D{{place}}&media=http%3A%2F%2Fwww.tripinium.com%2Fimages%2Ftripinium_logo_v2.png&description=Cool%20and%20useful%20tips%20for%20your%20next%20trip" class="pin-it-button" count-layout="none"><img border="0" src="/images/results/layer_7.png" title="Pin It" onClick="_gaq.push(['_trackEvent', 'Social', 'Pinterest', '{{place}}']);"/></a>
-                </div> -->
+                </div> 
             </div>
         </div>
 
@@ -490,6 +587,6 @@ function clear_placeholder()
 </body>
 <script>
 
-</script>
+</script> -->
 
 </html>
