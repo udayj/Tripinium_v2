@@ -5,9 +5,8 @@
     <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
-    <link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css">
-    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
      <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -38,16 +37,100 @@
   });
  </script>
 </head>
+<body>
+<div class="container">
+  <header>
+    
+    <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container" style="width: auto;">
+        <a class="brand" href="#">Tripinium</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active"><a href="/">Home</a></li>
+           <li>
+        <a href="/blog">Blog</a>
+      </li>
+      <li>
+        <a href="/about">About</a>
+      </li>
+      <li>
+        <a href="/cities">All Places</a>
+      </li>
+      <li>
+        <a href="/feedback">Feedback</a>
+      </li>
+    </ul>
+    <ul class="nav pull-right">
+      <li class="pull-right">
+        <a href="/login">Login Facebook</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Gmail</a>
+      </li>
+            
+          </ul>
+          
 
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->
+<!--    <div class="subnav">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/blog">Blog</a>
+      </li>
+      <li>
+        <a href="/about">About</a>
+      </li>
+      <li>
+        <a href="/cities">All Places</a>
+      </li>
+      <li>
+        <a href="/feedback">Feedback</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Facebook</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Gmail</a>
+      </li>
+    </ul>
+  </div>
+  </header>
+</div> -->
+<div class="container">
+  <div class="jumbotron" style="text-align:center;">
+    <h1>Tripinium</h1>
+  
+  <p class="lead muted">Easily browse through tips that tell you what to pack for your trip, when to visit a place, how to get around the neighborhood and much more.
+  </p>
+  <input id="search" type="text" class="input-xlarge" placeholder="where are you headed? eg. Paris"/>
+   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
+</div>
+</div>
+<div class="container">
+  <hr>
+  <div class="footer">
+  <p>© Tripinium.com 2013. All rights reserved.</p>
+  </div>
+</div>
+
+</body>
+<!--
 <body style="text-align:center;">
   <center>
     <div class="class7" style="">
-        <div class="class8" style="padding-top:0;width:100%"><!--<img src="/images/layer_6.png" style="padding:0px;margin-top:0;width:100%"> --></div>
+        <div class="class8" style="padding-top:0;width:100%"></div>
 
         <div class="row class10">
             <!--div class="pull-left class12">
                <a href="/" style="text-decoration:none;"> <span class="sclass12">Home </span></a>
-            </div-->
+            </div
 
 
 
@@ -118,7 +201,7 @@
         .
     </div>
 </center>
-</body>
+</body>-->
 
 <script type="text/javascript" charset="utf-8">
   window.twttr = (function (d,s,id) {
