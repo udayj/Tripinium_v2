@@ -5,7 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">    
+  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/style_new.css" rel="stylesheet" type="text/css">
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
@@ -238,9 +239,19 @@ function clear_placeholder()
   </div>
   <div class="row">
     <div class="span9">
-      <h2>Tips for {{place.title()}}</h2>
+      <h2 style="display:inline;">Tips for {{place.title()}}</h2> 
+
+      <div class="span1 pull-right">
+      <img src="/images/envelope.png"/>
+
     </div>
+    <div class="span1 pull-right">
+      <img src="images/print.png"/>
+    </div>
+    </div>
+
   </div>
+  <br>
   <div class="row">
     <div class="span9">
    <table class="table table-bordered table-striped table-hover">
@@ -250,12 +261,40 @@ function clear_placeholder()
         <td>
           {{p.item_name}}
         </td>
+        <td>
+          <div class="triangle-up"></div>
+        </td>
+        <td>
+          <div class="triangle-down"></div>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+<div class="span3">
+  <h3>Got a tip to share ?</h3>
+  <div class="muted" style="sont-size:14px;">Let us know below</div>
+  <textarea id="user_tips" rows="4" cols="70" value="" title="Tell us something about this place that we dont yet know">
+            </textarea>
+            
+            <input type="submit" class="btn btn-primary" name="user_feedback" value="Submit" onclick="send_feedback('{{place}}')" />
+          
 </div>
+<div class="row">
+  <div class="span3">
+    <h3>Also Explore</h3>
+    <table class="table table-bordered table-striped table-hover">
+    <tbody>
+      {% for recommendation in recommendations %}
+      <tr>
+        <td>
+         <b> {{recommendation.title()}}</b>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 </body>
 
