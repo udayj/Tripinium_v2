@@ -89,3 +89,8 @@ def get_user_from_db(username):
 def get_item_from_db_with_key(key):
     db.GqlQuery('select * from Item where key=:1',key)
     item=Item.get(key)
+    return item
+
+def get_all_places_from_db():
+    place_info=db.GqlQuery('select * from Place')
+    return place_info    

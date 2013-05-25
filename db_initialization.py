@@ -54,7 +54,7 @@ class InsertBulkPage(webapp2.RequestHandler):
                 #logging.error(parts[0])
                 if not is_valid_data(parts[1:]):
                     continue
-                place_info=Place(name=normalize(parts[0]))
+                place_info=Place(name=normalize(parts[0]),image='')
                 place_info.put()
 
                 for item_data in parts[1:]:
@@ -82,7 +82,7 @@ class InsertBulkPagev2(webapp2.RequestHandler):
                 #logging.error(parts[0])
                 if not is_valid_data(parts[1:]):
                     continue
-                place_info=Place(name=normalize(parts[0]))
+                place_info=Place(name=normalize(parts[0]),image='')
                 place_info.put()
 
                 for item_data in parts[1:]:

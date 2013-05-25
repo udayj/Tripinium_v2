@@ -176,16 +176,17 @@ function clear_placeholder()
         <a href="/blog">Blog</a>
       </li>
       <li>
-        <a href="/about">About</a>
-      </li>
-      <li>
         <a href="/cities">All Places</a>
       </li>
+      <li>
+        <a href="/how.html">About</a>
+      </li>
+      
       <li>
         <a href="/feedback">Feedback</a>
       </li>
     </ul>
-    <ul class="nav pull-right">
+    <!--<ul class="nav pull-right">
       <li class="pull-right">
         <a href="/login">Login Facebook</a>
       </li>
@@ -193,7 +194,7 @@ function clear_placeholder()
         <a href="/login">Login Gmail</a>
       </li>
             
-          </ul>
+          </ul>-->
           
 
         </div><!-- /.nav-collapse -->
@@ -233,20 +234,21 @@ function clear_placeholder()
   <div class="row">
     <div class="span9">
       <!--<h3 style="display:inline;margin-right:10px;margin-left:25px;">Search</h3>-->
-      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}"/>
-   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
+      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}" onkeydown="if (event.keyCode==13) { search();}"/>
+   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()" >Search</button>
     </div>
   </div>
   <div class="row">
     <div class="span9">
       <h2 style="display:inline;">Tips for {{place.title()}}</h2> 
-
-      <div class="span1 pull-right">
-      <img src="/images/envelope.png"/>
+     <!-- <img src="/images/envelope.png" style="margin-right:10px;"/>
+      <img src="images/print.png"/>-->
+      <div class="span1 pull-right" style="margin-right:0px;padding-right:0px;">
+      
 
     </div>
     <div class="span1 pull-right">
-      <img src="images/print.png"/>
+      
     </div>
     </div>
 
@@ -256,21 +258,36 @@ function clear_placeholder()
     <div class="span9">
    <table class="table table-bordered table-striped table-hover">
     <tbody>
-      {% for p in place_info.items %}
+      {% for p in place_info.items |sort(attribute='votes', reverse=True)%}
       <tr>
         <td>
           {{p.item_name}}
         </td>
         <td>
-          <div class="triangle-up"></div>
+          <div id="p{{p.key().id()}}" style="cursor:pointer;color:yellow;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote up" class="triangle-up" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)"></div>
         </td>
         <td>
-          <div class="triangle-down"></div>
+          <div id="n{{p.key().id()}}" style="cursor:pointer;color:yellow;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" class="triangle-down" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"></div>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  <br>
+  {% if urls %}
+  <div class="row">
+    {% for url in urls %}
+    <div class="span3">
+      
+      <div class="thumbnail"><img src="{{url}}" alt="{{place}}" style="width:260px;height:180px;">
+      </div>
+    </div>
+    {% endfor %}
+
+    
+  </div>
+  <div class="muted">Source: Flickr</div>
+  {% endif %}
 </div>
 <div class="span3">
   <h3>Got a tip to share ?</h3>
@@ -278,9 +295,11 @@ function clear_placeholder()
   <textarea id="user_tips" rows="4" cols="70" value="" title="Tell us something about this place that we dont yet know">
             </textarea>
             
-            <input type="submit" class="btn btn-primary" name="user_feedback" value="Submit" onclick="send_feedback('{{place}}')" />
+            <input type="submit" class="btn btn-primary" name="user_feedback" value="Submit" onclick="send_feedback('{{place}}')" 
+            style="display:block;"/>
+            <div id="tips_thank" style="display:hidden;color:yellow;"></div>
+
           
-</div>
 <div class="row">
   <div class="span3">
     <h3>Also Explore</h3>
@@ -289,13 +308,21 @@ function clear_placeholder()
       {% for recommendation in recommendations %}
       <tr>
         <td>
-         <b> {{recommendation.title()}}</b>
+         <a href="/search?location={{recommendation.title()}}"><b> {{recommendation.title()}}</b></a>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-
+</div>
+</div>
+</div>
+</div>
+<hr>
+  <div class="footer">
+  <p>© Tripinium.com 2013. All rights reserved.</p>
+  </div>
+  </div>
 </body>
 
 <!--

@@ -240,10 +240,19 @@ function clear_placeholder()
   
   <br>
   <div class="row">
-    <div class="span9">
-   <h2> How does it work ?</h2>
-        <div> Tripinium offers advice to travel planners on the last minute details for their next trip. To this end, it utilises deep local knowledge to prepare a carefully curated list of things that can help you enjoy your trip to the fullest. We provide you with useful tips that can help you organize the little details of your trip like where to eat, time to avoid the peak hour rush to your favorite tourist destination, how to commence a conversation with a foreigner, etc. We work hard so that you can travel smart. 
-        </div>
+    <div class="span5">
+   <table class="table table-bordered table-striped table-hover">
+    <tbody>
+      {% for p in places|sort %}
+      <tr>
+        <td>
+          <div style="font-size:14px;"><a href="/search?location={{p}}">{{p.title()}}</a></div>
+        </td>
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 

@@ -2,29 +2,41 @@
 
 <html lang="en">
 <head>
-    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link href="/stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
-    <!--link href="/stylesheets/bootstrap_override.css" rel="stylesheet" type="text/css"-->
-    <link href="/stylesheets/style_place.css" rel="stylesheet" type="text/css">
-     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script src="javascript/places.js"></script>
-    <title>Tripinium - Travel tips for your next trip</title>
-    <meta name="ROBOTS" content="noindex" />
-<script type="text/javascript">
-function search()
-{
-  var place=document.getElementById("search");
-  if(place==null || place.value.trim()=="")
-    return;
-  window.location="/search?location="+place.value;
-}
-</script>
-<script type="text/javascript">
+    
+  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/style_new.css" rel="stylesheet" type="text/css">
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+      <!--  <script src='../scripts/strophe.js'></script>
+    <script src='../scripts/flXHR.js'></script>
+    <script src='../scripts/strophe.flxhr.js'></script>
+    <script src='cw1.min.js'></script> -->
+        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
+        <title>Tripinium</title>
+        <meta property="og:image" content="/images/tripinium_share_image.png" />
+        <meta property="og:title" content="Smart travel tips from Tripinium.com" />
+        <meta property="og:site_name" content="Tripinium" />
+        <meta name="description" content="Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip." />
+        <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
+<style>
+        .ui-autocomplete
+        {
+            position:absolute;
+            cursor:default;
+            z-index:4000 !important
+        }
+    </style>
+      <script src="/javascript/utility.js"></script>
+
+<script src="javascript/places.js">
+
+</script>
+
+<script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-32623235-1']);
   _gaq.push(['_trackPageview']);
@@ -35,122 +47,212 @@ function search()
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
+var func=function(obj){obj.placeholder='';};
 </script>
-<style>
-        .ui-autocomplete
-        {
-            position:absolute;
-            cursor:default;
-            z-index:4000 !important
-        }
-    </style>
 <script>
         $(document).ready(function() {
     $("input#search").autocomplete({
     source: places
 });
+    $('#user_tips').attr('value','');
   });
 
 
-        </script>
-</head>
 
-<body style="overflow-y:hidden;">
-   <center>
-    <div class="class3" style="min-height:800px;background: url('/images/results/error_layer_16.png') no-repeat;background-color:#B1E8E7;overflow-x:hidden;overflow-y:hidden;">
-        <div class="class4">
-        </div>
-
-        <div class="row class6">
-            <div class="pull-left class8">
-                <a href="/" style="text-decoration:none;"> 
-                    <span class="sclass12">Home </span>
-                </a>
-            </div>
-
-            <div class="pull-left class10">
-                <a href="/how.html" style="text-decoration:none;">  
-                    <span class="sclass12">About </span>
-                </a>
-            </div>
-
-            <div class="pull-left class12">
-                <a href="/feedback.html" style="text-decoration:none;"> 
-                    <span class="sclass12">Feedback </span>
-                </a>
-            </div>
-            <div class="pull-left class-blog">
-                <a href="http://blog.tripinium.com" style="text-decoration:none;"> 
-                    <span class="sclass12">Blog </span>
-                </a>
-            </div>
-
-			<div class="pull-right" style="padding-top:1%;width:260px;">
-               <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
-                   
-                     {% if current_user: %}
-                      <a href="/profile?user={{current_user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{current_user.nickname}}!</a>    <a 
-                      {% if current_user.usertype=='Facebook': %}
-                      href="/logout"
-                      {% else: %}
-                      href="{{logout_url}}" 
-                      {% endif %}
-                      class="sclass12" style="text-decoration:none;">Logout</a>
-                      {%else: %}
-                      <span class="sclass12">Login using</span> <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Login_Gmail', 'Click', {{place}}]);"
-                      >Gmail</a> | <a href="/login" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Login_Facebook', 'Click', {{place}}]);"
-                      >Facebook</a>
-                      {% endif %}
-
-                   
-                </div>
-
-                <div class="pull-left class17" style="margin-top:2px;">
-                    <div class="class18"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com" data-text="Practical travel tips" data-via="tripinium" data-count="none" data-hashtags="tripinium,travel"><img src="/images/results/twt_img.png"></a>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="row class20">
-            <div class="pull-left class21">
-                <img class="pull-left" src="/images/results/layer_14.png" width="100%">
-            </div>
-
-            <input id="search" style="z-index:10000;" type="text" placeholder="{{place}}" style="display:inline;" onkeydown="if (event.keyCode==13) { search();}"/>
-            <input type="submit" value="Search" style="" onclick="search()"/>
-        </div>
-        <div class="class30" style="">
-            <div class="marginfix"></div>
-
-            <div class="class44" style="display:inline;">
-                <div class="class45" >
-                    <img src="/images/results/layer_24_copy.png">
-                </div>
-            </div>
-        </div>
-        <div style="margin-top:100px;color:#1b918f;font-size:1.4em;margin-left:20%;"> Oops! We didnt find what you are looking for </div>
-        <div style="margin-top:25px;margin-left:20%;font-size:1.3em;height:100px;"> Try searching for something else like <a href="/search?q={{suggestion.title()}}" style="text-decoration:none"> <span style="color:#1b918f;">{{suggestion.title()}} </span></a>
-        </div>
-        <div class="nclass41" style="margin-top:30px;margin-left:350px;width:400px;padding-bottom:0px;margin-bottom:0px;padding-left:100px;position:fixed;bottom:0;">
-            <div style="margin-bottom:0px;padding-top:170px;font-size:12px;">
-                Copyright 2012 Tripinium. All rights reserved.
-            </div>
-        </div>
-       </div>
-   </center>
-</body>
-<script type="text/javascript" charset="utf-8">
-  window.twttr = (function (d,s,id) {
-    var t, js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
-    js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
-    return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
-  }(document, "script", "twitter-wjs"));
-
-  
 </script>
+<script>
+$(document).ready(function(){
+$("#dialog-form").dialog({
+            autoOpen: false,
+            height: 300,
+            width: 600,
+            modal: true,
+            buttons: {
+                "Send": function() {
+                    send_email();
+                     $(this).dialog("close");
+                },
+                Cancel: function() {
+                  var place=$('#email_place').html()
+                  _gaq.push(['_trackEvent', 'Sign_Up_Via_Tip_Rating', 'Cancel', place]);
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+               
+            }
+        });
+//calculateRating();
+$('#star').raty({
+  score:calculateRating(),
+  half:true,
+  click: function (score,evt){
+  var place=document.getElementById('email_place').innerHTML;
+    $.ajax({
+  type: "POST",
+  url: "/send_city_rating",
+  data: {score:score,place:place},
+  
+  success: function()
+  {
+    var place=$('#email_place').html()
+    _gaq.push(['_trackEvent', 'Place', 'Rating', place]);
+    $('#star').raty({
+        readOnly:true,
+        score:score
+    })
+  },
+  fail: function()
+  {
+    
+    alert('Problem submitting rating. We are looking into this.');
+  }
+}).done(function( msg ) {
+ // document.getElementById("user_tips").value="";
+  //alert("Thanks for helping us improve!");
+});
+}
+});
+
+$( "#login-confirm" ).dialog({
+      resizable: false,
+      height:160,
+      modal: true,
+      autoOpen:false,
+      buttons: {
+        "Login Usign Gmail": function() {
+          window.location=$('#loginurl').attr('href')
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+
+ twttr.ready(function (twttr) {
+    // bind events here
+    twttr.events.bind('tweet', function(event) {
+    var place=$('#email_place').html()
+    _gaq.push(['_trackEvent', 'Social', 'Tweet', place]);
+    send_social_action('tweet',place);
+  });
+  });
+
+
+});
+
+function tweet()
+{
+  var place=$('#email_place').html();
+  send_social_action('tweet',place);
+}
+function dialog(){
+
+               $("#email").click(function() {
+                var place=$('#email_place').html()
+                _gaq.push(['_trackEvent', 'Email', 'Click', place]);
+                $("#dialog-form").dialog("open");
+            });
+    }
+function clear_placeholder()
+{
+  $('#search').attr('placeholder','');
+}
+    </script>
+
+</head>
+<body>
+  <div class="container">
+  <header>
+    
+    <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container" style="width: auto;">
+        <a class="brand" href="#">Tripinium</a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active"><a href="/">Home</a></li>
+           <li>
+        <a href="/blog">Blog</a>
+      </li>
+      <li>
+        <a href="/how.html">About</a>
+      </li>
+      <li>
+        <a href="/cities">All Places</a>
+      </li>
+      <li>
+        <a href="/feedback">Feedback</a>
+      </li>
+    </ul>
+    <!--<ul class="nav pull-right">
+      <li class="pull-right">
+        <a href="/login">Login Facebook</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Gmail</a>
+      </li>
+            
+          </ul>-->
+          
+
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->
+<!--    <div class="subnav">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/blog">Blog</a>
+      </li>
+      <li>
+        <a href="/about">About</a>
+      </li>
+      <li>
+        <a href="/cities">All Places</a>
+      </li>
+      <li>
+        <a href="/feedback">Feedback</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Facebook</a>
+      </li>
+      <li class="pull-right">
+        <a href="/login">Login Gmail</a>
+      </li>
+    </ul>
+  </div>
+  </header>
+</div> -->
+</header>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="span9">
+      <!--<h3 style="display:inline;margin-right:10px;margin-left:25px;">Search</h3>-->
+      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}" onkeydown="if (event.keyCode==13) { search();}"/>
+   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()" >Search</button>
+    </div>
+  </div>
+  
+  <br>
+  <div class="row">
+    <div class="span9">
+   <h2> We dont yet have tips for this place :(</h2>
+        <div> Try searching for something else like <a href="/search?location={{suggestion.title()}}">{{suggestion.title()}}</a>
+        </div>
+</div>
+
+
+
+</div>
+<hr>
+  <div class="footer">
+  <p>© Tripinium.com 2013. All rights reserved.</p>
+  </div>
+  </div>
+</body>
 </html>

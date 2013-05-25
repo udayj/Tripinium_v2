@@ -20,6 +20,7 @@ from google.appengine.api import mail
 from db_classes import *
 from db_initialization import *
 from utility import *
+import flickr
 
 
 #Feature list for MVP
@@ -58,6 +59,20 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
         user=get_user(self.request.cookies)
         self.render('front.html',current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
+class AllPlacesPage(webapp2.RequestHandler):
+    def get(self):
+        places_db=get_all_places_from_db()
+        places=[]
+        for place in places_db:
+            places.append(place.name)
+        logging.info(places)
+        self.response.headers['Content-Type'] = 'text/html'
+        self.render('all_places.html',places=places)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -237,6 +252,18 @@ class ResultPage(webapp2.RequestHandler):
         recommended_places=None
         #logging.error(place_info.recommendations)
         gov=None
+        urls=None
+        """flickr.API_KEY='d92539b03607b14117d6dc4ecce2a13d'
+        flickr.API_SECRET='ea9754bd24415292'
+        photos = flickr.photos_search(tags=place, per_page=3,sort='relevance')
+        urls = []
+        for photo in photos:
+            url=photo.getURL(size='Square', urlType='source')
+            url=url.replace('s.jpg','q.jpg')
+            urls.append(url)"""
+
+        logging.info(str(urls))
+        
         if place_info is not None:
             logging.info('Retreived from memcache:'+place)
             if place_info.recommendations is not None:
@@ -254,10 +281,16 @@ class ResultPage(webapp2.RequestHandler):
                 count-=1
             gov=get_user_from_db(place_info.gov)
             logging.info(gov)
+            urls=[]
+            if hasattr(place_info,'image'):
+                try:
+                    urls=place_info.image.split(',')
+                except AttributeError:
+                    pass
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                         login_url=users.create_login_url('/search?location='+place),milestone=milestone,
                         logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov,
-                        visited=visited,visited_count=count)
+                        visited=visited,visited_count=count,urls=urls)
 
         else:
             place_info=get_place_from_db(place)
@@ -283,10 +316,16 @@ class ResultPage(webapp2.RequestHandler):
                     visited=True
                     count-=1
                 gov=get_user_from_db(place_info.gov)
+                urls=[]
+                if hasattr(place_info,'image'):
+                    try:
+                        urls=place_info.image.split(',')
+                    except AttributeError:
+                        pass
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                             login_url=users.create_login_url('/search?location='+place),milestone=milestone,gov=gov,
                             logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,
-                            visited=visited,visited_count=count)
+                            visited=visited,visited_count=count,urls=urls)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -768,7 +807,10 @@ class TipModify(webapp2.RequestHandler):
         if not place_info:
             self.render('tipmodify.html',tips=[],error_message='No place found')
         else:
-            self.render('tipmodify.html',place=place.title(),tips=place_info.items,error_message=None)            
+            if hasattr(place_info,'image'):
+                self.render('tipmodify.html',place=place.title(),tips=place_info.items,error_message=None,images=place_info.image)            
+            else:
+                self.render('tipmodify.html',place=place.title(),tips=place_info.items,error_message=None,images='')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -795,6 +837,17 @@ class TipModifyAction(webapp2.RequestHandler):
         tip_id=self.request.get('id')
         status=self.request.get('status')
         content=self.request.get('content')
+        if status=='save_image':
+            logging.info(tip_id)
+            place=get_place_from_db(normalize(tip_id))
+            logging.info(place)
+            place.image=content
+            place.put()
+            self.response.headers['Content-Type'] = 'application/json'
+            output_json=json.dumps({'status':'success'})
+            self.response.out.write(output_json)
+            return
+
         tip_id=int(tip_id)
         tip=Item.get_by_id(tip_id)
         self.response.headers['Content-Type'] = 'application/json'
@@ -1028,6 +1081,7 @@ app = webapp2.WSGIApplication(
                                       ('/insertrecommendations',InsertRecommendationsPage),
                                       ('/insertlocal12345',InsertLocalPage),
                                       ('/how.html',HowPage),
+                                      ('/cities',AllPlacesPage),
                                       ('/no_analytics.html',AnalyticsPage),
                                       ('/user_tips',UserTipsPage),
                                       ('/send_email',SendEmail),
@@ -1044,7 +1098,7 @@ app = webapp2.WSGIApplication(
                                       ('/login',LoginHandler),
                                       ('/logout',LogoutHandler),
                                       ('/datarefresh',DataRefresh),
-                                      ('/feedback.html',FeedbackPage)],
+                                      ('/feedback',FeedbackPage)],
                                      debug=False)
 #Need more comments
 

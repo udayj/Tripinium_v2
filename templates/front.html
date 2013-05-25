@@ -52,24 +52,17 @@
         <a href="/blog">Blog</a>
       </li>
       <li>
-        <a href="/about">About</a>
-      </li>
-      <li>
         <a href="/cities">All Places</a>
       </li>
+      <li>
+        <a href="/how.html">About</a>
+      </li>
+      
       <li>
         <a href="/feedback">Feedback</a>
       </li>
     </ul>
-    <ul class="nav pull-right">
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-            
-          </ul>
+    
           
 
         </div><!-- /.nav-collapse -->
@@ -111,7 +104,7 @@
   
   <p class="lead muted">Easily browse through tips that tell you what to pack for your trip, when to visit a place, how to get around the neighborhood and much more.
   </p>
-  <input id="search" type="text" class="input-xlarge" placeholder="where are you headed? eg. Paris"/>
+  <input id="search" type="text" class="input-xlarge" placeholder="where are you headed? eg. Paris" onkeydown="if (event.keyCode==13) { search();}"/>
    <button type="submit" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
 </div>
 </div>
@@ -159,87 +152,7 @@
 </div>
 
 </body>
-<!--
-<body style="text-align:center;">
-  <center>
-    <div class="class7" style="">
-        <div class="class8" style="padding-top:0;width:100%"></div>
 
-        <div class="row class10">
-            <!--div class="pull-left class12">
-               <a href="/" style="text-decoration:none;"> <span class="sclass12">Home </span></a>
-            </div
-
-
-
-            <div class="pull-left class15">
-              <a href="/how.html" style="text-decoration:none;">  <span class="sclass15">About </span></a>
-            </div>
-
-
-
-            <div class="pull-left class18">
-              <a href="/feedback.html" style="text-decoration:none;"> <span class="sclass18">Feedback </span></a>
-            </div>
-      			<div class="pull-right" style="padding-top:1%;width:250px;margin-right:">
-                  
-               <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
-                   
-                    {% if current_user: %}
-                      <a href="/profile?user={{current_user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{current_user.nickname}}!</a>    <a 
-                      {% if current_user.usertype=='Facebook': %}
-                      href="/logout"
-                      {% else: %}
-                      href="{{logout_url}}" 
-                      {% endif %}
-                      class="sclass12" style="text-decoration:none;">Logout</a>
-                      {%else: %}
-                      <span class="sclass12">Login using</span> <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Login_Gmail', 'Click', {{place}}]);"
-                      >Gmail</a> | <a href="/login" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Login_Facebook', 'Click', {{place}}]);"
-                      >Facebook</a>
-                      {% endif %}
-
-                   
-                </div>
-
-                <div class="pull-left class17" style="margin-left:10px;margin-top:2px;">
-                    <div class="class18"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com" data-text="Practical travel tips" data-via="tripinium" data-count="none" data-hashtags="tripinium,travel"><img src="/images/results/twt_img.png"></a>
-                    </div>
-
-                </div>
-              
-      			</div>
-          </div>
-        <div class="class26"><img src="/images/layer_3.png"></div>
-
-        <div class="class28">
-            Get a Headstart
-        </div>
-
-        <div class="row class29">
-            <input id="search" type="text" placeholder="Where are you headed ? eg. Paris" style="float:left;position:relative;display:inline;text-align:left;" 
-             onkeydown="if (event.keyCode==13) { search();}"/>
-
-
-            <input type="submit" value="Search" style="float:left;position:relative; margin-left:2%;" onclick="search()"/>
-        </div>
-
-        <div class="class39">
-            Smart tips for your next trip
-        </div>
-
-        
-        <div class="class41">
-            <div class="class43">
-                Copyright 2012 Tripinium. All rights reserved.
-            </div>
-        </div>
-        .
-    </div>
-</center>
-</body>-->
 
 <script type="text/javascript" charset="utf-8">
   window.twttr = (function (d,s,id) {

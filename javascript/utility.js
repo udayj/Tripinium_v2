@@ -71,7 +71,9 @@ function send_feedback(place)
   success: function(data)
   {
 
-    var display_class=[];
+    $('#tips_thank').css('display','');
+    $('#tips_thank').html('Thanks for sharing the tip!')
+    /*var display_class=[];
     display_class['Infantry']='badge-infantry';
     display_class['Cavalry']='badge-cavalry';
     display_class['Governor']='badge-governor';
@@ -98,7 +100,7 @@ function send_feedback(place)
       $('#reward').css('max-width','180px');
       $('#reward').css('margin-top','');
     }
-    $('#milestone').html(data['place_milestone'])
+    $('#milestone').html(data['place_milestone'])*/
   },
   fail: function()
   {
@@ -222,7 +224,8 @@ function send_votes(id,key,type,displayId)
         
     }
     //toggle display for rating buttons
-    $('#'+displayId).css('display','none');
+    $('#'+displayId).html('+1');
+    $('#'+displayId).removeClass();
     $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).css('display','');
     var score=parseInt($('#'+displayId).attr('title').split(' ')[1]);
     score=score+score_dict[type];

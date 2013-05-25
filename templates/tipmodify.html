@@ -18,10 +18,15 @@
 <script type="text/javascript">
 function review_tip(id,status)
 {
+	var content_id='#'+id;
+	if(status=='save_image')
+	{
+		content_id='#image';
+	}
  $.ajax({
   type: "POST",
   url: "/tipmodifyaction",
-  data: { id:id,status:status,content:$('#'+id).val()},
+  data: { id:id,status:status,content:$(content_id).val()},
   
   success: function(data)
   {
@@ -33,11 +38,17 @@ function review_tip(id,status)
   				$('#status'+id).html('Successfully Updated');
   				$('#status'+id).css('color','green');
   			}
-  			else
+  			else if(data['status']=='delete')
   			{
   				$('#status'+id).html('Successfully Deleted');
   				$('#status'+id).css('color','red');	
   			}
+  			else
+  			{
+  				$('#statusimage').html('Successfully Updated');
+  				$('#status'+id).css('color','green');
+  			}
+
 
   		}
   		else
@@ -110,5 +121,16 @@ $(document).ready(function(){
 			</td>
 		</tr>
 		{% endfor %}
+		<tr id="image12345">
+			
+			<td style="width:584px;">
+			<textarea style="font-family:arial,sans-serif" id="image" cols="80" rows="5">{{images}}</textarea>
+			</td>
+			<td style="width:48px;cursor:pointer;color:green;" onclick="review_tip('{{place}}','save_image')">
+				Save
+			</td>
+			<td style="max-width:80px;" id="statusimage" style="background-color:white;">
+			</td>
+		</tr>	
 	</table>
 </html>
