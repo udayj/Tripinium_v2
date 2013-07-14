@@ -173,7 +173,7 @@ function clear_placeholder()
           <ul class="nav">
             <li class="active"><a href="/">Home</a></li>
            <li>
-        <a href="/blog">Blog</a>
+        <a href="http://blog.tripinium.com">Blog</a>
       </li>
       <li>
         <a href="/cities">All Places</a>
@@ -261,7 +261,7 @@ function clear_placeholder()
       {% for p in place_info.items |sort(attribute='votes', reverse=True)%}
       <tr>
         <td>
-          {{p.item_name}}
+          {{p.item_name|safe}}
         </td>
         <td>
           <div id="p{{p.key().id()}}" style="cursor:pointer;color:yellow;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote up" class="triangle-up" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)"></div>
