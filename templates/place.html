@@ -168,7 +168,7 @@ function clear_placeholder()
     <div class="navbar">
     <div class="navbar-inner">
       <div class="container" style="width: auto;">
-        <a class="brand" href="#">Tripinium</a>
+        <a class="brand" href="/">Tripinium</a>
         <div class="nav-collapse">
           <ul class="nav">
             <li><a href="/">Home</a></li>
@@ -278,8 +278,8 @@ function clear_placeholder()
   <div class="row">
     {% for url in urls %}
     <div class="span3">
-      
-      <div class="thumbnail"><img src="{{url}}" alt="{{place}}" style="width:260px;height:180px;">
+       
+      <div class="thumbnail"><a href="{{url}}"><img src="{{url}}" alt="{{place}}" style="width:260px;height:180px;"></a>
       </div>
     </div>
     {% endfor %}
