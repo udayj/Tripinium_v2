@@ -1,65 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-    
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/style_new.css" rel="stylesheet" type="text/css">
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-      <!--  <script src='../scripts/strophe.js'></script>
-    <script src='../scripts/flXHR.js'></script>
-    <script src='../scripts/strophe.flxhr.js'></script>
-    <script src='cw1.min.js'></script> -->
-        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
-        <title>About - Tripinium</title>
-        <meta property="og:image" content="/images/tripinium_share_image.png" />
-        <meta property="og:title" content="Smart travel tips from Tripinium.com" />
-        <meta property="og:site_name" content="Tripinium" />
-        <meta name="description" content="Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip." />
-        <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
-<style>
-        .ui-autocomplete
-        {
-            position:absolute;
-            cursor:default;
-            z-index:4000 !important
-        }
-    </style>
-      <script src="/javascript/utility.js"></script>
-
-<script src="javascript/places.js">
-
-</script>
-
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-32623235-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-var func=function(obj){obj.placeholder='';};
-</script>
-<script>
-        $(document).ready(function() {
-    $("input#search").autocomplete({
-    source: places
-});
-    $('#user_tips').attr('value','');
-  });
-
-
-
-</script>
+{% extends "base.html" %}
+{% block content %}
 <script>
 $(document).ready(function(){
 $("#dialog-form").dialog({
@@ -82,37 +22,6 @@ $("#dialog-form").dialog({
                
             }
         });
-//calculateRating();
-$('#star').raty({
-  score:calculateRating(),
-  half:true,
-  click: function (score,evt){
-  var place=document.getElementById('email_place').innerHTML;
-    $.ajax({
-  type: "POST",
-  url: "/send_city_rating",
-  data: {score:score,place:place},
-  
-  success: function()
-  {
-    var place=$('#email_place').html()
-    _gaq.push(['_trackEvent', 'Place', 'Rating', place]);
-    $('#star').raty({
-        readOnly:true,
-        score:score
-    })
-  },
-  fail: function()
-  {
-    
-    alert('Problem submitting rating. We are looking into this.');
-  }
-}).done(function( msg ) {
- // document.getElementById("user_tips").value="";
-  //alert("Thanks for helping us improve!");
-});
-}
-});
 
 $( "#login-confirm" ).dialog({
       resizable: false,
@@ -160,89 +69,29 @@ function clear_placeholder()
 }
     </script>
 
-</head>
-<body>
-  <div class="container">
-  <header>
-    
-    <div class="navbar">
-    <div class="navbar-inner">
-      <div class="container" style="width: auto;">
-        <a class="brand" href="#">Tripinium</a>
-        <div class="nav-collapse">
-          <ul class="nav">
-            <li><a href="/">Home</a></li>
-           <li>
-        <a href="http://blog.tripinium.com">Blog</a>
-      </li>
-      <li class="active">
-        <a href="/how.html">About</a>
-      </li>
-      <li>
-        <a href="/cities">All Places</a>
-      </li>
-      <li>
-        <a href="/feedback">Feedback</a>
-      </li>
-    </ul>
-    <!--<ul class="nav pull-right">
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-            
-          </ul>-->
-          
 
-        </div><!-- /.nav-collapse -->
-      </div>
-    </div><!-- /navbar-inner -->
-  </div><!-- /navbar -->
-<!--    <div class="subnav">
-    <ul class="nav nav-pills">
-      <li class="active">
-        <a href="/">Home</a>
-      </li>
-      <li>
-        <a href="/blog">Blog</a>
-      </li>
-      <li>
-        <a href="/about">About</a>
-      </li>
-      <li>
-        <a href="/cities">All Places</a>
-      </li>
-      <li>
-        <a href="/feedback">Feedback</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-    </ul>
-  </div>
-  </header>
-</div> -->
-</header>
-</div>
 <div class="container">
   <div class="row">
-    <div class="span9">
-      <!--<h3 style="display:inline;margin-right:10px;margin-left:25px;">Search</h3>-->
-      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}" onkeydown="if (event.keyCode==13) { search();}"/>
-   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()" >Search</button>
-    </div>
+     <div class="col-lg-6 input-group">
+  <input id="search" type="text" class="form-control" placeholder="where are you headed? eg. Paris" onkeydown="if (event.keyCode==13) { search();}"/ >
+  <span class="input-group-btn">
+   <button type="button" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
+ </span>
+ </div>
   </div>
   
   <br>
   <div class="row">
-    <div class="span9">
-   <h2> How does it work ?</h2>
-        <div> Tripinium offers advice to travel planners on the last minute details for their next trip. To this end, it utilises deep local knowledge to prepare a carefully curated list of things that can help you enjoy your trip to the fullest. We provide you with useful tips that can help you organize the little details of your trip like where to eat, time to avoid the peak hour rush to your favorite tourist destination, how to commence a conversation with a foreigner, etc. We work hard so that you can travel smart. 
+    <div class="col-lg-9">
+   <h3> How does it work ?</h3>
+        <div> Tripinium provides useful tips for your next trip. These would be tips around what to pack for your trip, peak season months, options for local travel, monuments to visit, things to do, currency conversion outlets, links to particularly insightful reviews on other websites, etc. Our intention is to provide tips which a local should be able to provide. We bring a local perspective to global travel planning. We analyse the content available on the internet and create a list of useful tips while also providing relevant links to detailed information present elsewhere on the internet.
+        </div>
+        <br>
+    <h3> How is this different from Tripadvisor, Lonely Planet or even Foursquare ?</h3>
+        <div> While most of these websites are destinations for travel planning, we are more like gateways for travel planning - think of a specialised search engine for travel planning - although that goal is very ambitious at present. We provide actionable, practical tips for travel planners, and point them to other detailed resources relevant to their task rather than provide encyclopaedic information ourselves. We are infact trying to complement these great services by being an effective gateway.
+        </div>
+    <h3> How can I contribute tips for a place?</h3>
+        <div> We would be glad to receive community help to improve the tips for a particular place. Infact, it is important that you contribute tips since that would expedite the process of getting more useful content. You can submit tips for a place from the results page itself. The submitted tips go into an admin moderated queue where they are approved before making it into the actual production list of tips.
         </div>
 </div>
 
@@ -250,9 +99,13 @@ function clear_placeholder()
 
 </div>
 <hr>
+    <div class="row">
+    <div class="col-lg-4">
   <div class="footer">
   <p>© Tripinium.com 2013. All rights reserved.</p>
   </div>
+</div>
+</div>
   </div>
-</body>
-</html>
+  {% endblock %}
+

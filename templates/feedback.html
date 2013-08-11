@@ -1,64 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-    
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/style_new.css" rel="stylesheet" type="text/css">
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-      <!--  <script src='../scripts/strophe.js'></script>
-    <script src='../scripts/flXHR.js'></script>
-    <script src='../scripts/strophe.flxhr.js'></script>
-    <script src='cw1.min.js'></script> -->
-        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
-        <title>Feedback - Tripinium</title>
-        <meta property="og:image" content="/images/tripinium_share_image.png" />
-        <meta property="og:title" content="Smart travel tips from Tripinium.com" />
-        <meta property="og:site_name" content="Tripinium" />
-        <meta name="description" content="Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip." />
-        <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
-<style>
-        .ui-autocomplete
-        {
-            position:absolute;
-            cursor:default;
-            z-index:4000 !important
-        }
-    </style>
-      <script src="/javascript/utility.js"></script>
-
-<script src="javascript/places.js">
-
-</script>
-
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-32623235-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-var func=function(obj){obj.placeholder='';};
-</script>
+{% extends "base.html" %}
+{% block content %}
 <script>
         $(document).ready(function() {
-    $("input#search").autocomplete({
-    source: places
-});
-    $('#user_tips').attr('value','');
+        $('#user_tips').attr('value','');
   });
-
-
-
 </script>
 <script>
 $(document).ready(function(){
@@ -82,165 +27,31 @@ $("#dialog-form").dialog({
                
             }
         });
-//calculateRating();
-$('#star').raty({
-  score:calculateRating(),
-  half:true,
-  click: function (score,evt){
-  var place=document.getElementById('email_place').innerHTML;
-    $.ajax({
-  type: "POST",
-  url: "/send_city_rating",
-  data: {score:score,place:place},
-  
-  success: function()
-  {
-    var place=$('#email_place').html()
-    _gaq.push(['_trackEvent', 'Place', 'Rating', place]);
-    $('#star').raty({
-        readOnly:true,
-        score:score
-    })
-  },
-  fail: function()
-  {
-    
-    alert('Problem submitting rating. We are looking into this.');
-  }
-}).done(function( msg ) {
- // document.getElementById("user_tips").value="";
-  //alert("Thanks for helping us improve!");
-});
-}
-});
 
-$( "#login-confirm" ).dialog({
-      resizable: false,
-      height:160,
-      modal: true,
-      autoOpen:false,
-      buttons: {
-        "Login Usign Gmail": function() {
-          window.location=$('#loginurl').attr('href')
-        },
-        Cancel: function() {
-          $( this ).dialog( "close" );
-        }
-      }
-    });
-
- twttr.ready(function (twttr) {
-    // bind events here
-    twttr.events.bind('tweet', function(event) {
-    var place=$('#email_place').html()
-    _gaq.push(['_trackEvent', 'Social', 'Tweet', place]);
-    send_social_action('tweet',place);
-  });
-  });
-
-
-});
 
 function tweet()
 {
   var place=$('#email_place').html();
   send_social_action('tweet',place);
 }
-function dialog(){
-
-               $("#email").click(function() {
-                var place=$('#email_place').html()
-                _gaq.push(['_trackEvent', 'Email', 'Click', place]);
-                $("#dialog-form").dialog("open");
-            });
-    }
 function clear_placeholder()
 {
   $('#search').attr('placeholder','');
 }
     </script>
-
-</head>
-<body>
-  <div class="container">
-  <header>
-    
-    <div class="navbar">
-    <div class="navbar-inner">
-      <div class="container" style="width: auto;">
-        <a class="brand" href="#">Tripinium</a>
-        <div class="nav-collapse">
-          <ul class="nav">
-            <li><a href="/">Home</a></li>
-           <li>
-        <a href="http://blog.tripinium.com">Blog</a>
-      </li>
-      <li>
-        <a href="/how.html">About</a>
-      </li>
-      <li>
-        <a href="/cities">All Places</a>
-      </li>
-      <li class="active">
-        <a href="/feedback">Feedback</a>
-      </li>
-    </ul>
-    <!--<ul class="nav pull-right">
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-            
-          </ul>-->
-          
-
-        </div><!-- /.nav-collapse -->
-      </div>
-    </div><!-- /navbar-inner -->
-  </div><!-- /navbar -->
-<!--    <div class="subnav">
-    <ul class="nav nav-pills">
-      <li class="active">
-        <a href="/">Home</a>
-      </li>
-      <li>
-        <a href="/blog">Blog</a>
-      </li>
-      <li>
-        <a href="/about">About</a>
-      </li>
-      <li>
-        <a href="/cities">All Places</a>
-      </li>
-      <li>
-        <a href="/feedback">Feedback</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-    </ul>
-  </div>
-  </header>
-</div> -->
-</header>
-</div>
 <div class="container">
   <div class="row">
-    <div class="span9">
-      <!--<h3 style="display:inline;margin-right:10px;margin-left:25px;">Search</h3>-->
-      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}" onkeydown="if (event.keyCode==13) { search();}"/>
-   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()" >Search</button>
-    </div>
+     <div class="col-lg-6 input-group">
+  <input id="search" type="text" class="form-control" placeholder="where are you headed? eg. Paris" onkeydown="if (event.keyCode==13) { search();}"/ >
+  <span class="input-group-btn">
+   <button type="button" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
+ </span>
+ </div>
   </div>
   
   <br>
   <div class="row">
-    <div class="span9">
+    <div class="col-lg-9">
    <h2> Let us know how we are doing  </h2>
         <div> Send any feedback, good or bad, to udayj.dev@gmail.com </div>
         </div>
@@ -250,9 +61,12 @@ function clear_placeholder()
 
 
 <hr>
+    <div class="row">
+    <div class="col-lg-4">
   <div class="footer">
   <p>© Tripinium.com 2013. All rights reserved.</p>
   </div>
+</div>
+</div>
 </div>  
-</body>
-</html>
+{% endblock %}

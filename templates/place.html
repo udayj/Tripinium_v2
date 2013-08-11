@@ -1,54 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-    
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/style_new.css" rel="stylesheet" type="text/css">
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-      <!--  <script src='../scripts/strophe.js'></script>
-    <script src='../scripts/flXHR.js'></script>
-    <script src='../scripts/strophe.flxhr.js'></script>
-    <script src='cw1.min.js'></script> -->
-        <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
-        <title>Smart tips for {{place.title()}} - Tripinium</title>
-        <meta property="og:image" content="/images/tripinium_share_image.png" />
-        <meta property="og:title" content="Smart travel tips from Tripinium.com" />
-        <meta property="og:site_name" content="Tripinium" />
-        <meta name="description" content="Tour {{place.title()}} with confidence. Smart local tips for your next trip. We help you organise the little details of your trip to {{place.title()}}" />
-        <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
-<style>
-        .ui-autocomplete
-        {
-            position:absolute;
-            cursor:default;
-            z-index:4000 !important
-        }
-    </style>
-      <script src="/javascript/utility.js"></script>
-
-<script src="javascript/places.js">
-
-</script>
-
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-32623235-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-var func=function(obj){obj.placeholder='';};
-</script>
+{% extends "base.html" %}
+{% block content %}
 <script>
         $(document).ready(function() {
     $("input#search").autocomplete({
@@ -82,38 +33,6 @@ $("#dialog-form").dialog({
                
             }
         });
-//calculateRating();
-$('#star').raty({
-  score:calculateRating(),
-  half:true,
-  click: function (score,evt){
-  var place=document.getElementById('email_place').innerHTML;
-    $.ajax({
-  type: "POST",
-  url: "/send_city_rating",
-  data: {score:score,place:place},
-  
-  success: function()
-  {
-    var place=$('#email_place').html()
-    _gaq.push(['_trackEvent', 'Place', 'Rating', place]);
-    $('#star').raty({
-        readOnly:true,
-        score:score
-    })
-  },
-  fail: function()
-  {
-    
-    alert('Problem submitting rating. We are looking into this.');
-  }
-}).done(function( msg ) {
- // document.getElementById("user_tips").value="";
-  //alert("Thanks for helping us improve!");
-});
-}
-});
-
 $( "#login-confirm" ).dialog({
       resizable: false,
       height:160,
@@ -161,93 +80,26 @@ function clear_placeholder()
     </script>
 
 </head>
-<body>
-  <div class="container">
-  <header>
-    
-    <div class="navbar">
-    <div class="navbar-inner">
-      <div class="container" style="width: auto;">
-        <a class="brand" href="/">Tripinium</a>
-        <div class="nav-collapse">
-          <ul class="nav">
-            <li><a href="/">Home</a></li>
-           <li>
-        <a href="http://blog.tripinium.com">Blog</a>
-      </li>
-      <li>
-        <a href="/cities">All Places</a>
-      </li>
-      <li>
-        <a href="/how.html">About</a>
-      </li>
-      
-      <li>
-        <a href="/feedback">Feedback</a>
-      </li>
-    </ul>
-    <!--<ul class="nav pull-right">
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-            
-          </ul>-->
-          
-
-        </div><!-- /.nav-collapse -->
-      </div>
-    </div><!-- /navbar-inner -->
-  </div><!-- /navbar -->
-<!--    <div class="subnav">
-    <ul class="nav nav-pills">
-      <li class="active">
-        <a href="/">Home</a>
-      </li>
-      <li>
-        <a href="/blog">Blog</a>
-      </li>
-      <li>
-        <a href="/about">About</a>
-      </li>
-      <li>
-        <a href="/cities">All Places</a>
-      </li>
-      <li>
-        <a href="/feedback">Feedback</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Facebook</a>
-      </li>
-      <li class="pull-right">
-        <a href="/login">Login Gmail</a>
-      </li>
-    </ul>
-  </div>
-  </header>
-</div> -->
-</header>
-</div>
 <div class="container">
   <div class="row">
-    <div class="span9">
-      <!--<h3 style="display:inline;margin-right:10px;margin-left:25px;">Search</h3>-->
-      <input id="search" type="text" class="input-xlarge" placeholder="{{place}}" onkeydown="if (event.keyCode==13) { search();}"/>
-   <button type="submit" value="Search" class="btn btn-primary"  onclick="search()" >Search</button>
-    </div>
+     <div class="col-lg-6 input-group">
+  <input id="search" type="text" class="form-control" placeholder="where are you headed? eg. Paris" onkeydown="if (event.keyCode==13) { search();}"/ >
+  <span class="input-group-btn">
+   <button type="button" value="Search" class="btn btn-primary"  onclick="search()">Search</button>
+ </span>
+ </div>
   </div>
+  <br>
   <div class="row">
-    <div class="span9">
+    <div class="col-lg-9">
       <h2 style="display:inline;">Tips for {{place.title()}}</h2> 
      <!-- <img src="/images/envelope.png" style="margin-right:10px;"/>
       <img src="images/print.png"/>-->
-      <div class="span1 pull-right" style="margin-right:0px;padding-right:0px;">
+      <div class="col-lg-1 pull-right" style="margin-right:0px;padding-right:0px;">
       
 
     </div>
-    <div class="span1 pull-right">
+    <div class="col-lg-1 pull-right">
       
     </div>
     </div>
@@ -255,7 +107,7 @@ function clear_placeholder()
   </div>
   <br>
   <div class="row">
-    <div class="span9">
+    <div class="col-lg-9">
    <table class="table table-bordered table-striped table-hover">
     <tbody>
       {% for p in place_info.items |sort(attribute='votes', reverse=True)%}
@@ -264,10 +116,10 @@ function clear_placeholder()
           {{p.item_name|safe}}
         </td>
         <td>
-          <div id="p{{p.key().id()}}" style="cursor:pointer;color:yellow;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote up" class="triangle-up" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)"></div>
+          <div id="p{{p.key().id()}}" style="cursor:pointer;color:green;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote up" class="triangle-up" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)"></div>
         </td>
         <td>
-          <div id="n{{p.key().id()}}" style="cursor:pointer;color:yellow;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" class="triangle-down" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"></div>
+          <div id="n{{p.key().id()}}" style="cursor:pointer;color:red;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" class="triangle-down" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"></div>
         </td>
       </tr>
       {% endfor %}
@@ -277,9 +129,9 @@ function clear_placeholder()
   {% if urls %}
   <div class="row">
     {% for url in urls %}
-    <div class="span3">
+    <div class="col-4 col-lg-4">
        
-      <div class="thumbnail"><a href="{{url}}"><img src="{{url}}" alt="{{place}}" style="width:260px;height:180px;"></a>
+      <div class="img-thumbnail img-responsive"><a href="{{url}}"><img src="{{url}}" alt="{{place}}" class="img" style="height:180px;"></a>
       </div>
     </div>
     {% endfor %}
@@ -289,20 +141,21 @@ function clear_placeholder()
   <div class="muted">Source: Flickr</div>
   {% endif %}
 </div>
-<div class="span3">
-  <h3>Got a tip to share ?</h3>
-  <div class="muted" style="sont-size:14px;">Let us know below</div>
-  <textarea id="user_tips" rows="4" cols="70" value="" title="Tell us something about this place that we dont yet know">
-            </textarea>
-            
+<div class="col-lg-3">
+  <div style="font-size:22px;font-weight:bold;">Got a tip to share?</div>
+  <div class="muted" style="font-size:14px;">Let us know below</div>
+  <textarea id="user_tips" rows="4" style="width:100%" value="" title="Tell us something about this place that we dont yet know"></textarea>
+            <br>
+            <br>
             <input type="submit" class="btn btn-primary" name="user_feedback" value="Submit" onclick="send_feedback('{{place}}')" 
             style="display:block;"/>
-            <div id="tips_thank" style="display:hidden;color:yellow;"></div>
+            <div id="tips_thank" style="display:hidden;color:green;"></div>
 
           
+          <br>
 <div class="row">
-  <div class="span3">
-    <h3>Also Explore</h3>
+  <div class="col-lg-9">
+    <h4>Also Explore</h4>
     <table class="table table-bordered table-striped table-hover">
     <tbody>
       {% for recommendation in recommendations %}
@@ -319,340 +172,14 @@ function clear_placeholder()
 </div>
 </div>
 <hr>
+    <div class="row">
+    <div class="col-lg-4">
   <div class="footer">
   <p>© Tripinium.com 2013. All rights reserved.</p>
   </div>
+</div>
+</div>
   </div>
-</body>
-
-<!--
-
-<body>
-  <script>
-   /*window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '232003813594670', // App ID
-      channelUrl : '//www.tripinium.com/channel.html', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true  // parse XFBML
-    });
-
-    // Additional initialization code here
-    FB.Event.subscribe('edge.create',
-    function(response) {
-      place=$('#email_place').innerHTML();
-      _gaq.push(['_trackEvent', 'Social', 'Like', place]);
-        send_social_action('like',place);
-    });
-  };*/
-  
-  </script>
-   <center>
-    <div class="class3" style="min-height:900px;">
-        <div class="class4">
-        </div>
-
-        <div class="row class6">
-            <div class="pull-left class8">
-                <a href="/" style="text-decoration:none;"> 
-                    <span class="sclass12">Home </span>
-                </a>
-            </div>
-
-            <div class="pull-left class10">
-                <a href="/how.html" style="text-decoration:none;">  
-                    <span class="sclass12">About </span>
-                </a>
-            </div>
-
-            <div class="pull-left class12">
-                <a href="/feedback.html" style="text-decoration:none;"> 
-                    <span class="sclass12">Feedback </span>
-                </a>
-            </div>
-            <div class="pull-left class-blog">
-                <a href="http://blog.tripinium.com" style="text-decoration:none;" target="blank"> 
-                    <span class="sclass12">Blog </span>
-                </a>
-            </div>
-
-			<div class="pull-right" style="padding-top:1%;width:260px;">
-                <div class="pull-left class14 scalss12" style="display:inline;margin-top:3px;">
-                   
-                      {% if user: %}
-                      <a href="/profile?user={{user.key().id()}}" style="text-decoration:underline;color:#1b918f;font-size:13px;"> Hi {{user.nickname}}!</a>    <a 
-                      {% if user.usertype=='Facebook': %}
-                      href="/logout"
-                      {% else: %}
-                      href="{{logout_url}}" 
-                      {% endif %}
-                      class="sclass12" style="text-decoration:none;">Logout</a>
-                      {%else: %}
-                      <span class="sclass12">Login using</span> <a href="{{login_url}}" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Login_Gmail', 'Click', {{place}}]);"
-                      >Gmail</a> | <a href="/login" class="sclass12" style="text-decoration:none;" id="loginurl"
-                      onclick="_gaq.push(['_trackEvent', 'Login_Facebook', 'Click', {{place}}]);"
-                      >Facebook</a>
-                      {% endif %}
-
-                   
-                </div>
-
-                <div class="pull-left class17" style="margin-top:2px;">
-                    <div class="class18"><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.tripinium.com/search?location={{place}}" data-text="Practical travel tips" data-via="tripinium" data-count="none" onClick="tweet()" 
-                      data-hashtags="{{place}}"
-                      ><img src="/images/results/twt_img.png"></a>
-                    </div>
-
-                </div>
-
-                <!--div class="pull-left class19"><a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.tripinium.com/search%3Flocation%3D{{place}}&media=http%3A%2F%2Fwww.tripinium.com%2Fimages%2Ftripinium_logo_v2.png&description=Cool%20and%20useful%20tips%20for%20your%20next%20trip" class="pin-it-button" count-layout="none"><img border="0" src="/images/results/layer_7.png" title="Pin It" onClick="_gaq.push(['_trackEvent', 'Social', 'Pinterest', '{{place}}']);"/></a>
-                </div> 
-            </div>
-        </div>
-
-        <div class="row class20">
-            <div class="pull-left class21">
-                <img class="pull-left" src="/images/results/layer_14.png" width="100%">
-            </div>
-
-            <input id="search" type="text" placeholder="{{place}}" style="display:inline;" onclick="clear_placeholder()" onkeydown="if (event.keyCode==13) { search();}"/>
-            <input type="submit" value="Search" style="" onclick="search()"/>
-            <div id="reward" class="pull-right" style="display:inline;display:none;width:300px;font-size:13px;margin-top:10px;">
-
-            </div>
-        </div>
-
-        <div class="class30">
-            
-
-            <div class="class44" style="display:inline;">
-                <div class="class45" >
-                    <img src="/images/results/layer_24_copy.png">
-                </div>
-
-                <div class="pull-left" style="width:60%;display:inline;">
-                	<span class="class46">
-                       {% if place_info: %}
-                       
-                       {% if is_spell_corrected %}
-                        <div class="pull-left class51"  style="display:block;min-width:400px;">
-                        Showing result for {{place.title()}}, search instead for <a href="/search?location={{orig_query}}&spellcorrect=false" style="no-decorate">{{orig_query}}</a>
-                        </div>
-                        {% endif %}
-                        <span class="pull-left class51" id="place_name" style="margin-top:1%;">
-                            <span class="class48">Get a Headstart on your trip to</span> <span class="class50" id="email_place">{{place.title()}}</span>
-
-                        </span>
-                        
-
-                        {% endif %}
-                    </span>
-                    <span class="pull-right utility">
-                        <div class="pull-left class53">
-                           <div class="class54" id="email" title="Share tips with friends through email"><img  src="/images/results/email.png" onclick="dialog()" style="cursor:pointer;"></div>
-                        </div>
-
-                        <div class="pull-left class56">
-                            <div class="class57" title="Print these tips"><img src="/images/results/printer.png" onclick="print()" style="cursor:pointer;" ></div>
-                        </div>
-                    </span>
-                    <br>
-                    {% if place_info: %}
-                    <br>
-					<span style="background-color:#e5e9fc;margin-top:5%;">
-           {% if milestone: %}
-                        <div id="milestone" class="alert alert-info" style="float:left;margin-top:10px;min-width:350px;border-size:3px;font-weight:bold;display:block;">{{milestone}}</div>
-                        
-                       
-                        {% endif %}
-						<ol style="margin-top:2%;" id="data" >
-							<span style="display:none;" id="total_rating" class="{{place_info.total_rating}}"> </span>
-                            <span style="display:none;" id="total_rating_count" class="{{place_info.total_rating_count}}"> </span>
-					{%   for p in place_info.items %}
-					       <li style="float:left;margin-top:1%;margin-bottom:2%;width:100%;">
-                            
-
-							
-							<span class="votes">
-
-							     <span class="votes_down">
+  {% endblock %}
 
 
-                    <img src="/images/results/layer_29_copy.png" style="margin-top:3px;cursor:pointer;" id='n{{p.key().id()}}' 
-                    {% if user: %}
-                    onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"
-                    {% else: %} 
-                    onclick="$('#login-confirm').dialog('open')"
-                    {% endif %}
-                    title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" />
-                                </span>
-                  <span class="votes_up">
-                        <img src="/images/results/layer_29.png" id='p{{p.key().id()}}'
-                        {% if user: %}
-                        onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)" 
-                        {% else: %} 
-                        onclick="$('#login-confirm').dialog('open')"
-                        {% endif %}
-                        style="cursor:pointer;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %} Click to vote up" />
-                      </span>
-					       	     
-					       </span>
-					       	<span style="float:right;width:76%;margin-right:20px;font-size:13px;" > {{ p.item_name | safe }} </span>
-
-					       {% if p.item_description %}
-					        <p>{{ p.item_description | safe }}</p>
-					       {% endif %}
-
-					        </li>
-					    
-					   {% endfor %}
-				   	
-					   </ol>
-
-                     
-                       
-                        <div class="rating" style="width:100%;">
-                            Rate this <span class="place_rating">Place</span>
-                            <span id="star" ></span>
-                          
-
-                        </div>
-                        <br>
-                        <div class="fb-like" style="float:left;margin-top:10px;" data-href="http://www.tripinium.com/search?location={{place}}" data-send="false" data-width="450" data-show-faces="true" data-font="arial"></div>
-                        <br>
-                        
-                                               
-    				</span>
-                    {% endif %}
-                </div>	  	
-                <span class="pull-right class62" >
-                   {% if visited: %}
-              <span class="badge badge-visited" style="margin-top:1%;font-size:13px;padding:4px;">
-                You and {{visited_count}} other people have been here
-              </span>
-            {% else: %}
-              <span id="visited" class="badge badge-not-visited" style="margin-top:1%;font-size:13px;padding:4px;padding-left:6px;padding-right:6px;cursor:pointer;"
-              {% if user: %}
-              onclick="visited('{{place}}')"
-              {% else: %}
-              onclick="$('#login-confirm').dialog('open')"
-              {% endif %}
-              >
-                I have been here
-              </span>
-              <br>
-              <span id="visited-other" class="badge badge-visited" style="margin-top:1%;font-size:13px;padding:4px;padding-left:6px;padding-right:6px;">
-                {{visited_count}} people have been here
-              </span>
-            {% endif %}
-                    <div class="class59" style="padding-left:2%;margin-top:20px;">Got a tip to share?
-                     	<br>
-                        <span class="class61">Let us know below</span>
-                    </div>
-
-                    <textarea id="user_tips" rows="4" cols="80" class="well" style="background-color:white;width:60%" value="" title="Tell us something about this place that we dont yet know">
-    				</textarea>
-            <span class="tip_submit_outer">
-    				<input type="submit" style="background-color:#89C9EE;width:95%;color:#1b918f;" name="user_feedback" value="Submit" onclick="send_feedback('{{place}}')" />
-          </span>
-                    <br>
-    				{% if recommendations %}
-                    <div class="nclass118">
-	                   <span class="nclass120"> Explore these places </span><br>
-                     <span style="width:1em;min-width:250px;">
-	                   <div style="position:relative;float:left;display:inline;margin:3%;min-width:100px;">
-	                       {% for recommendation in recommendations[:3] %}
-	                       <div class="nclass121" style="margin:3px;" >
-	                            <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;font-size:15px;"> 
-                                    <span onclick="_gaq.push(['_trackEvent', 'Recommendation', 'Click', '{{place}}']);">{{recommendation.title()}} </span>
-                                </a>
-                           </div>
-
-	                       {% endfor %}
-                        </div>
-                       <span style="position:relative;float:left;margin:3%;min-width:100px;">
-	                       {% for recommendation in recommendations[3:] %}
-	                       <div class="nclass121" style="margin:3px;" >
-	                           <a href="/search?q={{recommendation.title()}}" style="text-decoration:none;color:black;font-size:15px;"> 
-                                    <span class="" onclick="_gaq.push(['_trackEvent', 'Recommendation', 'Click', '{{place}}']);">{{recommendation.title()}} </span>
-                               </a>
-                           </div>
-
-	                       {% endfor %}
-                       </span>
-                      </span>
-                    </div>
-                    {% endif %}
-                    <div class=" {{leader_class}}" style="xheight:60px;max-width:235px;min-width:230px;padding-right:2px;cursor:pointer;font-size:13px;"
-                    {% if gov: %}
-                    onclick="window.location='/profile?user={{gov.key().id()}}'" style="cursor:pointer;"
-                    {% endif %}
-                    >
-                      {{leader_message}}
-                    </div>
-                     <a href="http://www.facebook.com/pages/Tripinium/485369678152306" target="blank" style="position:relative;text-decoration:none;top:20px;"><span style="background-color:#3a87ad;color:white" class="alert alert-info">Say Hi on our Facebook Page</span>
-                        </a>
-                    <div class="nclass123">
-	                   <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank" style="text-decoration:none;" onclick="_gaq.push(['_trackEvent', 'Affiliate_Link', 'Click', '{{place}}']);">Hotels in {{place.title()}}
-                       </a>
-                    </div>
-                
-                </span>
-                 <div class="class43" style="height:70%;display:inline;max-height:500px;">
-                  <img src="/images/results/layer_24_copy_3.png" style="max-height:500px;" width="2px">
-                </div>
-
-
-                </span>
-              </div>  
-
-</div>
-        <div class="nclass41" style="margin-top:100px;margin-left:350px;width:400px;padding-bottom:0px;margin-bottom:0px;padding-left:100px;">
-            <div style="margin-bottom:0px;padding-top:170px;font-size:12px;">
-                Copyright 2012 Tripinium. All rights reserved.
-            </div>
-        </div>
-        <div id="dialog-form" title="Share tips through email" style="display:none;">
-            <p class="validateTips">Enter the email ids where you want the tips sent (separated by semi-colons ; )</p>
-
-            <form>
-            <fieldset>
-                <label for="name">Your Name (optional)</label>
-                <input type="text" name="name" id="name_field" value="" class="text ui-widget-content ui-corner-all" />
-                <label for="email">Email Id(s)</label>
-                <input type="text" name="email" id="email_field" value="" class="text ui-widget-content ui-corner-all" width="80%"/>
-            </fieldset>
-            </form>
-        </div>
-        <div id="login-confirm" style="display:none" title="Login for this action">You need to be logged in to complete this action. Just login using your Gmail account !</div>
-
- <div id="fb-root"></div>
-                       
-                        <script type="text/javascript" charset="utf-8">
-  window.twttr = (function (d,s,id) {
-    var t, js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
-    js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
-    return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
-  }(document, "script", "twitter-wjs"));
-
-  
-</script>
- <script>(function(d, s, id) {
-                              var js, fjs = d.getElementsByTagName(s)[0];
-                              if (d.getElementById(id)) return;
-                              js = d.createElement(s); js.id = id;
-                              js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-                              fjs.parentNode.insertBefore(js, fjs);
-                            }(document, 'script', 'facebook-jssdk'));
-                        </script>
-</div>
-</center>
-</body>
-<script>
-
-</script> -->
-
-</html>

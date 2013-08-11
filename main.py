@@ -58,7 +58,7 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
         user=get_user(self.request.cookies)
-        self.render('front.html',current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+        self.render('front.html',current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'),active="front")
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -70,9 +70,23 @@ class AllPlacesPage(webapp2.RequestHandler):
         places=[]
         for place in places_db:
             places.append(place.name)
-        logging.info(places)
+        
         self.response.headers['Content-Type'] = 'text/html'
-        self.render('all_places.html',places=places)
+        places.sort()
+        #logging.info(str(places))
+        count=0
+        place_tuple=()
+        for place in places:
+            count+=1
+            if count%3==1:
+                place_tuple=()
+            place_tuple=place_tuple+(place,)
+            if count%3==0:
+                place_list.append(place_tuple)
+        
+        #logging.info(str(place_list))    
+
+        self.render('all_places.html',places=place_list,active="cities")
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -344,7 +358,8 @@ class ResultPage(webapp2.RequestHandler):
 class HowPage(webapp2.RequestHandler):
     def get(self):
         user=get_user(self.request.cookies)
-        self.render('how.html',current_user=user,login_url=users.create_login_url('/how.html'),logout_url=users.create_logout_url('/how.html'))
+        self.render('how.html',current_user=user,login_url=users.create_login_url('/how.html'),
+                    logout_url=users.create_logout_url('/how.html'),active="how")
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -352,7 +367,8 @@ class HowPage(webapp2.RequestHandler):
 class FeedbackPage(webapp2.RequestHandler):
     def get(self):
         user=get_user(self.request.cookies)
-        self.render('feedback.html',current_user=user,login_url=users.create_login_url('/feedback.html'),logout_url=users.create_logout_url('/feedback.html'))
+        self.render('feedback.html',current_user=user,login_url=users.create_login_url('/feedback.html'),
+                    logout_url=users.create_logout_url('/feedback.html'),active="feedback")
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):

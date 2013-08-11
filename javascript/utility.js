@@ -224,11 +224,18 @@ function send_votes(id,key,type,displayId)
         
     }
     //toggle display for rating buttons
-    $('#'+displayId).html('+1');
-    $('#'+displayId).removeClass();
+    $('#'+displayId).removeClass('triangle-up triangle-down');
     $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).css('display','');
     var score=parseInt($('#'+displayId).attr('title').split(' ')[1]);
     score=score+score_dict[type];
+    if(score_dict[type]==1)
+    {
+      $('#'+displayId).html('+1');
+    }
+    else
+    {
+      $('#'+displayId).html('-1');
+    }
     $('#'+displayId).attr('title','Score '+score);
     $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).attr('title','Score '+score);
     $.ajax({

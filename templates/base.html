@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html lang="en">
+<head>
+    <meta name="generator" content="HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Language" content="en" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="/javascript/bootstrap.min.js"></script>
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/style_new.css" rel="stylesheet" type="text/css">
+    <script src="/javascript/jquery_plugin/js/jquery.raty.min.js"></script>
+    <!--link href="/stylesheets/style_front.css" rel="stylesheet" type="text/css"-->
+    <meta property="og:image" content="/images/tripinium_share_image.png" />
+    <meta property="og:title" content="Smart travel tips from Tripinium.com" />
+    <meta property="og:site_name" content="Tripinium" />
+    <meta name="description" content="Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip." />
+        <meta name="keywords" content="travel,tour,tips,cities,places,hotels,excursion,{{place}}" />
+    
+    
+    <script src="/javascript/places.js"></script>
+    <title>Tripinium - Travel tips for your next trip</title>
+<script src="/javascript/utility.js">
+
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-32623235-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<script type="text/javascript">
+
+ $(document).ready(function() {
+ $("input#search").autocomplete({
+    source: places
+  });
+  });
+ </script>
+
+</head>
+<div class="container">
+  <body onload="$('#{{active}}').addClass('active');">
+
+    
+    <div class="navbar">
+    
+      <div class="container">
+         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+        <a class="navbar-brand" href="/">Tripinium</a>
+        <div class="nav-collapse collapse navbar-responsive-collapse" id="navbar">
+          <ul class="nav navbar-nav">
+            <li id="front"><a href="/">Home</a></li>
+           <li id="blog">
+        <a href="http://blog.tripinium.com">Blog</a>
+      </li>
+      <li id="cities">
+        <a href="/cities">All Places</a>
+      </li>
+      <li id="how">
+        <a href="/how.html">About</a>
+      </li>
+      
+      <li id="feedback">
+        <a href="/feedback">Feedback</a>
+      </li>
+    </ul>
+    
+          
+
+        </div><!-- /.nav-collapse -->
+      </div>
+    
+  </div><!-- /navbar -->
+  {% block content %}
+  {% endblock %}
+
+  </body>
+</div>
+</html>
+
