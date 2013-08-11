@@ -68,6 +68,12 @@ class Feedback(db.Model):
     feedback=db.TextProperty()
     created=db.DateTimeProperty(auto_now_add=True)
 
+class SocialScore(db.Model):
+    #items need to have a foreign reference to a place entity
+    """Social Score for Tripinium"""
+    score=db.TextProperty()
+    created=db.DateTimeProperty(auto_now_add=True)
+
 class LocalContact(db.Model):
     """Not being used presently but this class saves information about a local contact"""
     #local contacts need to have a foreign reference to a place entity
@@ -75,6 +81,11 @@ class LocalContact(db.Model):
     name=db.TextProperty(required=True)
     email=db.EmailProperty()
     address=db.TextProperty()
+
+def get_social_score_from_db():
+    score=db.GqlQuery('select * from SocialScore limit 1')
+    score=score.get()
+    return score
 
 def get_place_from_db(place):
     place_info=db.GqlQuery('select * from Place where name=:1 limit 1',place)

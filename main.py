@@ -64,6 +64,32 @@ class MainPage(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
+class SocialScorePage(webapp2.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/html'
+        user=get_user(self.request.cookies)
+        score=self.request.get('score')
+        password=self.request.get('password')
+        if score!=None and password!=None and password=='password':
+            obj=get_social_score_from_db()
+            if obj is not None:
+                obj.score=score
+                obj.put()
+            else:
+                obj=SocialScore(score=score)
+                obj.put()
+        new_score=get_social_score_from_db()
+        if new_score==None:
+            new_score=0
+        else:
+            new_score=int(str(new_score.score))
+        self.render('social_score.html',current_user=user,login_url=users.create_login_url('/'),
+                    logout_url=users.create_logout_url('/'),active='social_score',score=new_score)
+    def render(self, template, **kw):
+        self.write(render_str(template, **kw))
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
+
 class AllPlacesPage(webapp2.RequestHandler):
     def get(self):
         places_db=get_all_places_from_db()
@@ -76,6 +102,7 @@ class AllPlacesPage(webapp2.RequestHandler):
         #logging.info(str(places))
         count=0
         place_tuple=()
+        place_list=[]
         for place in places:
             count+=1
             if count%3==1:
@@ -1114,7 +1141,8 @@ app = webapp2.WSGIApplication(
                                       ('/login',LoginHandler),
                                       ('/logout',LogoutHandler),
                                       ('/datarefresh',DataRefresh),
-                                      ('/feedback',FeedbackPage)],
+                                      ('/feedback',FeedbackPage),
+                                      ('/social_score.html',SocialScorePage)],
                                      debug=False)
 #Need more comments
 

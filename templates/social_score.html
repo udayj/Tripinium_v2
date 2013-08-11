@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+      /* All form factors */
+
+      /* Main body and headings */
+     @media (min-width: 980px) { 
+        
+       .linediv-l {
+         border-right: 1px white solid;
+        }
+       .linediv-r {
+         border-left: 1px white solid;
+       }
+      }
+
+       @media (max-width: 480px) { 
+       .copy {
+         padding: 2.5% 10%;
+       }
+       .linediv-l {
+         border-bottom: 1px white solid;
+       }
+       .linediv-r {
+         border-top: 1px white solid;
+       }
+      }
+      /* Video pitch and Action */
+      .pitch {
+        padding: 2.5% 0%;
+      }
+      .order {
+        padding: 2% 0%;
+      }
+      .actions {
+        background-color: #343434;
+        padding: 3% 0%;
+      }
+      .video, .thermometer, .order, .social, .statistics {
+        text-align: center;
+      }
+      .statistics h3, .statistics p {
+        color: white;
+      }
+
+      /* Marketing Copy and Footer */
+      .copy {
+        padding-top: 2.5%;
+        padding-bottom: 2.5%;
+        text-align: justify;
+      }
+      .asset {
+        padding: 2.5% 0%;
+      }
+      .footer {
+        color: #cccccc;
+        text-align: center;
+      }
+      .footer p {
+        font-size: 11px;
+      }
+      .footer a {
+        color: #ccccff;
+      }
+    </style>
+
+    <!-- We use row-fluid inside containers to achieve a resizable layout. -->
+    <!-- blogs.endjin.com/2013/04/tips-for-implementing-responsive-designs-using-bootstrap/ -->
+    <!-- http://stackoverflow.com/a/12270322 -->
+    <div class="container">
+      <!-- Font and paired font of .heading/.subheading and body from Google Fonts -->
+      <!-- www.google.com/fonts/specimen/Ubuntu -->
+      <!-- www.google.com/fonts/specimen/Ubuntu#pairings -->
+      <div class="row heading" style="text-align:center;">
+        <div class="col-lg-12">
+          <h1>Share for Tripinium</h1>
+        </div>
+      </div> 
+      <div class="row subheading" style="text-align:center;">
+        <div class="col-lg-12">
+          <!-- Special typography from Bootstrap for lead paragraph. -->
+          <!-- http://twitter.github.io/bootstrap/base-css.html#typography -->
+          <p class="lead">Get the word out for the easiest way to plan your next trip</p>
+        </div>
+      </div>
+      <div class="row pitch">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5 ">
+          <img class="img-thumbnail" src="/images/crowd1.png" style="width:100%;height:300px;">
+        </div>
+
+        <!-- We define a new 'actions' div to contain statistics, order, and share buttons.-->
+        <div class="col-lg-5 actions" style="text-align:center;">
+          <div class="col-lg-12" style="text-align:center;">
+              
+              <div class="col-lg-12" style="text-align:center;color:white;">
+                <!-- linediv-l and linediv-r give dividing lines that look
+                different in horizontal and vertical layouts, illustrating
+                media queries. -->
+                <h3>Social Score - {{score}}/10000</h3>
+                
+            
+          </div>
+        </div>
+
+          <div class="col-lg-12 offset1">
+            <!-- Bootstrap progress bar -->
+            <!-- http://twitter.github.io/bootstrap/components.html#progress -->
+            <div class="thermometer progress active">
+              <div class="progress-bar progress-bar-success" style="width: {{score*100/10000.0}}%;"></div>
+              <div class="progress-bar progress-bar-warning" style="width: {{(10000-score)*100/10000.0}}%;"></div>
+            </div>
+          </div>
+          
+          
+          <div class="col-lg-12">
+            <div class="col-lg-1"></div>
+          <div class="col-lg-10 social" style="text-align:center;">
+            <!-- Social buttons are not included in default Bootstrap. -->
+            <!-- See: http://noizwaves.github.io/bootstrap-social-buttons -->
+               <!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+<a class="addthis_button_tweet"></a>
+<a class="addthis_button_google_plusone" g:plusone:annotation="bubble"></a> 
+<a class="addthis_counter addthis_pill_style"></a>
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5207445d5cd301f3"></script>
+<!-- AddThis Button END -->
+            
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Beyond this part the marketing copy begins. -->
+      <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/text-align -->
+      <!-- http://twitter.github.io/bootstrap/base-css.html#images -->
+      <!-- http://placehold.it -->
+      <div class="row section1">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5 asset">
+          <img class="img-thumbnail" src="/images/crowd2.png" style="width:100%;height:300px;">
+        </div>
+        <div class="col-lg-5 copy">
+          <p>
+           Tripinium provides useful tips for your next trip. These would be tips around what to pack for your trip, peak season months, options for local travel, monuments to visit, things to do, currency conversion outlets, links to particularly insightful reviews on other websites, etc. Our intention is to provide tips which a local should be able to provide. We bring a local perspective to global travel planning. We analyse the content available on the internet and create a list of useful tips while also providing relevant links to detailed information present elsewhere on the internet.
+          </p>
+        </div>
+      </div>
+
+      <div class="row section2">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5 copy copy-right">
+          <p>How is it different from Tripadvisor, Lonely Planet, or even Foursquare ?<br>
+            While most of these websites are destinations for travel planning, we are more like gateways for travel planning - think of a specialised search engine for travel planning - although that goal is very ambitious at present. We provide actionable, practical tips for travel planners, and point them to other detailed resources relevant to their task rather than provide encyclopaedic information ourselves. We are infact trying to complement these great services by being an effective gateway.
+          </p>
+        </div>
+        <div class="col-lg-5 asset">
+          <img class="img-polaroid" src="/images/crowd3.png" style="width:100%;height:300px;">
+        </div>
+      </div>
+
+      <!-- For the FAQ, we introduce a little bit of JS, using the accordion. -->
+      <!-- This brings in jquery.js and bootstrap.js as dependencies. -->
+      <!-- http://twitter.github.io/bootstrap/javascript.html#collapse -->
+      <div class="row-fluid faq">
+          <div class="col-lg-10 offset1">
+            <h3>FAQ</h3>
+            <div class="accordion" id="accordion2">
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseOne">
+                     How do you keep track of your social score ?
+                  </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    We update the social score once a day by consulting our analytics tools. But essentially score=likes + tweets + shares on google plus
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseTwo">
+                     How does getting social recognition help ?
+                  </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    Social recognition helps confirm demand for this service. It also tells us that we are probably doing it right. Infact, it helps get the word out about Tripinium so that people can use the service, provide feedback and help guide the development effort for the service. Besides, ten thousand people cheering for you feels nice :)
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse"
+                     data-parent="#accordion2" href="#collapseThree">
+                    How can I give feedback ?
+                  </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    We would be very glad to receive feedback/suggestions - send your feedback to udayj.dev@gmail.com
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      </div>
+
+      <!-- Not crucial, but we put this under a CC By-SA 3.0 license. -->
+      <!-- http://creativecommons.org/licenses/ -->
+      <div class="row footer">
+        <div class="col-lg-12">
+          Copyright Tripinium.com 2013-14. All rights reserved.
+        </div>
+      </div>
+    </div>
+    {% endblock %}
