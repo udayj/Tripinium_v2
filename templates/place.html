@@ -77,6 +77,21 @@ function clear_placeholder()
 {
   $('#search').attr('placeholder','');
 }
+function select_category()
+{
+  var category=$('#select').val().toLowerCase();
+  if(category!='all tips')
+  {
+    category=category.replace(/ /g,"");
+    
+    $('.rows').hide();
+    $('.'+category).show();
+  }
+  else
+  {
+    $('.rows').show();
+  }
+}
     </script>
 
 </head>
@@ -102,25 +117,69 @@ function clear_placeholder()
     <div class="col-lg-1 pull-right">
       
     </div>
+
     </div>
+
+
 
   </div>
   <br>
   <div class="row">
+    <div class="col-lg-4">
+      
+      <select class="form-control" id="select" style="margin-bottom:2px;" onchange="select_category()">
+        <option>All Tips</option>
+        {% for class in tips_classes.keys() | sort %}
+        <option>
+          {{class.title()}}
+        </option>
+        {% endfor %}       
+      
+
+      </select>
+
+</div>
+</div>
+  <div class="row">
     <div class="col-lg-9">
+
+
+      
    <table class="table table-bordered table-striped table-hover">
     <tbody>
-      {% for p in place_info.items |sort(attribute='votes', reverse=True)%}
-      <tr>
+      {% for p in place_info.items |sort(attribute='item_category')%}
+      <tr class="rows {{p.item_category|replace(" ","")}}">
         <td>
-          {{p.item_name|safe}}
+          {{p.item_name|safe}} 
+          {% if p.item_category %}
+          <span class="label {{tips_classes[p.item_category]}}">{{p.item_category}}</span>
+          {% endif %}
         </td>
         <td>
+          <span class="pull-left" style="display:inline;">
           <div id="p{{p.key().id()}}" style="cursor:pointer;color:green;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote up" class="triangle-up" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','p',this.id)"></div>
+          <div id="n{{p.key().id()}}" style="cursor:pointer;color:red;margin-top:4px;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" class="triangle-down" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"></div>
+        </span>
+      </td>
+      <td>
+        <div class="pull-right">
+          {% if p.votes %}
+          {% if p.votes>0 %}
+          <span class="label label-success" title="{{p.votes}} votes received - Vote using the buttons on the left">+{{p.votes}}</span>
+          {% else %}
+          <span class="label label-danger" title="{{p.votes}} votes received - Vote using the buttons on the left">{{p.votes}}</span>
+          {% endif %}
+        {% else %}
+          <span class="label label-success" title="{{p.votes}} votes received - Vote using the buttons on the left">0</span>
+        {% endif %}
+        </div>
+        
+
+
         </td>
-        <td>
-          <div id="n{{p.key().id()}}" style="cursor:pointer;color:red;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" class="triangle-down" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"></div>
-        </td>
+        <!--td>
+          <div id="n{{p.key().id()}}" style="cursor:pointer;color:red;margin-top:2px;" title="Score {% if p.votes: %}{{p.votes}}{% else: %}{{0}}{% endif %}  Click to vote down" class="triangle-down" onclick="send_votes('{{p.key().id()}}','{{p.key()}}','n',this.id)"></div>
+        </td-->
       </tr>
       {% endfor %}
     </tbody>

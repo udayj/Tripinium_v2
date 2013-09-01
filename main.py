@@ -328,10 +328,23 @@ class ResultPage(webapp2.RequestHandler):
                     urls=place_info.image.split(',')
                 except AttributeError:
                     pass
+            classes=['label-default','label-primary','label-success','label-warning','label-danger','label-info']
+            tips_classes={}
+            class_counter=0
+            tip_list=[]
+            for tips in place_info.items:
+                if tips.item_category and tips.item_category not in tip_list:
+                   tip_list.append(tips.item_category)
+            tip_list.sort()
+            
+            for tips in tip_list:
+                tips_classes[tips]=classes[class_counter%6]
+                class_counter+=1
+            logging.info(tips_classes)
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                         login_url=users.create_login_url('/search?location='+place),milestone=milestone,
                         logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov,
-                        visited=visited,visited_count=count,urls=urls)
+                        visited=visited,visited_count=count,urls=urls,tips_classes=tips_classes)
 
         else:
             place_info=get_place_from_db(place)
@@ -363,10 +376,22 @@ class ResultPage(webapp2.RequestHandler):
                         urls=place_info.image.split(',')
                     except AttributeError:
                         pass
+                classes=['label-default','label-primary','label-success','label-warning','label-danger','label-info']
+                tips_classes={}
+                class_counter=0
+                tip_list=[]
+                for tips in place_info.items:
+                    if tips.item_category and tips.item_category not in tip_list:
+                       tip_list.append(tips.item_category)
+                tip_list.sort()
+                for tips in tip_list:
+                    tips_classes[tips]=classes[class_counter%6]
+                    class_counter+=1
+                logging.info(tips_classes)
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
                             login_url=users.create_login_url('/search?location='+place),milestone=milestone,gov=gov,
                             logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,
-                            visited=visited,visited_count=count,urls=urls)
+                            visited=visited,visited_count=count,urls=urls,tips_classes=tips_classes)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -880,6 +905,7 @@ class TipModifyAction(webapp2.RequestHandler):
         tip_id=self.request.get('id')
         status=self.request.get('status')
         content=self.request.get('content')
+        category=self.request.get('category')
         if status=='save_image':
             logging.info(tip_id)
             place=get_place_from_db(normalize(tip_id))
@@ -909,7 +935,8 @@ class TipModifyAction(webapp2.RequestHandler):
                 self.response.out.write(output_json)
                 return
         else:
-            result=self.save_tip(tip,content)
+            result=self.save_tip(tip,content,category)
+            logging.info(category)
             if result==0:
                 output_json=json.dumps({'status':'success'})
                 self.response.out.write(output_json)
@@ -923,10 +950,13 @@ class TipModifyAction(webapp2.RequestHandler):
     def delete_tip(self,tip):
         tip.delete()
         return 0
-    def save_tip(self,tip,content):
+    def save_tip(self,tip,content,category):
         tip.item_name=content
+        if len(normalize(category))!=0:
+            tip.item_category=category
         tip.put()
         return 0
+
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):

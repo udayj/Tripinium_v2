@@ -26,7 +26,7 @@ function review_tip(id,status)
  $.ajax({
   type: "POST",
   url: "/tipmodifyaction",
-  data: { id:id,status:status,content:$(content_id).val()},
+  data: { id:id,status:status,content:$(content_id).val(),category:$(content_id+'-category').val()},
   
   success: function(data)
   {
@@ -111,9 +111,13 @@ $(document).ready(function(){
 			<td style="width:584px;">
 			<textarea style="font-family:arial,sans-serif" id="{{object.key().id()}}" cols="80" rows="5">{{object.item_name}}</textarea>
 			</td>
+			<td>
+				<input type="text" id="{{object.key().id()}}-category" name="category"></input>
+			</td>
 			<td style="width:48px;cursor:pointer;color:green;" id="save{{object.key().id()}}" onclick="review_tip({{object.key().id()}},'save')">
 				Save
 			</td>
+
 			<td style="width:48px;cursor:pointer;color:red;" id="delete{{object.key().id()}}" onclick="review_tip({{object.key().id()}},'delete')">
 				Delete
 			</td>

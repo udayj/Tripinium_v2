@@ -59,8 +59,10 @@ class Item(db.Model):
     place=db.ReferenceProperty(Place,collection_name='items')
     item_name=db.TextProperty()
     item_description=db.TextProperty()
+    item_category=db.TextProperty()
     submitted_by=db.StringProperty()
     votes=db.IntegerProperty()
+
 
 class Feedback(db.Model):
     #items need to have a foreign reference to a place entity
