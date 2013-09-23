@@ -72,7 +72,7 @@ function send_feedback(place)
   {
 
     $('#tips_thank').css('display','');
-    $('#tips_thank').html('Thanks for sharing the tip!')
+    $('#tips_thank').html('Thanks for sharing the tip! It will start showing as soon as it is approved.')
     /*var display_class=[];
     display_class['Infantry']='badge-infantry';
     display_class['Cavalry']='badge-cavalry';
