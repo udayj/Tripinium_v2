@@ -126,13 +126,14 @@ class InsertPage(webapp2.RequestHandler):
         place=self.request.get('p')
         item_name=self.request.get('name')
         item_description=self.request.get('description')
+        recommendations=self.request.get('recommendations')
         if not place or place is None or item_name is None or place is '' or item_name is '':
             #if place is none, then we cant insert data
             self.render('insert.html',message='Place or item name is null')
         place=normalize(place)
         place_info=get_place_from_db(place)
         if place_info is None:
-            place_info=Place(name=place)
+            place_info=Place(name=place,recommendations=recommendations)
             place_info.put()
         item=Item(place=place_info,item_name=item_name,item_description=item_description)
         item.put()
