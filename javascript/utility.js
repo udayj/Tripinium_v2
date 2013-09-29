@@ -225,6 +225,15 @@ function send_votes(id,key,type,displayId)
     }
     //toggle display for rating buttons
     $('#'+displayId).removeClass('triangle-up triangle-down');
+
+    var otherDisplayId=displayId.substr(1)
+    if(type=='p')
+      otherDisplayId='n'+otherDisplayId;
+    else
+      otherDisplayId='p'+otherDisplayId;
+    $('#'+otherDisplayId).removeClass('triangle-up triangle-down');
+    $('#'+displayId).attr('onclick','').unbind('click');
+    $('#'+otherDisplayId).attr('onclick','').unbind('click');
     $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).css('display','');
     var score=parseInt($('#'+displayId).attr('title').split(' ')[1]);
     score=score+score_dict[type];
@@ -238,6 +247,26 @@ function send_votes(id,key,type,displayId)
     }
     $('#'+displayId).attr('title','Score '+score);
     $('#'+display_vector[displayId.substr(0,1)]+displayId.substr(1)).attr('title','Score '+score);
+    
+      if(score>0)
+      {
+        $('#votes_received'+id).html("+"+score);
+      }
+      else
+      {
+        $('#votes_received'+id).html(score);
+      }
+      if(score>=0)
+      {
+        $('#votes_received'+id).removeClass('label-danger');
+        $('#votes_received'+id).addClass('label-success'); 
+      }
+      else
+      {
+        $('#votes_received'+id).removeClass('label-success');
+        $('#votes_received'+id).addClass('label-danger');
+      }
+    
     $.ajax({
   type: "POST",
   url: "/send_votes",

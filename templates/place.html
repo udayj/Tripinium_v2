@@ -152,7 +152,7 @@ function select_category()
         <td>
           {{p.item_name|safe}} 
           {% if p.item_category %}
-          <span class="label {{tips_classes[p.item_category]}}">{{p.item_category}}</span>
+          <span class="label {{tips_classes[p.item_category]}}">#{{p.item_category}}</span>
           {% endif %}
         </td>
         <td>
@@ -165,12 +165,12 @@ function select_category()
         <div class="pull-right">
           {% if p.votes %}
           {% if p.votes>0 %}
-          <span class="label label-success" title="{{p.votes}} votes received - Vote using the buttons on the left">+{{p.votes}}</span>
+          <span id="votes_received{{p.key().id()}}" class="label label-success" title="{{p.votes}} votes received - Vote using the buttons on the left">+{{p.votes}}</span>
           {% else %}
-          <span class="label label-danger" title="{{p.votes}} votes received - Vote using the buttons on the left">{{p.votes}}</span>
+          <span id="votes_received{{p.key().id()}}" class="label label-danger" title="{{p.votes}} votes received - Vote using the buttons on the left">{{p.votes}}</span>
           {% endif %}
         {% else %}
-          <span class="label label-success" title="{{p.votes}} votes received - Vote using the buttons on the left">0</span>
+          <span id="votes_received{{p.key().id()}}" class="label label-success" title="{{p.votes}} votes received - Vote using the buttons on the left">0</span>
         {% endif %}
         </div>
         
