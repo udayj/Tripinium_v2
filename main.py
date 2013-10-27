@@ -135,6 +135,9 @@ class InsertPage(webapp2.RequestHandler):
         if place_info is None:
             place_info=Place(name=place,recommendations=recommendations)
             place_info.put()
+        if recommendations!= None and len(recommendations)>5:
+            place_info.recommendations=recommendations
+            place_info.put()
         item=Item(place=place_info,item_name=item_name,item_description=item_description)
         item.put()
         self.render('tipmodify.html',tips=place_info.items,place=place)
