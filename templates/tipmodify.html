@@ -112,7 +112,7 @@ $(document).ready(function(){
 			<textarea style="font-family:arial,sans-serif" id="{{object.key().id()}}" cols="80" rows="5">{{object.item_name}}</textarea>
 			</td>
 			<td>
-				<input type="text" id="{{object.key().id()}}-category" name="category"></input>
+				<input type="text" id="{{object.key().id()}}-category" name="category" value="{{object.item_category}}"></input>
 			</td>
 			<td style="width:48px;cursor:pointer;color:green;" id="save{{object.key().id()}}" onclick="review_tip({{object.key().id()}},'save')">
 				Save
