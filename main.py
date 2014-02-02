@@ -58,37 +58,14 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
         user=get_user(self.request.cookies)
-        self.render('front.html',current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'),active="front")
+        self.render('front.html',active='front',
+            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
-class SocialScorePage(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-        user=get_user(self.request.cookies)
-        score=self.request.get('score')
-        password=self.request.get('password')
-        if score!=None and password!=None and password=='password':
-            obj=get_social_score_from_db()
-            if obj is not None:
-                obj.score=score
-                obj.put()
-            else:
-                obj=SocialScore(score=score)
-                obj.put()
-        new_score=get_social_score_from_db()
-        if new_score==None:
-            new_score=0
-        else:
-            new_score=int(str(new_score.score))
-        self.render('social_score.html',current_user=user,login_url=users.create_login_url('/'),
-                    logout_url=users.create_logout_url('/'),active='social_score',score=new_score)
-    def render(self, template, **kw):
-        self.write(render_str(template, **kw))
-    def write(self, *a, **kw):
-        self.response.out.write(*a, **kw)
+
 
 class AllPlacesPage(webapp2.RequestHandler):
     def get(self):
@@ -103,6 +80,7 @@ class AllPlacesPage(webapp2.RequestHandler):
         count=0
         place_tuple=()
         place_list=[]
+        temp=()
         for place in places:
             count+=1
             if count%3==1:
@@ -110,10 +88,17 @@ class AllPlacesPage(webapp2.RequestHandler):
             place_tuple=place_tuple+(place,)
             if count%3==0:
                 place_list.append(place_tuple)
+            temp=place_tuple
+        if count%3==1:
+            place_list.append(temp+('',''))
+            
+        if count%3==2:
+            place_list.append(temp+('',))
         
         #logging.info(str(place_list))    
 
-        self.render('all_places.html',places=place_list,active="cities")
+        self.render('all_places.html',places=place_list,active="cities",
+            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -238,27 +223,6 @@ def getPlaceFromQuery(query,is_spell_correct=True):
     return query
 
 
-def get_milestone(user,place):
-    place_milestone='Submit your first tip for this place to join the Infantry!'
-    social_milestone='Tweet to beocme a Humming-Bird!'
-    if not user.points:
-        place_milestone='Submit your first tip for this place to join the Infantry!'
-    else:
-        place_points_dict=eval(user.points)
-        place_milestone=calc_next_place_milestone(place_points_dict,place)
-    if not user.social_points:
-        social_milestone='Tweet from this page to become a Humming-Bird!'
-    else:
-        social_points_dict=eval(user.social_points)
-        if 'tweet' not in social_points_dict:
-            social_milestone=get_next_social_milestone(0)
-        else:
-            social_milestone=get_next_social_milestone(social_points_dict['tweet'])
-    logging.info(place_milestone)
-    logging.info(social_milestone)
-    return choice([place_milestone,social_milestone])
-
-
 #This class should be thread-safe as only read operation are being performed to prepare data
 class ResultPage(webapp2.RequestHandler):
 	
@@ -277,7 +241,8 @@ class ResultPage(webapp2.RequestHandler):
         user=get_user(self.request.cookies)
 
         if query is None or query=='':
-            self.render('error.html',place='',suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+            self.render('error.html',place='',suggestion=choice(error_suggestions),
+                meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
             return
         #query=query.lower()
         
@@ -291,21 +256,15 @@ class ResultPage(webapp2.RequestHandler):
             is_spell_corrected=True
         if place is None:
             
-            self.render('error.html',place=place,suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+            self.render('error.html',place=place,suggestion=choice(error_suggestions),
+                meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
             return
         place_info=memcache.get(place)
         recommended_places=None
         #logging.error(place_info.recommendations)
-        gov=None
+        
         urls=None
-        """flickr.API_KEY='d92539b03607b14117d6dc4ecce2a13d'
-        flickr.API_SECRET='ea9754bd24415292'
-        photos = flickr.photos_search(tags=place, per_page=3,sort='relevance')
-        urls = []
-        for photo in photos:
-            url=photo.getURL(size='Square', urlType='source')
-            url=url.replace('s.jpg','q.jpg')
-            urls.append(url)"""
+        
 
         logging.info(str(urls))
         
@@ -313,19 +272,9 @@ class ResultPage(webapp2.RequestHandler):
             logging.info('Retreived from memcache:'+place)
             if place_info.recommendations is not None:
                 recommended_places=place_info.recommendations.split('|')
-            leader_message,leader_class=self.get_gov(place_info,place)
-            milestone=''
-            if not user:
-                milestone='Submit your first tip to join the Infantry!'
-            else:
-                milestone=get_milestone(user,place)
-            visited=False
-            count=place_info.visited_count or 2
-            if user and place in user.visited:
-                visited=True
-                count-=1
-            gov=get_user_from_db(place_info.gov)
-            logging.info(gov)
+            
+            
+            
             urls=[]
             if hasattr(place_info,'image'):
                 try:
@@ -336,7 +285,9 @@ class ResultPage(webapp2.RequestHandler):
             tips_classes={}
             class_counter=0
             tip_list=[]
+            meta_description=''
             for tips in place_info.items:
+                meta_description+=tips.item_name+' '
                 if tips.item_category and tips.item_category not in tip_list:
                    tip_list.append(tips.item_category)
             tip_list.sort()
@@ -345,35 +296,22 @@ class ResultPage(webapp2.RequestHandler):
                 tips_classes[tips]=classes[class_counter%6]
                 class_counter+=1
             logging.info(tips_classes)
-            self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
-                        login_url=users.create_login_url('/search?location='+place),milestone=milestone,
-                        logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,gov=gov,
-                        visited=visited,visited_count=count,urls=urls,tips_classes=tips_classes)
+            self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,
+                        urls=urls,tips_classes=tips_classes,meta_description=meta_description)
 
         else:
             place_info=get_place_from_db(place)
             if not place_info:
                 logging.info('No place for this query:'+query)
                 logging.info('Canonical place from query:'+place)
-                self.render('error.html',place=place,suggestion=choice(error_suggestions),current_user=user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
+                self.render('error.html',place=place,suggestion=choice(error_suggestions),
+                    meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
             else:
                 #store result in memcache
                 memcache.set(place,place_info)
                 if place_info.recommendations is not None:
                     recommended_places=place_info.recommendations.split('|')
-                leader_message,leader_class=self.get_gov(place_info,place)
-                milestone=''
-                if not user:
-                    milestone='Submit your first tip to join the Infantry!'
-                else:
-                    milestone=get_milestone(user,place)
-                    logging.info(milestone)
-                visited=False
-                count=place_info.visited_count or 2
-                if user and place in user.visited:
-                    visited=True
-                    count-=1
-                gov=get_user_from_db(place_info.gov)
+                
                 urls=[]
                 if hasattr(place_info,'image'):
                     try:
@@ -384,7 +322,9 @@ class ResultPage(webapp2.RequestHandler):
                 tips_classes={}
                 class_counter=0
                 tip_list=[]
+                meta_description=''
                 for tips in place_info.items:
+                    meta_description+=tips.item_name+' '
                     if tips.item_category and tips.item_category not in tip_list:
                        tip_list.append(tips.item_category)
                 tip_list.sort()
@@ -392,30 +332,19 @@ class ResultPage(webapp2.RequestHandler):
                     tips_classes[tips]=classes[class_counter%6]
                     class_counter+=1
                 logging.info(tips_classes)
-                self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,user=user,
-                            login_url=users.create_login_url('/search?location='+place),milestone=milestone,gov=gov,
-                            logout_url=users.create_logout_url('/search?q='+place),leader_message=leader_message,leader_class=leader_class,
-                            visited=visited,visited_count=count,urls=urls,tips_classes=tips_classes)
+                self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,
+                            urls=urls,tips_classes=tips_classes,meta_description=meta_description)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
-    def get_gov(self,place_info,place):
-        if place_info.gov!=None:
-            gov=get_user_by_name(place_info.gov)
-            leader_message='Governor of '+place.title()+': '+gov.nickname
-            leader_class='badge badge-governor'
-            return (leader_message,leader_class)
-        else:
-            leader_message='This place does not yet have a governor! Submit 3 tips to become the governor'
-            leader_class='alert alert-error'
-            return (leader_message,leader_class)
+    
 
 class HowPage(webapp2.RequestHandler):
     def get(self):
         user=get_user(self.request.cookies)
-        self.render('how.html',current_user=user,login_url=users.create_login_url('/how.html'),
-                    logout_url=users.create_logout_url('/how.html'),active="how")
+        self.render('how.html',active="how",
+            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -423,8 +352,8 @@ class HowPage(webapp2.RequestHandler):
 class FeedbackPage(webapp2.RequestHandler):
     def get(self):
         user=get_user(self.request.cookies)
-        self.render('feedback.html',current_user=user,login_url=users.create_login_url('/feedback.html'),
-                    logout_url=users.create_logout_url('/feedback.html'),active="feedback")
+        self.render('feedback.html',active="feedback",
+            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -437,54 +366,11 @@ class AnalyticsPage(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
-def calc_next_place_milestone(points_dict,place):
-    def plural(num):
-        if num==1:
-            return ''
-        else:
-            return 's'
 
-    milestone_rules={0:'Submit your first tip for this place to be a part of the Infantry',
-                    1:'Submit another tip for this place to join the Cavalry'}
-    if place not in points_dict:
-        return milestone_rules[0]
-    count=points_dict[place]
-    if count in milestone_rules:
-        return milestone_rules[count]
-    if count>=2:
-        gov_milestone=get_gov_milestone(place,count)
-        more_tips=gov_milestone-count
-        if more_tips>0:
-            
-            return 'Submit '+str(more_tips)+' more tip'+plural(more_tips)+' to become the Governor of this place'
-        else:
-            return None
-    return None
     
 
-def calc_next_cross_place_milestone(points_dict):
-    def filter_func(x):
-        if x>0:
-            return True
-        else:
-            return False
-    count=len([value for value in points_dict.values() if filter_func(value)])
-    milestone_rules={0:'Submit your first tip for this place to join the Infantry',
-                    1:'Great going so far! Submit a tip for a different place to become an Ambassador',
-                    2:'Submit a tip for some place else to become an esteemed Envoy',
-                    3:'You need tips for two more places to become a Diplomat',
-                    4:'You are almost there! Submit a tip for some other place to become a true Diplomat'}
-    if count in milestone_rules:
-        return milestone_rules[count]
-    else:
-        return None
 
-def get_gov_milestone(place,count):
-    place_info=get_place_info(place)
-    if not place_info.gov_points:
-        return 3
-    current_gov_points=place_info.gov_points
-    return current_gov_points
+
 
 def get_place_info(place):
     place_info=memcache.get(place)
@@ -497,68 +383,13 @@ def get_place_info(place):
     else:
         return place_info
 
-class SocialActionPage(webapp2.RequestHandler):
-    def post(self):
-        action=self.request.get('action')
-        place=self.request.get('place')
-        place=normalize(place)
-        user=get_user(self.request.cookies)
-        if user==None:
-            logging.info('No user logged in')
-            self.response.headers['Content-Type'] = 'application/json'
-            output_json=json.dumps({'badges_earned':[],'place_milestone':'Submit your first tip to join the Infantry!',
-                                    'social_milestone':'','user':'n','thanks':'Thanks for letting the word out!'})
-            self.response.out.write(output_json)
-        else:
-            points_dict=None
-            if user.social_points==None:
-                points_dict={action:1}
-            else:
-                points_dict=eval(user.social_points)
-                if action in points_dict:
-                    points_dict[action]+=1
-                else:
-                    points_dict[action]=1
-            badges=''
-            if action=='tweet':
-                new_badge=self.calc_social_badges(points_dict[action])
-                if user.social_badges==None:
-                    user.social_badges=[]
-                if new_badge:
-                    badges=new_badge
-                    user.social_badges=user.social_badges+[badges]
-                logging.info(badges)
-            social_milestone=get_next_social_milestone(points_dict['tweet'])
-            place_points_dict={}
-            if user.points!=None:
-                place_points_dict=eval(user.points)
-            place_milestone=calc_next_place_milestone(place_points_dict,place)
-            user.social_points=repr(points_dict)
-            logging.info(social_milestone)
-            logging.info(place_milestone)
-            user.put()
-            self.response.headers['Content-Type'] = 'application/json'
-            output_json=json.dumps({'badges_earned':[badges.title()],'place_milestone':choice([place_milestone,social_milestone]),
-                                    'social_milestone':social_milestone,'user':'y','thanks':''})
-            self.response.out.write(output_json)
+
 
             
 
-    def calc_social_badges(self,points):
-        badge_rules={1:'Humming-Bird',2:'Koel',3:'Nightingale'}
-        if points in badge_rules:
-            return badge_rules[points]
-        else:
-            return None
 
-def get_next_social_milestone(points):
-    milestone_rules={0:'Becoming a Humming-Bird by tweeting about this page',
-                    1:'You sing like a humming-bird! Become a Koel by tweeting regularly.',
-                    2:'Tweet your way to becoming a Nightingale!'}
-    if points in milestone_rules:
-        return milestone_rules[points]
-    else:
-        return 'You are awesome! Keep tweeting !'
+
+
 
 def toTitle(string):
     return string.title()
@@ -573,8 +404,7 @@ class UserTipsPage(webapp2.RequestHandler):
             self.store_tentative(None,tip,place,datetime.datetime.now())
             logging.info('User not logged in, submitted tip')
             self.response.headers['Content-Type'] = 'application/json'
-            output_json=json.dumps({'badges_earned':[],'place_milestone':'Submit your first tip to join the Infantry!',
-                                    'social_milestone':'','user':'n','thanks':'Thanks for submitting a tip!'})
+            output_json=json.dumps({'thanks':'Thanks for submitting a tip!'})
             
             self.response.out.write(output_json)
         else:
@@ -590,40 +420,15 @@ class UserTipsPage(webapp2.RequestHandler):
                     points_dict[place]=1
             user.points=repr(points_dict)
             self.store_tentative(user.username,tip,place,datetime.datetime.now())
-            badges=[]
-            new_badges=self.calc_place_badges(points_dict[place],place,user.username)
-            if new_badges !=None and new_badges not in user.badges:
-                badges.append(new_badges)
-            logging.info(badges)
-            new_badges=self.calc_cross_place_badges(points_dict)
-            if new_badges!=None and new_badges not in user.badges:
-                badges.append(new_badges)
-            user.badges=user.badges+badges
-            logging.info(badges)
+            
 
 
-            place_milestone=calc_next_place_milestone(points_dict,place)
-            cross_place_milestone=calc_next_cross_place_milestone(points_dict)
-            logging.info(place_milestone)
-            logging.info(cross_place_milestone)
-            if user.social_points==None or user.social_points==0 :
-                social_milestone=get_next_social_milestone(0)
-            else:
-                social_points_dict=eval(user.social_points)
-                if 'tweet' in social_points_dict:
-                    social_milestone=get_next_social_milestone(social_points_dict['tweet'])
-                else:
-                    social_milestone=get_next_social_milestone(0)
-            logging.info(social_milestone)
+            
             user.put()
             self.response.headers['Content-Type'] = 'application/json'
-            badges=map(toTitle,badges)
-            badges_earned=[]
-            if badges !=[]:
-                badges_earned=choice(badges)
+            
 
-            output_json=json.dumps({'badges_earned':[badges_earned],'place_milestone':choice([place_milestone,cross_place_milestone,social_milestone]),
-                                    'social_milestone':social_milestone,'user':'y','thanks':''})
+            output_json=json.dumps({'thanks':''})
             self.response.out.write(output_json)
             #governor badge rollback wont work in concurrent tip submission case
 
@@ -631,43 +436,12 @@ class UserTipsPage(webapp2.RequestHandler):
 
 
 
-    def calc_cross_place_badges(self,points_dict):
-        def filter_func(x):
-            if x>0:
-                return True
-            else:
-                return False
-        count=len([value for value in points_dict.values() if filter_func(value)])
-        badge_rules={2:'Ambassador',3:'Envoy',5:'Diplomat'}
-        if count in badge_rules:
-            return badge_rules[count]
-        else:
-            return None
-
-    def calc_place_badges(self,points,place,username):
-        badge_rules={1:'Infantry',2:'Cavalry'}
-        if points>=3:
-            return self.gov_reward(points,place,username)
-            
-
-        if badge_rules[points]:
-            return place+':'+badge_rules[points]
+    
 
     
-    def gov_reward(self,points,place,username):
-        (new_gov,place_info)=self.is_new_gov(points,place)
-        if new_gov==True:
-            #current_gov=self.get_user(place_info.gov)
-            if place_info.gov==None or place_info.gov=='':
-                self.set_place_gov(place,place_info,username,points)
-                return place+':Governor'
-            else:
-                self.set_place_gov(place,place_info,username,points)
-                current_gov=self.get_user(place_info.gov)
-                self.remove_place_badge_from_user(place+':Governor',current_gov)
-                return place+':Governor'
-        else:
-            return None
+
+    
+    
 
     def get_user(self,username):
         if username==None:
@@ -678,32 +452,12 @@ class UserTipsPage(webapp2.RequestHandler):
         else:
             return user
 
-    def remove_place_badge_from_user(self,badge,user):
-        logging.info(user)
-        logging.info(badge)
-        user.badges.remove(badge)
-        user.put()
+    
 
-    def set_place_gov(self,place,place_info,username,points):
-        place_info.gov=username
-        place_info.gov_points=points
-        place_info.put()
-        memcache.set(place,place_info)
+    
 
 
-    def is_new_gov(self,points,place):
-        place_info=memcache.get(place)
-        if not place_info:
-            place_info=get_place_from_db(place)
-            if not place_info:
-                logging.info('Problem with tip submission, cannot find place:'+place)
-                return -1
-        if place_info.gov_points==None or place_info.gov_points==0:
-            return (True,place_info)
-        elif place_info.gov_points>=points:
-            return (False,None)
-        else:
-            return (True,place_info)
+    
     def store_tentative(self,user,tip,place,date):
         tentative_tip=TentativeTip(user=user,tip=tip,place=place)
         tentative_tip.put()
@@ -809,6 +563,7 @@ class SendEmail(webapp2.RequestHandler):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
+
 class ShowUserTipsPage(webapp2.RequestHandler):
     def get(self):
         
@@ -822,42 +577,7 @@ class ShowUserTipsPage(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)            
 
-class UserProfile(webapp2.RequestHandler):
-    def get(self):
-        current_user=get_user(self.request.cookies)
-        error_message=''
 
-        user_id=self.request.get('user')
-        logging.info(user_id)
-        user=None
-        if not user_id or user_id=='':
-            error_message='No such user exists...incorrect url'
-        else:
-            user=SystemUser.get_by_id(int(user_id))
-        logging.info(user)
-        nickname=''
-        use_place_badges=[]
-        use_social_badges=[]
-        if not user:
-            error_message='No such user exists'
-        else:
-            nickname=user.nickname
-            place_badges=map(toTitle,user.badges)
-            social_badges=map(toTitle,user.social_badges)
-            for badge in place_badges:
-                if badge in ['Ambassador','Envoy','Governor']:
-                    use_place_badges.append((badge,'badge-'+badge.lower()))
-                else:
-                    use_place_badges.append((badge,'badge-'+badge[badge.index(':')+1:].lower()))
-            for badge in social_badges:
-                use_social_badges.append((badge,'badge-'+badge.lower()))
-
-        self.render("profile.html",error_message=error_message,user=nickname,place_badges=use_place_badges,social_badges=use_social_badges,
-                    current_user=current_user,login_url=users.create_login_url('/'),logout_url=users.create_logout_url('/'))
-    def render(self, template, **kw):
-        self.write(render_str(template, **kw))
-    def write(self, *a, **kw):
-        self.response.out.write(*a, **kw)
 class TipAdmin(webapp2.RequestHandler):
     def get(self):
         tips=db.GqlQuery('select * from TentativeTip')
@@ -966,34 +686,7 @@ class TipModifyAction(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
-class Visited(webapp2.RequestHandler):
-    def post(self):
-        place=self.request.get('place')
-        user=get_user(self.request.cookies)
-        if place is None or user is None:
-            return
-        place=normalize(place)
-        logging.info(place)
-        logging.info(user)
-        place_info=get_place_from_db(place)
-        if place_info is None:
-            return
-        if place_info.visited_count:
-            place_info.visited_count+=1
-        else:
-            place_info.visited_count=3
-        user.visited.append(place)
-        user.put()
-        place_info.put()
-        memcache.set(place,place_info)
-        self.response.headers['Content-Type'] = 'application/json'
-        output_json=json.dumps({'status':'success','count':str(place_info.visited_count-1)})
-        self.response.out.write(output_json)
 
-    def render(self, template, **kw):
-        self.write(render_str(template, **kw))
-    def write(self, *a, **kw):
-        self.response.out.write(*a, **kw)
     
 
 
@@ -1034,11 +727,7 @@ class TipReview(webapp2.RequestHandler):
             return -1
         item=Item(place=place_info,item_name=tip.tip,submitted_by=tip.user)
         logging.info(place_info.name)
-        if tip.user!=None and place_info.gov==tip.user:
-            if place_info.prev_gov:
-                place_info.prev_gov=place_info.prev_gov.insert(0,tip.user)
-            else:
-                place_info.gov=tip.user
+        
 
         item.put()
         place_info.put()
@@ -1060,65 +749,13 @@ class TipReview(webapp2.RequestHandler):
             rejected_tip.put()
             tip.delete()
             return 0
-        if place_info.gov==tip.user:
-            place_info.gov_points=place_info.gov_points-1
-        points_dict=eval(user.points)
-        points_dict[place]=points_dict[place]-1
-        cross_place_badges=self.get_cross_place_badges(points_dict,user)
-        badges_to_remove=set(['Ambassador','Envoy','Diplomat'])
-        badges_to_remove=badges_to_remove-set(cross_place_badges)
-        place_badges=[place+':'+value for value in self.get_place_badges(points_dict,tip.place,place_info)]
-        logging.info(place_badges)
-        place_badges_to_remove=set([place+':'+value for value in set(['Infantry','Cavalry','Governor'])])
-        place_badges_to_remove=place_badges_to_remove-set(place_badges)
-        bad_badges=badges_to_remove.union(place_badges_to_remove)
-        logging.info(bad_badges)
-        logging.info(user.badges)
-        user.badges=[badge for badge in user.badges if badge not in bad_badges]
-        logging.info(user.badges)
-        governor_badge=place+':Governor'
-        if governor_badge in bad_badges and place_info.gov==tip.user:
-            if place_info.prev_gov:
-                place_info.gov=place_info.prev_gov[0]
-            else:
-                place_info.gov=None
-        user.points=repr(points_dict)
-        rejected_tip.put()
-        place_info.put()
-        memcache.set(place,place_info)
-        user.put()
-        tip.delete()
-        return 0
+        
 
-    def get_place_badges(self,points_dict,place,place_info):
-        rules={1:['Infantry'],2:['Infantry','Cavalry']}
-        count=points_dict[place]
-        if count in rules:
-            return rules[count]
-        total=['Infantry','Cavalry','Governor']
-        if place_info.gov_points and count>place_info.gov_points:
-            return total
-        elif count>2:
-            return rules[2]
-        else:
-            return []
+    
 
 
 
-    def get_cross_place_badges(self,points_dict,user):
-        def filter_func(x):
-            if x>0:
-                return True
-            else:
-                return False
-        count=len([value for value in points_dict.values() if filter_func(value)])
-        rules={2:['Ambassador'],3:['Ambassador','Envoy'],4:['Ambassador','Envoy'],5:['Ambassador','Envoy','Diplomat']}
-        if count in rules:
-            return rules[count]
-        elif count>5:
-            return rules[5]
-        else:
-            return []
+    
 
 
     def get_user(self,username):
@@ -1165,18 +802,16 @@ app = webapp2.WSGIApplication(
                                       ('/send_votes',SendVotes),
                                       ('/send_city_rating',SendCityRating),
                                       ('/show_user_tips',ShowUserTipsPage),
-                                      ('/send_social_action',SocialActionPage),
-                                      ('/profile',UserProfile),
+                                      
+                                      
                                       ('/tipadmin',TipAdmin),
                                       ('/tipmodify',TipModify),
                                       ('/tipmodifyaction',TipModifyAction),
                                       ('/send_review',TipReview),
-                                      ('/visited',Visited),
-                                      ('/login',LoginHandler),
-                                      ('/logout',LogoutHandler),
+                                      
+                                    
                                       ('/datarefresh',DataRefresh),
-                                      ('/feedback',FeedbackPage),
-                                      ('/social_score.html',SocialScorePage)],
+                                      ('/feedback',FeedbackPage)],
                                      debug=False)
 #Need more comments
 
