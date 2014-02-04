@@ -59,7 +59,8 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
         user=get_user(self.request.cookies)
         self.render('front.html',active='front',
-            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+            meta_description="""Tour with great confidence. Smart local tips for your next trip. 
+            We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -98,7 +99,8 @@ class AllPlacesPage(webapp2.RequestHandler):
         #logging.info(str(place_list))    
 
         self.render('all_places.html',places=place_list,active="cities",
-            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+            meta_description="""Tour with great confidence. Smart local tips for your next trip. 
+            We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -242,7 +244,8 @@ class ResultPage(webapp2.RequestHandler):
 
         if query is None or query=='':
             self.render('error.html',place='',suggestion=choice(error_suggestions),
-                meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+                meta_description="""Tour with great confidence. Smart local tips for your next trip.
+                 We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
             return
         #query=query.lower()
         
@@ -257,7 +260,8 @@ class ResultPage(webapp2.RequestHandler):
         if place is None:
             
             self.render('error.html',place=place,suggestion=choice(error_suggestions),
-                meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+                meta_description="""Tour with great confidence. Smart local tips for your next trip. 
+                We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
             return
         place_info=memcache.get(place)
         recommended_places=None
@@ -285,9 +289,12 @@ class ResultPage(webapp2.RequestHandler):
             tips_classes={}
             class_counter=0
             tip_list=[]
-            meta_description=''
+            title='Useful travel tips and suggestions for '+place_info.name.title()+' - Tripinium'
+            meta_description='Useful travel tips for '+place_info.name.title()+""". Best time to visit, where to eat, what to pack for the trip,
+                            popular places to visit, things to do, local language help, currency conversion outlets, local transportation, cab services,
+                            user submitted and voted tips. Visit """+place_info.name.title()+' with confidence'
             for tips in place_info.items:
-                meta_description+=tips.item_name+' '
+                #meta_description+=tips.item_name+' '
                 if tips.item_category and tips.item_category not in tip_list:
                    tip_list.append(tips.item_category)
             tip_list.sort()
@@ -297,7 +304,7 @@ class ResultPage(webapp2.RequestHandler):
                 class_counter+=1
             logging.info(tips_classes)
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,
-                        urls=urls,tips_classes=tips_classes,meta_description=meta_description)
+                        urls=urls,tips_classes=tips_classes,meta_description=meta_description,title=title)
 
         else:
             place_info=get_place_from_db(place)
@@ -305,7 +312,8 @@ class ResultPage(webapp2.RequestHandler):
                 logging.info('No place for this query:'+query)
                 logging.info('Canonical place from query:'+place)
                 self.render('error.html',place=place,suggestion=choice(error_suggestions),
-                    meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+                    meta_description="""Tour with great confidence. Smart local tips for your next trip. 
+                    We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
             else:
                 #store result in memcache
                 memcache.set(place,place_info)
@@ -322,9 +330,12 @@ class ResultPage(webapp2.RequestHandler):
                 tips_classes={}
                 class_counter=0
                 tip_list=[]
-                meta_description=''
+                title='Useful travel tips and suggestions for '+place_info.name.title()+' - Tripinium'
+                meta_description='Useful travel tips for '+place_info.name.title()+""". Best time to visit, where to eat, what to pack for the trip,
+                            popular places to visit, things to do, local language help, currency conversion outlets, local transportation, cab services,
+                            user submitted and voted tips. Visit """+place_info.name.title()+' with confidence'
                 for tips in place_info.items:
-                    meta_description+=tips.item_name+' '
+                    
                     if tips.item_category and tips.item_category not in tip_list:
                        tip_list.append(tips.item_category)
                 tip_list.sort()
@@ -333,7 +344,7 @@ class ResultPage(webapp2.RequestHandler):
                     class_counter+=1
                 logging.info(tips_classes)
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,
-                            urls=urls,tips_classes=tips_classes,meta_description=meta_description)
+                            urls=urls,tips_classes=tips_classes,meta_description=meta_description,title=title)
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -344,7 +355,8 @@ class HowPage(webapp2.RequestHandler):
     def get(self):
         user=get_user(self.request.cookies)
         self.render('how.html',active="how",
-            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+            meta_description="""Tour with great confidence. Smart local tips for your next trip.
+             We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
@@ -353,7 +365,8 @@ class FeedbackPage(webapp2.RequestHandler):
     def get(self):
         user=get_user(self.request.cookies)
         self.render('feedback.html',active="feedback",
-            meta_description='Tour with great confidence. Smart local tips for your next trip. We help you organise the little details of your trip.')
+            meta_description="""Tour with great confidence. Smart local tips for your next trip.
+             We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
