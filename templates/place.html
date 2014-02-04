@@ -6,9 +6,32 @@
     source: places
 });
     $('#user_tips').attr('value','');
+  
+  $("#tips table tbody tr td a").attr("target","_blank");
+  
+  $("#tips table tbody tr td a").attr("onclick","track_content_click()");
   });
 
-
+function track_content_click()
+{
+  var place=$('#place_id_click').html();
+  _gaq.push(['_trackEvent', 'Link', 'Click',place]);
+}
+function track_facebook_click()
+{
+  var place=$('#place_id_click').html();
+  _gaq.push(['_trackEvent', 'Facebook', 'Click',place]);
+}
+function track_affiliate_click()
+{
+  var place=$('#place_id_click').html();
+  _gaq.push(['_trackEvent', 'HotelsCombined', 'Click',place]);
+}
+function track_recommendation_click()
+{
+  var place=$('#place_id_click').html();
+  _gaq.push(['_trackEvent', 'Recommendation', 'Click',place]);
+}
 
 </script>
 <script>
@@ -80,6 +103,8 @@ function clear_placeholder()
 function select_category()
 {
   var category=$('#select').val().toLowerCase();
+  var place=$('#place_id_click').html();
+  _gaq.push(['_trackEvent', 'Category','Filter', place]);
   if(category!='all tips')
   {
     category=category.replace(/ /g,"");
@@ -95,7 +120,7 @@ function select_category()
     </script>
 
 </head>
-<div class="container">
+<div class="container" >
   <div class="row">
      <div class="col-lg-6 input-group">
   <input id="search" type="text" class="form-control" placeholder="where are you headed? eg. Paris" onkeydown="if (event.keyCode==13) { search();}"/ >
@@ -110,6 +135,11 @@ function select_category()
       <h2 style="display:inline;">Tips for {{place.title()}}</h2> 
      <!-- <img src="/images/envelope.png" style="margin-right:10px;"/>
       <img src="images/print.png"/>-->
+      <div style="display:none" id="place_id_click">{{place.title()}}</div>
+      {% if is_spell_corrected %}
+      <div class="text-muted">{{spell_message}} - search for <a href="\search?location={{query}}&spellcorrect=false">{{query}}</a> instead
+      </div>
+      {% endif %}
       <div class="col-lg-1 pull-right" style="margin-right:0px;padding-right:0px;">
       
 
@@ -141,7 +171,7 @@ function select_category()
 </div>
 </div>
   <div class="row">
-    <div class="col-lg-9">
+    <div id="tips" class="col-lg-9">
 
 
       
@@ -220,7 +250,7 @@ function select_category()
       {% for recommendation in recommendations %}
       <tr>
         <td>
-         <a href="/search?location={{recommendation.title()}}"><b> {{recommendation.title()}}</b></a>
+         <a href="/search?location={{recommendation.title()}}" onclick="track_recommendation_click()"><b> {{recommendation.title()}}</b></a>
         </td>
       </tr>
       {% endfor %}
@@ -230,8 +260,8 @@ function select_category()
 </div>
 <div class="row">
   <div class="col-lg-12">
-    <a href="https://www.facebook.com/pages/Tripinium/485369678152306"><h4>Say Hi on our Facebook page</h4></a>
-    <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" target="_blank"><h4>Look for hotels in {{place.title()}}</h4></a>
+    <a href="https://www.facebook.com/pages/Tripinium/485369678152306" onclick="track_facebook_click()"><h4>Say Hi on our Facebook page</h4></a>
+    <a href="http://www.hotelscombined.com/City/{{place}}.htm?a_aid=69074" onclick="track_affiliate_click()" target="_blank"><h4>Look for hotels in {{place.title()}}</h4></a>
     <br>
     <!-- AddThis Button BEGIN -->
 <div class="addthis_toolbox addthis_default_style ">

@@ -20,6 +20,7 @@ from google.appengine.api import mail
 from db_classes import *
 from db_initialization import *
 from utility import *
+from countries import *
 import flickr
 
 
@@ -156,52 +157,10 @@ class InsertLocalPage(webapp2.RequestHandler):
         self.response.out.write(*a, **kw)
 
 cache={}
-place_list_created=False
-place_list=[]
-country_capital={}
-no_data_place_list=[]
+
 def spell_checker(word):
     return spell_check.correct(word)
-def in_place_list(word):
-    global place_list_created
-    if place_list_created:
-        if word in place_list or word in no_data_place_list:
-            return True
-        else:
-            return False
-    #create in-memory places list to check future queries
-    f=codecs.open('resources/place_list_refresh_v2_part1','r','utf-8')
-    fc=codecs.open('resources/country_capitals','r','utf-8')
-    fnc=codecs.open('resources/no_data_cities','r','utf-8')
-    while True:
-        place=f.readline()
 
-        if not place:
-            break
-        else:
-            place_list.append(normalize(place[:-1]))
-    f.close()
-    place_list_created=True
-    while True:
-        place=fc.readline()
-
-        if not place:
-            break
-        else:
-            country,capital=place.split('\t')
-            country_capital[country.strip().lower()]=capital[:-1].strip().lower()
-            #logging.error(country+capital[:-1])
-    fc.close()
-    while True:
-        place=fnc.readline()
-
-        if not place:
-            break
-        else:
-            no_data_place_list.append(normalize(place[:-1]))
-            #logging.error(country+capital[:-1])
-    if word in place_list:
-        return True
 
 
 def is_country(query):
@@ -263,6 +222,48 @@ class ResultPage(webapp2.RequestHandler):
                 meta_description="""Tour with great confidence. Smart local tips for your next trip. 
                 We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
             return
+        if type(place) is list and is_country(normalize(query)):
+            places=place
+            self.response.headers['Content-Type'] = 'text/html'
+            places.sort()
+            logging.info(str(places))
+            count=0
+            place_tuple=()
+            place_list_country=[]
+            temp=()
+            for place in places:
+                if place not in place_list:
+                    continue
+                """count+=1
+                if count%3==1:
+                    place_tuple=()
+                place_tuple=place_tuple+(place,)
+                if count%3==0:"""
+                place_list_country.append((place,))
+                temp=place_tuple
+            
+            
+
+            """if count%3==1:
+                place_list_country.append(temp+('',''))
+                
+            if count%3==2:
+                place_list_country.append(temp+('',))"""
+            logging.info(place_list_country)
+
+            if len(place_list_country)<1:
+                self.render('error.html',place=query,suggestion=choice(error_suggestions),
+                meta_description="""Tour with great confidence. Smart local tips for your next trip. 
+                We help you organise the little details of your trip.""",title='Tripinium - Gateway to travel planning information')
+                return
+            #logging.info(str(place_list))    
+
+            self.render('all_places.html',places=place_list_country,
+                meta_description="""Useful travel tips for """+query.title()+"""Things to do, when to visit, what to wear, where to eat,
+                local language help, places to visit.""" ,title="""Useful travel tips for """+query.title(),
+                message='Where in '+query.title()+' do you want to go?',country=True)
+            return
+
         place_info=memcache.get(place)
         recommended_places=None
         #logging.error(place_info.recommendations)
@@ -271,7 +272,9 @@ class ResultPage(webapp2.RequestHandler):
         
 
         logging.info(str(urls))
-        
+        spell_message=''
+        if is_spell_corrected:
+            spell_message="Showing results for "+place.title()
         if place_info is not None:
             logging.info('Retreived from memcache:'+place)
             if place_info.recommendations is not None:
@@ -304,7 +307,8 @@ class ResultPage(webapp2.RequestHandler):
                 class_counter+=1
             logging.info(tips_classes)
             self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,
-                        urls=urls,tips_classes=tips_classes,meta_description=meta_description,title=title)
+                        urls=urls,tips_classes=tips_classes,meta_description=meta_description,title=title,
+                        spell_message=spell_message,query=query)
 
         else:
             place_info=get_place_from_db(place)
@@ -319,7 +323,9 @@ class ResultPage(webapp2.RequestHandler):
                 memcache.set(place,place_info)
                 if place_info.recommendations is not None:
                     recommended_places=place_info.recommendations.split('|')
-                
+                spell_message=''
+                if is_spell_corrected:
+                    spell_message="Showing results for "+place.title()
                 urls=[]
                 if hasattr(place_info,'image'):
                     try:
@@ -344,7 +350,9 @@ class ResultPage(webapp2.RequestHandler):
                     class_counter+=1
                 logging.info(tips_classes)
                 self.render('place.html',place_info=place_info,place=place,is_spell_corrected=is_spell_corrected,orig_query=query,recommendations=recommended_places,
-                            urls=urls,tips_classes=tips_classes,meta_description=meta_description,title=title)
+                            urls=urls,tips_classes=tips_classes,
+                            meta_description=meta_description,title=title,spell_message=spell_message,query=query)
+                            
     def render(self, template, **kw):
         self.write(render_str(template, **kw))
     def write(self, *a, **kw):
