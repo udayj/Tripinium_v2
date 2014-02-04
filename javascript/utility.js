@@ -274,8 +274,7 @@ function send_votes(id,key,type,displayId)
   
   success: function()
   {
-    var place=$('#email_place').html()
-    
+    var place=$('#place_id_click').html();
     _gaq.push(['_trackEvent', 'Tip', 'Rating', place]);
   },
   fail: function()
