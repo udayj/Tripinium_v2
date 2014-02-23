@@ -22,7 +22,6 @@ from db_classes import *
 from db_initialization import *
 from utility import *
 from countries import *
-import flickr
 
 
 
