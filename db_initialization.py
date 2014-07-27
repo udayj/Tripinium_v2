@@ -104,10 +104,12 @@ def insert_recommendations():
     #    return
     f=codecs.open('resources/place_recommendations_refresh_v2_part1','r','utf-8')
     while True:
+        
         data=f.readline()
         if not data:
             break
         else:
+            
             parts=data.split('\t')
             if len(parts)<=1:
                 continue
@@ -119,6 +121,7 @@ def insert_recommendations():
                 logging.error('error while calculating recommendations for'+place)
                 continue
             place_info.recommendations='|'.join(parts[1:])
+            logging.info(place_info.recommendations)
             place_info.put()
     f.close()
     return jsonify({'status':'success'})

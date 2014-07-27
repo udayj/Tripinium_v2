@@ -500,9 +500,11 @@ def data_refresh():
     if task=='tips':
         taskqueue.add(url='/insertbulk',method='GET')
         logging.info('insert tips - enqueued')
+        return jsonify({'status':'Success'})
     elif task=='recommendations':
         taskqueue.add(url='/insertrecommendations',method='GET')
         logging.info('insert recommendations - enqueued')
+        return jsonify({'status':'Success'})
     else:
         return jsonify({'status':'Success'})
     
