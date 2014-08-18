@@ -1,0 +1,129 @@
+Bremen	Hamburg	Cologne	Amsterdam	Potsdam	Leipzig
+Hamburg	Bremen	Potsdam	Berlin	copenhagen	Leipzig
+Füssen	Munich	dachau	liechtenstein	Zurich	Stuttgart
+Berlin	Potsdam	Leipzig	Dresden	Hamburg	Prague
+Potsdam	Berlin	Leipzig	Dresden	Hamburg	Prague
+Cologne	Frankfurt	luxembourg	antwerp	brussels	Amsterdam
+Munich	dachau	Füssen	liechtenstein	Stuttgart	Zurich
+Stuttgart	Frankfurt	Zurich	Füssen	dachau	basel
+Frankfurt	Cologne	Stuttgart	luxembourg	dachau	Leipzig
+Dresden	Leipzig	Prague	Potsdam	Berlin	dachau
+Leipzig	Dresden	Potsdam	Berlin	Prague	Hamburg
+London	Sheffield	lille	Manchester	Liverpool	antwerp
+Birmingham	Leeds	Varna	bragged	Interlaken	Gothenburg
+Manchester	Liverpool	Sheffield	Blackpool	London	Dublin
+Sheffield	Manchester	Liverpool	Blackpool	London	Edinburgh
+Blackpool	Liverpool	Manchester	Sheffield	belfast	Dublin
+Leeds	Birmingham	Varna	bragged	Interlaken	Gothenburg
+Liverpool	Blackpool	Manchester	Sheffield	Dublin	belfast
+Leicester	hague	Interlaken	Varna	bragged	Leeds
+Edinburgh	Glasgow	belfast	Blackpool	Manchester	Liverpool
+Glasgow	Edinburgh	belfast	Blackpool	Liverpool	Manchester
+Zurich	basel	liechtenstein	Berne	lugano	Stuttgart
+Lucerne	Gothenburg	bragged	Varna	Birmingham	Leeds
+Berne	basel	Zurich	Geneva	lugano	liechtenstein
+Geneva	Lyon	grenoble	Berne	basel	lugano
+Interlaken	Leicester	hague	Varna	Leeds	Birmingham
+Lisbon	Malaga	Madrid	Zaragoza	bordeaux	Barcelona
+Madrid	Zaragoza	Malaga	Lisbon	Barcelona	bordeaux
+Barcelona	Zaragoza	Marseille	bordeaux	Madrid	grenoble
+Zaragoza	Barcelona	Madrid	bordeaux	Marseille	Malaga
+Malaga	Madrid	Lisbon	Zaragoza	Barcelona	bordeaux
+Paris	lille	brussels	luxembourg	antwerp	London
+Lyon	grenoble	Geneva	Berne	Marseille	basel
+Marseille	grenoble	Lyon	Genoa	Geneva	Barcelona
+Amsterdam	antwerp	brussels	Cologne	lille	Bremen
+Rome	Naples	capri island	Genoa	palermo	Milan
+Naples	capri island	Rome	palermo	siracusa	Tirana
+Milan	lugano	Genoa	liechtenstein	Berne	Zurich
+Genoa	Milan	lugano	grenoble	Geneva	Berne
+Prague	Dresden	Leipzig	Vienna	Potsdam	Berlin
+Vienna	Budapest	Prague	Zagreb	Krakow	Munich
+Warsaw	Lodz	Krakow	Minsk	Prague	Dresden
+Krakow	Lodz	Warsaw	Budapest	Vienna	Prague
+Lodz	Warsaw	Krakow	Prague	Dresden	Berlin
+Budapest	Vienna	Krakow	Zagreb	Prague	Lodz
+Zagreb	Vienna	Budapest	Munich	dachau	Füssen
+Tirana	Patra	patras	Naples	capri island	Athens
+Athens	Patra	patras	Tirana	Bucharest	siracusa
+Patra	patras	Athens	Tirana	siracusa	capri island
+Bucharest	Tirana	Budapest	Athens	Kyiv	Patra
+Varna	bragged	Birmingham	Leeds	Gothenburg	Interlaken
+Minsk	Riga	Kyiv	Warsaw	Lodz	tallinn
+Kyiv	Kharkiv	Minsk	Warsaw	Bucharest	Krakow
+Kharkiv	Kyiv	Minsk	Bucharest	Warsaw	Riga
+Dublin	belfast	Liverpool	Blackpool	cork	Manchester
+Oslo	Bergen	Stockholm	copenhagen	Hamburg	Tampere
+Bergen	Oslo	copenhagen	Edinburgh	Stockholm	Glasgow
+Stockholm	tallinn	Tampere	Helsinki	Oslo	Riga
+Gothenburg	bragged	Varna	Birmingham	Leeds	Lucerne
+Helsinki	tallinn	Tampere	Riga	Stockholm	Minsk
+Tampere	Helsinki	tallinn	Stockholm	Riga	Oslo
+Riga	tallinn	Helsinki	Minsk	Stockholm	Tampere
+tallinn	Helsinki	Tampere	Riga	Stockholm	Minsk
+darjeeling	kalimpong	gangtok	puri	patna	guwahati
+amritsar	pushkar	jaipur	sariska	ranthambore	jaisalmer
+varanasi	new delhi	patna	puri	haridwar	ranchi
+hyderabad	pune	bangalore	chennai	goa	mumbai
+pushkar	jaipur	amritsar	ranthambore	sariska	udaipur
+goa	pune	mumbai	bangalore	hyderabad	chennai
+gangtok	kalimpong	darjeeling	guwahati	shillong	cherapunjee
+haridwar	new delhi	agra	varanasi	katra	ranthambore
+agartala	aizwal	cherapunjee	shillong	guwahati	imphal
+dachau	Munich	Füssen	Stuttgart	liechtenstein	Zurich
+capri island	Naples	Rome	palermo	siracusa	Tirana
+guwahati	shillong	cherapunjee	dimapur	itanagar	kohima
+copenhagen	Hamburg	Berlin	Potsdam	Bremen	Leipzig
+ajmer	ahmadabad	udaipur	mumbai	pune	jaisalmer
+bangalore	pondicherry	chennai	madurai	goa	trivandrum
+agra	sariska	katra	ranthambore	jaipur	haridwar
+cherapunjee	shillong	guwahati	agartala	aizwal	dimapur
+sariska	jaipur	ranthambore	agra	pushkar	amritsar
+lugano	Milan	liechtenstein	Zurich	Berne	Genoa
+srinagar	jammu	leh	dharamshala	shimla	chandigarh
+belfast	Dublin	Glasgow	Blackpool	Edinburgh	Liverpool
+ranchi	puri	patna	varanasi	kolkata	new delhi
+lille	brussels	antwerp	Paris	Amsterdam	London
+patras	Patra	Athens	Tirana	siracusa	capri island
+antwerp	brussels	lille	Amsterdam	Cologne	luxembourg
+jammu	srinagar	dharamshala	shimla	chandigarh	leh
+basel	Berne	Zurich	liechtenstein	Stuttgart	Geneva
+luxembourg	Cologne	brussels	Frankfurt	antwerp	Stuttgart
+leh	srinagar	jammu	dharamshala	shimla	chandigarh
+jaisalmer	amritsar	pushkar	udaipur	ahmadabad	jaipur
+itanagar	dibrugarh	dimapur	kohima	kiphire	guwahati
+shillong	cherapunjee	guwahati	dimapur	agartala	aizwal
+udaipur	ahmadabad	pushkar	ranthambore	jaipur	ajmer
+puri	patna	ranchi	varanasi	darjeeling	kalimpong
+dimapur	kohima	kiphire	imphal	itanagar	shillong
+patna	puri	varanasi	ranchi	darjeeling	kalimpong
+chandigarh	dharamshala	shimla	jammu	sariska	leh
+chennai	pondicherry	bangalore	madurai	hyderabad	trivandrum
+dibrugarh	itanagar	kiphire	dimapur	kohima	imphal
+dharamshala	shimla	chandigarh	jammu	leh	srinagar
+new delhi	haridwar	varanasi	patna	katra	puri
+shimla	dharamshala	chandigarh	jammu	leh	srinagar
+madurai	trivandrum	pondicherry	bangalore	chennai	goa
+siracusa	palermo	capri island	Naples	Patra	patras
+pondicherry	chennai	bangalore	madurai	trivandrum	hyderabad
+katra	agra	haridwar	sariska	ranthambore	jaipur
+cork	Dublin	belfast	Liverpool	Blackpool	Manchester
+kolkata	ranchi	agartala	puri	cherapunjee	aizwal
+trivandrum	madurai	pondicherry	bangalore	chennai	goa
+ahmadabad	ajmer	udaipur	pushkar	mumbai	jaisalmer
+brussels	antwerp	lille	Amsterdam	Cologne	luxembourg
+grenoble	Lyon	Geneva	Marseille	Berne	lugano
+palermo	siracusa	capri island	Naples	Rome	Tirana
+pune	mumbai	goa	ajmer	hyderabad	ahmadabad
+bragged	Varna	Gothenburg	Birmingham	Leeds	hague
+kohima	dimapur	kiphire	imphal	itanagar	dibrugarh
+jaipur	sariska	ranthambore	pushkar	amritsar	agra
+ranthambore	jaipur	sariska	pushkar	agra	amritsar
+kalimpong	darjeeling	gangtok	guwahati	puri	patna
+liechtenstein	Zurich	Füssen	lugano	basel	Berne
+hague	Leicester	Interlaken	Varna	bragged	Leeds
+kiphire	kohima	dimapur	imphal	itanagar	dibrugarh
+mumbai	pune	ajmer	goa	ahmadabad	hyderabad
+bordeaux	Zaragoza	Lyon	Barcelona	grenoble	Paris
+imphal	kohima	dimapur	kiphire	aizwal	shillong
+aizwal	agartala	imphal	cherapunjee	shillong	kohima
